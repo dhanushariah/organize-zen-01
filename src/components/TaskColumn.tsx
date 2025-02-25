@@ -60,17 +60,17 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
   };
 
   return (
-    <div className="flex flex-col gap-4 min-w-[300px]">
-      <h2 className="text-xl font-semibold text-secondary">{title}</h2>
-      <div className="space-y-4">
+    <div className="flex-1 min-w-[280px] md:min-w-[300px] relative">
+      <h2 className="text-lg md:text-xl font-semibold text-secondary mb-4">{title}</h2>
+      <div className="space-y-3 md:space-y-4">
         {tasks.map((task) => (
-          <Card key={task.id} className="task-card p-4">
-            <div className="flex items-start gap-3">
+          <Card key={task.id} className="task-card p-3 md:p-4">
+            <div className="flex items-start gap-2 md:gap-3">
               <Checkbox
                 id={task.id}
                 checked={completedTasks.includes(task.id)}
                 onCheckedChange={() => toggleTask(task.id)}
-                className="mt-1"
+                className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
               />
               <div className="flex flex-1 items-start justify-between">
                 {editingTask === task.id ? (
@@ -83,19 +83,20 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
                       }
                     }}
                     autoFocus
+                    className="text-sm md:text-base"
                   />
                 ) : (
-                  <div className="flex-1 flex items-center justify-between">
+                  <div className="flex-1 flex items-center justify-between gap-2">
                     <label
                       htmlFor={task.id}
-                      className={`font-medium cursor-pointer ${
+                      className={`font-medium cursor-pointer text-sm md:text-base ${
                         completedTasks.includes(task.id) ? "line-through text-muted-foreground" : ""
                       }`}
                       onClick={() => setEditingTask(task.id)}
                     >
                       {task.title}
                     </label>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <span className={`tag tag-${task.tag}`}>{task.tag}</span>
                       <Button
                         variant="ghost"
@@ -122,8 +123,14 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
                 handleAddTask();
               }
             }}
+            className="text-sm md:text-base"
           />
-          <Button size="icon" onClick={handleAddTask} disabled={!newTaskTitle.trim()}>
+          <Button 
+            size="icon" 
+            onClick={handleAddTask} 
+            disabled={!newTaskTitle.trim()}
+            className="shrink-0"
+          >
             <Plus className="h-4 w-4" />
           </Button>
         </div>

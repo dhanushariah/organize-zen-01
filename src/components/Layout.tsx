@@ -11,14 +11,15 @@ const Layout = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className="min-h-screen flex w-full bg-background transition-colors">
         <Sidebar />
-        <main className="flex-1 p-6 animate-fade-in">
-          <div className="absolute top-4 right-4">
+        <main className="flex-1 p-4 md:p-6 animate-fade-in">
+          <div className="fixed top-4 right-4 z-50">
             <Button
               variant="outline"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="bg-background"
             >
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
