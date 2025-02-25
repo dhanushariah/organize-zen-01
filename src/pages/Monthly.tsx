@@ -1,5 +1,6 @@
 
 import TaskColumn from "@/components/TaskColumn";
+import { format } from "date-fns";
 
 const mockTasks = {
   week1: [
@@ -17,16 +18,18 @@ const mockTasks = {
 };
 
 const Monthly = () => {
+  const currentMonth = format(new Date(), "MMMM yyyy");
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold">Monthly Plan</h1>
-        <p className="text-secondary mt-2">Your month at a glance</p>
+        <h1 className="text-4xl font-bold">Monthly</h1>
+        <p className="text-secondary mt-2">{currentMonth}</p>
       </div>
-      <div className="flex gap-8 overflow-x-auto pb-4">
+      <div className="flex gap-8 overflow-x-auto pb-4 relative">
         <TaskColumn title="Week 1" tasks={mockTasks.week1} />
         <TaskColumn title="Week 2" tasks={mockTasks.week2} />
-        <TaskColumn title="Week 3" tasks={mockTasks.week3} />
+        <TaskColumn title="Week 3" tasks={mockTasks.week3} isLast />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 
 import TaskColumn from "@/components/TaskColumn";
+import { format } from "date-fns";
 
 const mockTasks = {
   nonNegotiables: [
@@ -17,16 +18,19 @@ const mockTasks = {
 };
 
 const Daily = () => {
+  const today = new Date();
+  const dateString = format(today, "EEEE, MMMM do, yyyy");
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Daily Tasks</h1>
-        <p className="text-secondary mt-2">Organize your day efficiently</p>
+        <p className="text-secondary mt-2">{dateString}</p>
       </div>
-      <div className="flex gap-8 overflow-x-auto pb-4">
+      <div className="flex gap-8 overflow-x-auto pb-4 relative">
         <TaskColumn title="Non-negotiables" tasks={mockTasks.nonNegotiables} />
         <TaskColumn title="Today" tasks={mockTasks.today} />
-        <TaskColumn title="Priority" tasks={mockTasks.priority} />
+        <TaskColumn title="Priority" tasks={mockTasks.priority} isLast />
       </div>
     </div>
   );

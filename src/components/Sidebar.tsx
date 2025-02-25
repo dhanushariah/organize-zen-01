@@ -19,12 +19,12 @@ const items = [
     icon: CheckSquare,
   },
   {
-    title: "Weekly View",
+    title: "Weekly",
     path: "/weekly",
     icon: Calendar,
   },
   {
-    title: "Monthly Plan",
+    title: "Monthly",
     path: "/monthly",
     icon: CalendarIcon,
   },
