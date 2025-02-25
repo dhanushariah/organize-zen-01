@@ -52,7 +52,7 @@ const Sidebar = () => {
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton
                     asChild
-                    isActive={location.pathname === item.path}
+                    data-active={location.pathname === item.path}
                   >
                     <Link to={item.path} className="flex items-center gap-3">
                       <item.icon className="w-5 h-5" />
