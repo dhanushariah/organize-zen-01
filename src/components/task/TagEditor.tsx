@@ -67,7 +67,11 @@ export const TagEditor = ({
                 onUpdateTagColor(color);
                 closeTagEditor();
               }}
-              className={`h-6 w-6 p-0 rounded-full tag-${color}`}
+              className={`h-6 w-6 p-0 rounded-full border-2 tag-${color}`}
+              style={{
+                backgroundColor: `var(--${color}-100, #f0f9ff)`,
+                borderColor: `var(--${color}-300, #93c5fd)`
+              }}
             />
           ))}
         </div>

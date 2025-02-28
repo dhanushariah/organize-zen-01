@@ -103,7 +103,7 @@ export const TagManagement = () => {
             {availableTags.map(tag => (
               <div 
                 key={tag} 
-                className={`flex items-center justify-between p-2 border rounded-md ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
+                className={`flex items-center justify-between p-2 border-2 rounded-md ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
                 onClick={() => setEditingTagColor(tag)}
               >
                 <span className="mr-2 truncate">{tag}</span>
@@ -168,13 +168,13 @@ export const TagManagement = () => {
         </div>
         
         {editingTagColor && (
-          <div className="p-4 border rounded-md bg-background">
+          <div className="p-4 border-2 rounded-md bg-background">
             <h3 className="font-medium mb-2">Choose color for tag: {editingTagColor}</h3>
             <div className="grid grid-cols-4 gap-2">
               {TAG_COLORS.map(color => (
                 <button
                   key={color}
-                  className={`py-2 px-4 rounded cursor-pointer tag-${color} border`}
+                  className={`py-2 px-4 rounded cursor-pointer tag-${color} border-2`}
                   onClick={() => updateTagColor(editingTagColor, color)}
                 >
                   {color}

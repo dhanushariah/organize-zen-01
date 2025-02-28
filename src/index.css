@@ -105,6 +105,11 @@
     --sidebar-accent-foreground: var(--obsidian-fg);
     --sidebar-ring: var(--obsidian-accent);
   }
+  
+  /* Set Poppins as default font */
+  html {
+    font-family: 'Poppins', sans-serif;
+  }
 }
 
 @layer components {
@@ -189,37 +194,37 @@
     }
   }
 
-  /* Add tag color utilities */
+  /* Add tag color utilities - Make sure these are more specific and visible */
   .tag-red {
-    @apply bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-red-200 dark:border-red-800;
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-2 border-red-300 dark:border-red-700;
   }
   
   .tag-blue {
-    @apply bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border-blue-200 dark:border-blue-800;
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-2 border-blue-300 dark:border-blue-700;
   }
   
   .tag-green {
-    @apply bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300 border-green-200 dark:border-green-800;
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-2 border-green-300 dark:border-green-700;
   }
   
   .tag-purple {
-    @apply bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border-purple-200 dark:border-purple-800;
+    @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 border-2 border-purple-300 dark:border-purple-700;
   }
   
   .tag-yellow {
-    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800;
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-2 border-yellow-300 dark:border-yellow-700;
   }
   
   .tag-pink {
-    @apply bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 border-pink-200 dark:border-pink-800;
+    @apply bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200 border-2 border-pink-300 dark:border-pink-700;
   }
   
   .tag-indigo {
-    @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800;
+    @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 border-2 border-indigo-300 dark:border-indigo-700;
   }
   
   .tag-teal {
-    @apply bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300 border-teal-200 dark:border-teal-800;
+    @apply bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200 border-2 border-teal-300 dark:border-teal-700;
   }
   
   /* Add animations for glowing */
