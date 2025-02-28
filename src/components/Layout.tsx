@@ -59,7 +59,7 @@ const Layout = ({ isMobileVersion = false }: LayoutProps) => {
                         <span className="sr-only">Toggle Menu</span>
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="p-0 w-[80%] sm:w-[350px] z-50">
+                    <SheetContent side="left" className="p-0 w-[80%] sm:w-[350px]">
                       <Sidebar isMobile={true} onNavigate={() => setIsSidebarOpen(false)} />
                     </SheetContent>
                   </Sheet>

@@ -1,5 +1,11 @@
 
-import { useState } from "react";
+import TaskColumn from "@/components/task/TaskColumn";
+
+const mockTasks = [
+  { id: "1", title: "Prepare Weekly Report", tag: "work" },
+  { id: "2", title: "Team Meeting", tag: "work" },
+  { id: "3", title: "Weekly Exercise Plan", tag: "health" },
+];
 
 const Weekly = () => {
   return (
@@ -9,11 +15,13 @@ const Weekly = () => {
         <p className="text-muted-foreground mt-2">Manage your tasks for the week</p>
       </div>
       
-      {/* Weekly content goes here */}
       <div className="flex justify-center">
-        <div className="p-12 border rounded-lg text-center">
-          <p className="text-muted-foreground">Weekly task management coming soon!</p>
-        </div>
+        <TaskColumn 
+          title="Weekly Tasks" 
+          tasks={mockTasks} 
+          isLast 
+          columnId="weekly"
+        />
       </div>
     </div>
   );

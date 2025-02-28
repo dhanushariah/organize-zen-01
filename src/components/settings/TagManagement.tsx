@@ -4,10 +4,15 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { X, Plus, Palette } from "lucide-react";
+import { toast } from "sonner";
+
+// Defining tag colors
+const TAG_COLORS = ["red", "blue", "green", "purple", "yellow", "pink", "indigo", "teal"];
 
 export const TagManagement = () => {
   const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [tagColors, setTagColors] = useState<Record<string, string>>({});
   const [newTagName, setNewTagName] = useState("");
   const [addingNewTag, setAddingNewTag] = useState(false);
   const [editingTagColor, setEditingTagColor] = useState<string | null>(null);
@@ -22,6 +27,12 @@ export const TagManagement = () => {
       setAvailableTags(defaultTags);
       localStorage.setItem('availableTags', JSON.stringify(defaultTags));
     }
+
+    // Load tag colors
+    const savedTagColors = localStorage.getItem('tagColors');
+    if (savedTagColors) {
+      setTagColors(JSON.parse(savedTagColors));
+    }
   }, []);
 
   // Save tags to localStorage when they change
@@ -31,11 +42,19 @@ export const TagManagement = () => {
     }
   }, [availableTags]);
 
+  // Save tag colors to localStorage when they change
+  useEffect(() => {
+    if (Object.keys(tagColors).length > 0) {
+      localStorage.setItem('tagColors', JSON.stringify(tagColors));
+    }
+  }, [tagColors]);
+
   const addNewTag = () => {
     if (newTagName.trim() && !availableTags.includes(newTagName.toLowerCase())) {
       setAvailableTags([...availableTags, newTagName.toLowerCase()]);
       setNewTagName("");
       setAddingNewTag(false);
+      toast.success(`Tag "${newTagName}" added successfully`);
     }
   };
 
@@ -43,15 +62,32 @@ export const TagManagement = () => {
     e.stopPropagation();
     if (availableTags.length > 1) {
       setAvailableTags(availableTags.filter(tag => tag !== tagToDelete));
+      
+      // Also remove the color from tagColors
+      const newTagColors = {...tagColors};
+      delete newTagColors[tagToDelete];
+      setTagColors(newTagColors);
+      
+      toast.success(`Tag "${tagToDelete}" deleted`);
+    } else {
+      toast.error("Cannot delete the last tag");
     }
   };
 
   const updateTagColor = (tag: string, color: string) => {
-    // Store tag colors in localStorage
-    const tagColors = JSON.parse(localStorage.getItem('tagColors') || '{}');
-    tagColors[tag] = color;
-    localStorage.setItem('tagColors', JSON.stringify(tagColors));
+    // Store tag colors
+    setTagColors(prev => ({
+      ...prev,
+      [tag]: color
+    }));
+    
+    localStorage.setItem('tagColors', JSON.stringify({
+      ...tagColors,
+      [tag]: color
+    }));
+    
     setEditingTagColor(null);
+    toast.success(`Color updated for "${tag}" tag`);
   };
 
   return (
@@ -67,18 +103,28 @@ export const TagManagement = () => {
             {availableTags.map(tag => (
               <div 
                 key={tag} 
-                className="flex items-center justify-between p-2 border rounded-md"
+                className={`flex items-center justify-between p-2 border rounded-md ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
                 onClick={() => setEditingTagColor(tag)}
               >
-                <span className={`tag tag-${tag} mr-2`}>{tag}</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => deleteTag(tag, e)}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
+                <span className="mr-2 truncate">{tag}</span>
+                <div className="flex items-center">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6 ml-1"
+                    onClick={() => setEditingTagColor(tag)}
+                  >
+                    <Palette className="h-3 w-3" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => deleteTag(tag, e)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -89,6 +135,7 @@ export const TagManagement = () => {
               onClick={() => setAddingNewTag(true)}
               className="w-full"
             >
+              <Plus className="h-4 w-4 mr-2" />
               Add New Tag
             </Button>
           ) : (
@@ -98,6 +145,11 @@ export const TagManagement = () => {
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
                 className="flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    addNewTag();
+                  }
+                }}
               />
               <Button onClick={addNewTag}>
                 Add
@@ -119,10 +171,10 @@ export const TagManagement = () => {
           <div className="p-4 border rounded-md bg-background">
             <h3 className="font-medium mb-2">Choose color for tag: {editingTagColor}</h3>
             <div className="grid grid-cols-4 gap-2">
-              {['red', 'blue', 'green', 'purple', 'yellow', 'pink', 'indigo', 'teal'].map(color => (
+              {TAG_COLORS.map(color => (
                 <button
                   key={color}
-                  className={`tag tag-${color} py-2 px-4 cursor-pointer`}
+                  className={`py-2 px-4 rounded cursor-pointer tag-${color} border`}
                   onClick={() => updateTagColor(editingTagColor, color)}
                 >
                   {color}

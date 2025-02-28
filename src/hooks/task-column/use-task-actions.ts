@@ -1,5 +1,6 @@
 
 import { Task } from "@/types/task";
+import { formatDuration } from "date-fns";
 
 interface TaskActionsProps {
   tasks: Task[];
@@ -90,18 +91,47 @@ export function useTaskActions({
     }
   };
 
+  // Calculate and format time duration
+  const formatTimeDuration = (seconds: number) => {
+    if (seconds < 60) {
+      return `${seconds}s`;
+    }
+    
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (minutes < 60) {
+      return `${minutes}m ${remainingSeconds}s`;
+    }
+    
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    
+    return `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
+  };
+
   // Toggle task timer
   const toggleTaskTimer = (taskId: string) => {
+    const now = new Date();
+    
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
-        const now = new Date();
         const isStarting = !task.timerRunning;
+        
+        let elapsedTime = task.duration || 0;
+        
+        // If stopping the timer, calculate time elapsed since it started
+        if (!isStarting && task.startTime) {
+          const elapsedSeconds = Math.floor((now.getTime() - new Date(task.startTime).getTime()) / 1000);
+          elapsedTime += elapsedSeconds;
+        }
         
         const updatedTask = {
           ...task,
           timerRunning: isStarting,
           startTime: isStarting ? now : task.startTime,
-          duration: task.duration || 0
+          duration: elapsedTime,
+          timerDisplay: isStarting ? formatTimeDuration(elapsedTime) : undefined
         };
         
         if (onTaskUpdate) {
@@ -114,6 +144,42 @@ export function useTaskActions({
     });
     
     setTasks(updatedTasks);
+    
+    // If any timer is running, set up interval to update the display
+    if (updatedTasks.some(task => task.timerRunning)) {
+      setupTimerInterval(updatedTasks, setTasks);
+    }
+  };
+
+  // Set up timer interval to update running timers
+  const setupTimerInterval = (currentTasks: Task[], setTasksFunction: React.Dispatch<React.SetStateAction<Task[]>>) => {
+    // Clear any existing interval
+    if (window.timerInterval) {
+      clearInterval(window.timerInterval);
+    }
+    
+    // Set up new interval if any timer is running
+    if (currentTasks.some(task => task.timerRunning)) {
+      window.timerInterval = setInterval(() => {
+        setTasksFunction(prevTasks => 
+          prevTasks.map(task => {
+            if (task.timerRunning && task.startTime) {
+              const startTime = new Date(task.startTime);
+              const now = new Date();
+              const baseDuration = task.duration || 0;
+              const runningSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000);
+              const totalSeconds = baseDuration + runningSeconds;
+              
+              return {
+                ...task,
+                timerDisplay: formatTimeDuration(totalSeconds)
+              };
+            }
+            return task;
+          })
+        );
+      }, 1000);
+    }
   };
 
   return {
@@ -123,4 +189,11 @@ export function useTaskActions({
     handleDeleteTask,
     toggleTaskTimer
   };
+}
+
+// Add the timerInterval property to the Window interface
+declare global {
+  interface Window {
+    timerInterval: number | undefined;
+  }
 }

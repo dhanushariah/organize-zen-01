@@ -60,7 +60,9 @@ const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
           <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-base px-6 mb-2">Time Frames</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-base px-6 mb-2 underline decoration-2 underline-offset-4">
+            Time Frames
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className={isMobile ? "flex flex-col gap-4 py-4" : ""}>
               {items.map((item) => (
