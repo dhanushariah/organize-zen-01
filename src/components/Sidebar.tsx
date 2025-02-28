@@ -52,21 +52,17 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Add your logout logic here
-    navigate("/");
+    navigate("/auth");
   };
 
   return (
     <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
       <SidebarContent>
-        <div className="px-6 py-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
-          {isMobile && onClose && (
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-              <X className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
+        {!isMobile && (
+          <div className="px-6 py-6 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
+          </div>
+        )}
         <SidebarGroup>
           <SidebarGroupLabel className="text-base px-6 mb-2 underline decoration-2 underline-offset-4">
             Time Frames

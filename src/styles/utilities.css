@@ -16,18 +16,18 @@
 
   /* Dark mode utilities */
   [data-theme="dark"] {
-    @apply bg-gray-900 text-white;
+    @apply bg-background text-foreground;
   }
 
   [data-theme="dark"] .task-column {
-    @apply bg-gray-800 border border-gray-700;
+    @apply bg-card border border-border;
   }
 
   [data-theme="dark"] .sidebar-nav-button {
-    @apply hover:bg-gray-800;
+    @apply hover:bg-secondary;
   }
 
   [data-theme="dark"] .sidebar-nav-button[data-active="true"] {
-    @apply bg-gray-800;
+    @apply bg-secondary;
   }
 }
