@@ -65,7 +65,7 @@ const Layout = () => {
           )}
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent side="left" className="p-0 border-r w-[80%] max-w-[300px]">
+            <SheetContent side="left" className="p-0 border-r w-[300px] max-w-[300px]">
               <div className="flex justify-between items-center px-4 py-3 border-b">
                 <h1 className="text-xl font-bold text-primary">TaskSheet</h1>
                 <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>

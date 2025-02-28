@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, LogOut, Crown, Heart, Flag } from "lucide-react";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, LogOut, Crown, Heart } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
@@ -144,9 +144,6 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
         <div className="flex flex-col items-center justify-center text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by NEO TECHINFRA
-          </div>
-          <div className="flex items-center gap-1 mt-1">
-            INDIA <Flag className="h-3 w-3 ml-1" />
           </div>
         </div>
       </SidebarFooter>
