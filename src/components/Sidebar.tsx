@@ -42,7 +42,7 @@ const Sidebar = () => {
     <SidebarContainer>
       <SidebarContent>
         <div className="px-6 py-4">
-          <h1 className="text-2xl font-bold text-primary">TaskFlow</h1>
+          <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>Time Frames</SidebarGroupLabel>

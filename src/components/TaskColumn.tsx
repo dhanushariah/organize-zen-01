@@ -5,13 +5,13 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Plus, X, Flag, Edit } from "lucide-react";
+import { Plus, X, Flag, Edit, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface Task {
   id: string;
   title: string;
-  tag: "work" | "personal";
+  tag: string;
 }
 
 interface TaskColumnProps {
@@ -20,12 +20,17 @@ interface TaskColumnProps {
   isLast?: boolean;
 }
 
+const DEFAULT_TAGS = ["work", "personal", "home", "study", "health"];
+
 const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [editingTask, setEditingTask] = useState<string | null>(null);
   const [editingTag, setEditingTag] = useState<string | null>(null);
+  const [availableTags, setAvailableTags] = useState<string[]>(DEFAULT_TAGS);
+  const [newTagName, setNewTagName] = useState("");
+  const [addingNewTag, setAddingNewTag] = useState(false);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -50,7 +55,7 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
       const newTask = {
         id: `${Date.now()}`,
         title: newTaskTitle,
-        tag: "personal" as const
+        tag: "personal"
       };
       setTasks([...tasks, newTask]);
       setNewTaskTitle("");
@@ -66,7 +71,7 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
     setEditingTask(null);
   };
 
-  const handleUpdateTag = (taskId: string, newTag: "work" | "personal") => {
+  const handleUpdateTag = (taskId: string, newTag: string) => {
     setTasks(tasks.map(task => 
       task.id === taskId 
         ? { ...task, tag: newTag }
@@ -80,10 +85,18 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
     setCompletedTasks(prev => prev.filter(id => id !== taskId));
   };
 
+  const handleAddNewTag = () => {
+    if (newTagName.trim() && !availableTags.includes(newTagName.toLowerCase())) {
+      setAvailableTags([...availableTags, newTagName.toLowerCase()]);
+      setNewTagName("");
+      setAddingNewTag(false);
+    }
+  };
+
   return (
-    <div className="flex-1 min-w-[280px] md:min-w-[300px] relative">
+    <div className="flex-1 min-w-[280px] md:min-w-[300px] max-w-md relative">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg md:text-xl font-semibold text-secondary">{title}</h2>
+        <h2 className="text-lg md:text-xl font-bold">{title}</h2>
         {progress === 100 && (
           <div className="flex items-center">
             <Flag className="h-5 w-5 text-primary mr-1" />
@@ -93,7 +106,10 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
       </div>
       
       <div className="mb-4">
-        <Progress value={progress} className="h-2" />
+        <Progress 
+          value={progress} 
+          className={`h-2 rounded-full overflow-hidden ${progress > 0 ? 'progress-bar-glow' : ''}`}
+        />
         <div className="flex justify-between mt-1">
           <span className="text-xs text-muted-foreground">Progress</span>
           <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
@@ -136,28 +152,57 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
                     </label>
                     <div className="flex items-center gap-2 shrink-0">
                       {editingTag === task.id ? (
-                        <div className="flex gap-1">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleUpdateTag(task.id, "work")}
-                            className="h-6 px-2 text-xs"
-                          >
-                            Work
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleUpdateTag(task.id, "personal")}
-                            className="h-6 px-2 text-xs"
-                          >
-                            Personal
-                          </Button>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap gap-1 max-w-[150px]">
+                            {availableTags.map(tag => (
+                              <Button 
+                                key={tag}
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => handleUpdateTag(task.id, tag)}
+                                className="h-6 px-2 text-xs"
+                              >
+                                {tag}
+                              </Button>
+                            ))}
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setAddingNewTag(true)}
+                              className="h-6 px-2 text-xs"
+                            >
+                              <Plus className="h-3 w-3 mr-1" />
+                              New
+                            </Button>
+                          </div>
+                          
+                          {addingNewTag && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <Input
+                                placeholder="Tag name"
+                                value={newTagName}
+                                onChange={(e) => setNewTagName(e.target.value)}
+                                className="h-6 text-xs"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    handleAddNewTag();
+                                  }
+                                }}
+                              />
+                              <Button
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={handleAddNewTag}
+                              >
+                                <Check className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="flex items-center gap-1">
                           <span 
-                            className={`tag tag-${task.tag} cursor-pointer flex items-center`}
+                            className={`tag tag-${task.tag in DEFAULT_TAGS ? task.tag : 'personal'} cursor-pointer flex items-center`}
                             onClick={() => setEditingTag(task.id)}
                           >
                             {task.tag}
@@ -203,7 +248,7 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
         </div>
       </div>
       {!isLast && (
-        <div className="hidden lg:block absolute right-0 top-0 h-full">
+        <div className="hidden lg:block absolute top-1/2 right-0 -translate-y-1/2 h-[70%]">
           <Separator orientation="vertical" className="h-full" />
         </div>
       )}

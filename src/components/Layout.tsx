@@ -15,7 +15,7 @@ const Layout = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background text-foreground transition-colors">
+      <div className="min-h-screen flex w-full bg-background text-foreground transition-colors font-poppins">
         <Sidebar />
         <main className="flex-1 p-4 md:p-6 animate-fade-in">
           <div className="fixed top-4 right-4 z-50">
