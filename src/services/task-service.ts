@@ -2,7 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Task, Tables } from "@/types/task";
 import { ColumnTasks, TaskHistory } from "@/types/daily-task";
-import { format } from "date-fns";
+import { Json } from "@/integrations/supabase/types";
 
 // Fetch tasks from Supabase
 export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> => {
@@ -62,7 +62,7 @@ export const fetchTaskHistory = async (userId: string): Promise<TaskHistory[]> =
       data.forEach((item: Tables['task_history']) => {
         history.push({
           date: item.date,
-          tasks: item.tasks as ColumnTasks
+          tasks: item.tasks as unknown as ColumnTasks
         });
       });
     }
@@ -124,6 +124,9 @@ export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Prom
 // Save task history to Supabase
 export const saveTaskHistory = async (userId: string, date: string, taskData: ColumnTasks): Promise<boolean> => {
   try {
+    // Convert ColumnTasks to Json type for Supabase
+    const tasksJson = taskData as unknown as Json;
+    
     // Check if history for this date already exists
     const { data, error: fetchError } = await supabase
       .from('task_history')
@@ -139,7 +142,7 @@ export const saveTaskHistory = async (userId: string, date: string, taskData: Co
       // Update existing record
       const { error: updateError } = await supabase
         .from('task_history')
-        .update({ tasks: taskData })
+        .update({ tasks: tasksJson })
         .eq('id', data[0].id);
         
       if (updateError) {
@@ -152,7 +155,7 @@ export const saveTaskHistory = async (userId: string, date: string, taskData: Co
         .insert({
           user_id: userId,
           date,
-          tasks: taskData
+          tasks: tasksJson
         });
         
       if (insertError) {
