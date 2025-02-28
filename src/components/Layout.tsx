@@ -2,10 +2,10 @@
 import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Menu } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import Sidebar from "./Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -20,7 +20,10 @@ const Layout = ({ isMobileVersion = false }: LayoutProps) => {
   const shouldUseMobileLayout = isMobileVersion || isMobile;
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    const themeOrder = ["light", "dark", "obsidian", "system"];
+    const currentIndex = themeOrder.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themeOrder.length;
+    setTheme(themeOrder[nextIndex] as any);
   };
 
   return (
@@ -37,9 +40,10 @@ const Layout = ({ isMobileVersion = false }: LayoutProps) => {
                   size="icon"
                   onClick={toggleTheme}
                   className="bg-background"
+                  title={`Current theme: ${theme}`}
                 >
-                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 obsidian:-rotate-90 obsidian:scale-0" />
+                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 obsidian:rotate-0 obsidian:scale-100" />
                   <span className="sr-only">Toggle theme</span>
                 </Button>
               </div>
@@ -60,6 +64,13 @@ const Layout = ({ isMobileVersion = false }: LayoutProps) => {
                       </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 w-[80%] sm:w-[350px]">
+                      <div className="flex justify-end p-2">
+                        <SheetClose asChild>
+                          <Button variant="ghost" size="icon">
+                            <X className="h-5 w-5" />
+                          </Button>
+                        </SheetClose>
+                      </div>
                       <Sidebar isMobile={true} onNavigate={() => setIsSidebarOpen(false)} />
                     </SheetContent>
                   </Sheet>
@@ -73,9 +84,10 @@ const Layout = ({ isMobileVersion = false }: LayoutProps) => {
                     size="icon"
                     onClick={toggleTheme}
                     className="ml-2"
+                    title={`Current theme: ${theme}`}
                   >
-                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 obsidian:-rotate-90 obsidian:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 obsidian:rotate-0 obsidian:scale-100" />
                     <span className="sr-only">Toggle theme</span>
                   </Button>
                 </div>

@@ -43,11 +43,6 @@ const items = [
     path: "/analytics",
     icon: BarChart,
   },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: Settings,
-  }
 ];
 
 const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
@@ -77,12 +72,29 @@ const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
                       className="flex items-center gap-3"
                       onClick={onNavigate}
                     >
-                      <item.icon className="w-6 h-6" />
+                      <item.icon className="w-5 h-5" />
                       <span className={`text-base ${isMobile ? "font-medium" : ""}`}>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6" : "px-3 py-1 mt-10"}>
+                <SidebarMenuButton
+                  asChild
+                  data-active={location.pathname === "/settings"}
+                  className={`sidebar-nav-button ${isMobile ? "h-10" : ""}`}
+                >
+                  <Link 
+                    to="/settings"
+                    className="flex items-center gap-3"
+                    onClick={onNavigate}
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

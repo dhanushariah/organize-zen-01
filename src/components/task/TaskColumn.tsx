@@ -215,11 +215,7 @@ const TaskColumn = ({
           </Button>
         </div>
       </div>
-      {!isLast && (
-        <div className="hidden lg:block absolute top-1/2 right-0 -translate-y-1/2 h-[70%]">
-          <Separator orientation="vertical" className="h-full" />
-        </div>
-      )}
+      {/* Removed the separation line as requested */}
     </div>
   );
 };

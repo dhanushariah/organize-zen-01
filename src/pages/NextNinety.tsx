@@ -13,9 +13,9 @@ const mockTasks = [
 const NextNinety = () => {
   return (
     <div className="space-y-8">
-      <div>
+      <div className="text-center">
         <h1 className="text-4xl font-bold">Next 90 Days</h1>
-        <p className="text-secondary mt-2 date-text">Long-term planning made simple</p>
+        <p className="text-muted-foreground mt-2">Long-term planning made simple</p>
       </div>
       <div className="flex justify-center">
         <TaskColumn 

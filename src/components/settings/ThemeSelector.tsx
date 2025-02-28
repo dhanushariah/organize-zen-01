@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Sun, Moon, Laptop } from "lucide-react";
+import { Sun, Moon, Laptop, Gem } from "lucide-react";
 
 export const ThemeSelector = () => {
   const { theme, setTheme } = useTheme();
@@ -19,8 +19,8 @@ export const ThemeSelector = () => {
         
         <RadioGroup 
           value={theme} 
-          onValueChange={(value) => setTheme(value as "light" | "dark" | "system")}
-          className="grid grid-cols-3 gap-4"
+          onValueChange={(value) => setTheme(value as "light" | "dark" | "system" | "obsidian")}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           <div>
             <RadioGroupItem 
@@ -64,6 +64,21 @@ export const ThemeSelector = () => {
             >
               <Laptop className="mb-2 h-6 w-6" />
               <span>System</span>
+            </Label>
+          </div>
+          
+          <div>
+            <RadioGroupItem 
+              value="obsidian" 
+              id="obsidian" 
+              className="sr-only" 
+            />
+            <Label 
+              htmlFor="obsidian"
+              className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer ${theme === 'obsidian' ? 'border-primary' : ''}`}
+            >
+              <Gem className="mb-2 h-6 w-6" />
+              <span>Obsidian</span>
             </Label>
           </div>
         </RadioGroup>

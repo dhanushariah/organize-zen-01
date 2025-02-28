@@ -33,6 +33,17 @@
     --sidebar-accent: 0 0% 94%;
     --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-ring: 240 5% 64.9%;
+    
+    /* Obsidian theme */
+    --obsidian-bg: 250 20% 10%;
+    --obsidian-fg: 255 100% 100%;
+    --obsidian-accent: 260 70% 70%;
+    --obsidian-accent-glow: 260 70% 70%;
+    --obsidian-card: 250 15% 15%;
+    --obsidian-card-fg: 255 100% 100%;
+    --obsidian-muted: 250 10% 30%;
+    --obsidian-muted-fg: 250 5% 80%;
+    --obsidian-border: 250 20% 20%;
   }
 
   .dark {
@@ -63,6 +74,103 @@
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-ring: 240 4.9% 83.9%;
+  }
+  
+  .obsidian {
+    --background: var(--obsidian-bg);
+    --foreground: var(--obsidian-fg);
+    --card: var(--obsidian-card);
+    --card-foreground: var(--obsidian-card-fg);
+    --popover: var(--obsidian-card);
+    --popover-foreground: var(--obsidian-card-fg);
+    --primary: var(--obsidian-accent);
+    --primary-foreground: 0 0% 100%;
+    --secondary: var(--obsidian-muted);
+    --secondary-foreground: var(--obsidian-muted-fg);
+    --muted: var(--obsidian-muted);
+    --muted-foreground: var(--obsidian-muted-fg);
+    --accent: var(--obsidian-accent);
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--obsidian-border);
+    --input: var(--obsidian-border);
+    --ring: var(--obsidian-accent);
+    
+    /* Sidebar specific */
+    --sidebar: var(--obsidian-bg);
+    --sidebar-foreground: var(--obsidian-fg);
+    --sidebar-border: var(--obsidian-border);
+    --sidebar-accent: var(--obsidian-muted);
+    --sidebar-accent-foreground: var(--obsidian-fg);
+    --sidebar-ring: var(--obsidian-accent);
+  }
+}
+
+@layer components {
+  /* Sidebar nav button active state */
+  .sidebar-nav-button[data-active="true"] {
+    @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+  }
+  
+  /* Task Column Layout - Remove borders but keep spacing */
+  .task-columns-container {
+    @apply grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .task-column {
+    @apply bg-card rounded-lg shadow-sm p-4;
+  }
+  
+  /* Mobile sidebar adjustments */
+  .mobile-sidebar .sidebar-group-label {
+    @apply text-base font-medium opacity-100 mt-0 !important;
+  }
+  
+  /* Tag styling */
+  .tag {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .tag-work {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300;
+  }
+  
+  .tag-personal {
+    @apply bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300;
+  }
+  
+  .tag-health {
+    @apply bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300;
+  }
+  
+  .tag-finance {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300;
+  }
+  
+  .tag-education {
+    @apply bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300;
+  }
+  
+  /* Obsidian theme specific styles */
+  .obsidian .progress-bar {
+    @apply bg-transparent relative overflow-hidden;
+    box-shadow: 0 0 5px hsl(var(--obsidian-accent-glow) / 0.3), 0 0 10px hsl(var(--obsidian-accent-glow) / 0.2);
+  }
+  
+  .obsidian .progress-bar-indicator {
+    @apply bg-primary;
+    box-shadow: 0 0 10px hsl(var(--obsidian-accent-glow)), 0 0 20px hsl(var(--obsidian-accent-glow) / 0.7);
+  }
+  
+  .obsidian .checkbox-item {
+    @apply border-primary;
+    box-shadow: 0 0 5px hsl(var(--obsidian-accent-glow) / 0.5);
+  }
+  
+  .obsidian .checkbox-item[data-state="checked"] {
+    @apply bg-primary;
+    box-shadow: 0 0 8px hsl(var(--obsidian-accent-glow)), 0 0 15px hsl(var(--obsidian-accent-glow) / 0.7);
   }
 }
 
@@ -113,23 +221,18 @@
   .tag-teal {
     @apply bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300 border-teal-200 dark:border-teal-800;
   }
-}
-
-/* Sidebar nav button active state */
-.sidebar-nav-button[data-active="true"] {
-  @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
-}
-
-/* Task Column Layout - Remove borders but keep spacing */
-.task-columns-container {
-  @apply grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
-}
-
-.task-column {
-  @apply bg-card rounded-lg shadow-sm p-4;
-}
-
-/* Mobile sidebar adjustments */
-.mobile-sidebar .sidebar-group-label {
-  @apply text-base font-medium opacity-100 mt-0 !important;
+  
+  /* Add animations for glowing */
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  .glow-effect {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
 }

@@ -4,7 +4,7 @@
 import * as React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 
-type Theme = "dark" | "light" | "system"
+type Theme = "dark" | "light" | "system" | "obsidian"
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -38,7 +38,7 @@ export function ThemeProvider({
     const root = window.document.documentElement
 
     // Remove previous classes
-    root.classList.remove("light", "dark")
+    root.classList.remove("light", "dark", "obsidian")
 
     if (theme === "system" && enableSystem) {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")

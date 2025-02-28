@@ -71,7 +71,7 @@ export const TaskItem = ({
           id={task.id}
           checked={isCompleted}
           onCheckedChange={onToggle}
-          className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+          className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
         />
         <div className="flex flex-1 items-start justify-between">
           {editingTask ? (
@@ -127,11 +127,11 @@ export const TaskItem = ({
                 ) : (
                   <div className="flex items-center gap-1">
                     <span 
-                      className={`tag ${task.tagColor ? `tag-${task.tagColor}` : `tag-${task.tag}`} cursor-pointer flex items-center`}
+                      className={`tag ${task.tagColor ? `tag-${task.tagColor}` : `tag-${task.tag}`} cursor-pointer`}
                       onClick={() => setEditingTag(task.id)}
                     >
                       {task.tag}
-                      <Edit className="ml-1 h-3 w-3" />
+                      <Edit className="ml-1 h-3 w-3 inline" />
                     </span>
                     <Button
                       variant="ghost"
