@@ -61,7 +61,10 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
       <SidebarContent>
         {!isMobile && (
           <div className="px-6 py-6 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
+            <h1 className="text-2xl font-bold text-primary flex items-center">
+              TaskSheet
+              <span className="ml-2 text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Pro</span>
+            </h1>
           </div>
         )}
         <SidebarGroup>

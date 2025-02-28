@@ -41,7 +41,10 @@ const Layout = () => {
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Open menu</span>
               </Button>
-              <h1 className="text-xl font-bold text-primary">TaskSheet</h1>
+              <h1 className="text-xl font-bold text-primary flex items-center">
+                TaskSheet
+                <span className="ml-2 text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Pro</span>
+              </h1>
               <div className="flex gap-2">
                 <ThemeToggle />
                 <Button variant="ghost" size="icon" onClick={handleLogout}>
@@ -67,7 +70,10 @@ const Layout = () => {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetContent side="left" className="p-0 border-r w-[300px] max-w-[300px]">
               <div className="flex justify-between items-center px-4 py-3 border-b">
-                <h1 className="text-xl font-bold text-primary">TaskSheet</h1>
+                <h1 className="text-xl font-bold text-primary flex items-center">
+                  TaskSheet
+                  <span className="ml-2 text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Pro</span>
+                </h1>
                 <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                   <ChevronLeft className="h-5 w-5" />
                 </Button>

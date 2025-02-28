@@ -1,4 +1,5 @@
 
+
 @layer utilities {
   /* Add animation for fade-in effect */
   .animate-fade-in {
@@ -59,8 +60,8 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-ring: 212 97% 85%;
     
-    /* Set background to #030637 */
-    --background: 238 90% 11%;
+    /* Set background to #02042a */
+    --background: 234 94% 9%;
   }
   
   [data-theme="night"] .task-column {
@@ -75,3 +76,4 @@
     @apply bg-secondary;
   }
 }
+
