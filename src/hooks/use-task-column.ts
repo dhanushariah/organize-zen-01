@@ -10,16 +10,16 @@ interface UseTaskColumnProps {
   columnId: string;
   onMoveTask?: (taskId: string, sourceColumn: string, targetColumn: string) => void;
   onTaskUpdate?: (task: Task) => void;
-  columnRef: React.RefObject<HTMLDivElement>;
 }
 
-export function useTaskColumnLogic({
+export function useTaskColumn({
   initialTasks,
   columnId,
   onMoveTask,
-  onTaskUpdate,
-  columnRef
+  onTaskUpdate
 }: UseTaskColumnProps) {
+  const columnRef = useRef<HTMLDivElement>(null);
+  
   // Get all state from the useTaskState hook
   const {
     tasks,
@@ -38,7 +38,7 @@ export function useTaskColumnLogic({
   // Get task action handlers
   const {
     toggleTask,
-    handleAddTask: addTask,
+    handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
     toggleTaskTimer
@@ -61,13 +61,10 @@ export function useTaskColumnLogic({
     onMoveTask
   });
 
-  // Wrapper for addTask to use the current newTaskTitle
-  const handleAddTask = () => {
-    addTask(newTaskTitle);
-    setNewTaskTitle("");
-  };
-
   return {
+    // Refs
+    columnRef,
+    
     // State
     tasks,
     setTasks,
@@ -85,11 +82,11 @@ export function useTaskColumnLogic({
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
+    toggleTaskTimer,
     
     // Drag and Drop
     handleDragStart,
     handleDragEnd,
-    handleMoveTaskToColumn,
-    toggleTaskTimer
+    handleMoveTaskToColumn
   };
 }

@@ -1,11 +1,8 @@
 
-import { useRef } from "react";
 import { Task } from "@/types/task";
 import { TaskItem } from "./TaskItem";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useTaskState } from "@/hooks/task-column/use-task-state";
-import { useTaskActions } from "@/hooks/task-column/use-task-actions";
-import { useDragDrop } from "@/hooks/task-column/use-drag-drop";
+import { useTaskColumn } from "@/hooks/use-task-column";
 import TaskColumnHeader from "./TaskColumnHeader";
 import TaskColumnProgress from "./TaskColumnProgress";
 import AddTaskInput from "./AddTaskInput";
@@ -30,53 +27,37 @@ const TaskColumn = ({
   onTaskUpdate
 }: TaskColumnProps) => {
   const isMobile = useIsMobile();
-  const columnRef = useRef<HTMLDivElement>(null);
   
-  // Use the state hook
+  // Use the comprehensive task column hook
   const {
+    columnRef,
     tasks,
-    setTasks,
     completedTasks,
-    setCompletedTasks,
     progress,
     newTaskTitle,
     setNewTaskTitle,
     editingTask,
     setEditingTask,
     draggedTask,
-    setDraggedTask
-  } = useTaskState(initialTasks);
-
-  // Use the actions hook
-  const {
     toggleTask,
-    handleAddTask: addTask,
+    handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
-    toggleTaskTimer
-  } = useTaskActions({
-    tasks,
-    setTasks,
-    completedTasks,
-    setCompletedTasks,
-    onTaskUpdate
-  });
-
-  // Use the drag and drop hook
-  const {
+    toggleTaskTimer,
     handleDragStart,
     handleDragEnd,
     handleMoveTaskToColumn
-  } = useDragDrop({
+  } = useTaskColumn({
+    initialTasks,
     columnId,
-    columnRef,
-    onMoveTask
+    onMoveTask,
+    onTaskUpdate
   });
 
-  // Wrapper for addTask to use the current newTaskTitle
-  const handleAddTask = () => {
+  // Wrapper for addTask to check for empty inputs
+  const onAddTask = () => {
     if (newTaskTitle.trim()) {
-      addTask(newTaskTitle);
+      handleAddTask(newTaskTitle);
       setNewTaskTitle("");
     }
   };
@@ -116,7 +97,7 @@ const TaskColumn = ({
         <AddTaskInput 
           newTaskTitle={newTaskTitle}
           setNewTaskTitle={setNewTaskTitle}
-          onAddTask={handleAddTask}
+          onAddTask={onAddTask}
         />
       </div>
     </div>
