@@ -74,7 +74,7 @@ export function useTaskColumnLogic({
     tasks,
     setTasks,
     availableTags,
-    setAvailableTasks,
+    setAvailableTags,
     onTaskUpdate
   });
 
