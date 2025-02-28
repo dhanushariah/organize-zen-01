@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Plus, X, Flag, Edit, Check, Trash2, Palette, MoveHorizontal, ArrowRightLeft } from "lucide-react";
+import { Plus, X, Flag, Edit, Check, Trash2, Palette, MoveHorizontal, ArrowRightLeft, Clock } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -20,6 +20,10 @@ interface Task {
   title: string;
   tag: string;
   tagColor?: string;
+  startTime?: Date;
+  endTime?: Date;
+  timerRunning?: boolean;
+  duration?: number; // duration in seconds
 }
 
 interface TaskColumnProps {
@@ -29,6 +33,7 @@ interface TaskColumnProps {
   onMoveTask?: (taskId: string, sourceColumn: string, targetColumn: string) => void;
   columnId: string;
   otherColumns?: { id: string, title: string }[];
+  onTaskUpdate?: (task: Task) => void;
 }
 
 const DEFAULT_TAGS = ["work", "personal", "home", "study", "health"];
@@ -40,7 +45,8 @@ const TaskColumn = ({
   isLast, 
   onMoveTask,
   columnId,
-  otherColumns = []
+  otherColumns = [],
+  onTaskUpdate
 }: TaskColumnProps) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
@@ -51,8 +57,9 @@ const TaskColumn = ({
   const [newTagName, setNewTagName] = useState("");
   const [addingNewTag, setAddingNewTag] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+  const [showColorPicker, setShowColorPicker] = useState<string | null>(null);
   const [draggedTask, setDraggedTask] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string | null>(null);
   const columnRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
@@ -119,6 +126,27 @@ const TaskColumn = ({
         ? prev.filter(id => id !== taskId)
         : [...prev, taskId]
     );
+    
+    // Update the task's endTime if completed, or remove endTime if uncompleted
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const isCompleting = !completedTasks.includes(taskId);
+        const updatedTask = {
+          ...task,
+          endTime: isCompleting ? new Date() : undefined,
+          timerRunning: isCompleting ? false : task.timerRunning
+        };
+        
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
   };
 
   const handleAddTask = () => {
@@ -128,41 +156,74 @@ const TaskColumn = ({
         title: newTaskTitle,
         tag: "personal"
       };
-      setTasks([...tasks, newTask]);
+      const updatedTasks = [...tasks, newTask];
+      setTasks(updatedTasks);
       setNewTaskTitle("");
+      
+      if (onTaskUpdate) {
+        onTaskUpdate(newTask);
+      }
     }
   };
 
   const handleUpdateTask = (taskId: string, newTitle: string) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId 
-        ? { ...task, title: newTitle }
-        : task
-    ));
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedTask = { ...task, title: newTitle };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
     setEditingTask(null);
   };
 
   const handleUpdateTag = (taskId: string, newTag: string) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId 
-        ? { ...task, tag: newTag }
-        : task
-    ));
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedTask = { ...task, tag: newTag };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
     setEditingTag(null);
-    setShowColorPicker(false);
+    setShowColorPicker(null);
   };
 
   const handleUpdateTagColor = (taskId: string, color: string) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId 
-        ? { ...task, tagColor: color }
-        : task
-    ));
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedTask = { ...task, tagColor: color };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
   };
 
   const handleDeleteTask = (taskId: string) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(updatedTasks);
     setCompletedTasks(prev => prev.filter(id => id !== taskId));
+    
+    // Notify parent component
+    const taskToDelete = tasks.find(task => task.id === taskId);
+    if (taskToDelete && onTaskUpdate) {
+      onTaskUpdate({...taskToDelete, deleted: true});
+    }
   };
 
   const handleAddNewTag = () => {
@@ -175,14 +236,23 @@ const TaskColumn = ({
 
   const handleDeleteTag = (tagToDelete: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Update available tags
     setAvailableTags(availableTags.filter(tag => tag !== tagToDelete));
     
     // Update tasks with the deleted tag to use 'personal' tag instead
-    setTasks(tasks.map(task => 
-      task.tag === tagToDelete 
-        ? { ...task, tag: "personal" }
-        : task
-    ));
+    const updatedTasks = tasks.map(task => {
+      if (task.tag === tagToDelete) {
+        const updatedTask = { ...task, tag: "personal" };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
   };
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
@@ -209,7 +279,7 @@ const TaskColumn = ({
 
   const closeTagEditor = () => {
     setEditingTag(null);
-    setShowColorPicker(false);
+    setShowColorPicker(null);
     setAddingNewTag(false);
   };
 
@@ -219,6 +289,39 @@ const TaskColumn = ({
     }
   };
 
+  const toggleTaskTimer = (taskId: string) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const now = new Date();
+        const isStarting = !task.timerRunning;
+        
+        const updatedTask = {
+          ...task,
+          timerRunning: isStarting,
+          startTime: isStarting ? now : task.startTime,
+          duration: task.duration || 0
+        };
+        
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
+  };
+
+  // Sort tasks based on sortBy state
+  const sortedTasks = [...tasks].sort((a, b) => {
+    if (sortBy === null) return 0;
+    if (sortBy === a.tag) return -1;
+    if (sortBy === b.tag) return 1;
+    return 0;
+  });
+
   return (
     <div 
       className="flex-1 min-w-[280px] md:min-w-[300px] max-w-md relative"
@@ -226,12 +329,33 @@ const TaskColumn = ({
     >
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg md:text-xl font-bold">{title}</h2>
-        {progress === 100 && (
-          <div className="flex items-center">
-            <Flag className="h-5 w-5 text-primary mr-1" />
-            <span className="text-sm text-primary font-medium">Complete!</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Sort by tag dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8">
+                {sortBy ? `Sorted: ${sortBy}` : "Sort by Tag"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setSortBy(null)}>
+                No sorting
+              </DropdownMenuItem>
+              {availableTags.map(tag => (
+                <DropdownMenuItem key={tag} onClick={() => setSortBy(tag)}>
+                  {tag}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {progress === 100 && (
+            <div className="flex items-center">
+              <Flag className="h-5 w-5 text-primary mr-1" />
+              <span className="text-sm text-primary font-medium">Complete!</span>
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="mb-4">
@@ -246,7 +370,7 @@ const TaskColumn = ({
       </div>
       
       <div className="space-y-3 md:space-y-4">
-        {tasks.map((task) => (
+        {sortedTasks.map((task) => (
           <Card 
             key={task.id} 
             className="task-card p-3 md:p-4 cursor-move"
@@ -287,29 +411,42 @@ const TaskColumn = ({
                       >
                         {task.title}
                       </label>
-                      {otherColumns && otherColumns.length > 0 && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-6 w-6"
-                            >
-                              <ArrowRightLeft className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            {otherColumns.map(column => (
-                              <DropdownMenuItem 
-                                key={column.id}
-                                onClick={() => handleMoveTaskToColumn(task.id, column.id)}
+                      <div className="flex items-center gap-1">
+                        {/* Task timer button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => toggleTaskTimer(task.id)}
+                        >
+                          <Clock className={`h-3 w-3 ${task.timerRunning ? 'text-primary animate-pulse' : ''}`} />
+                        </Button>
+                        
+                        {/* Move task dropdown */}
+                        {otherColumns && otherColumns.length > 0 && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-6 w-6"
                               >
-                                Move to {column.title}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
+                                <ArrowRightLeft className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              {otherColumns.map(column => (
+                                <DropdownMenuItem 
+                                  key={column.id}
+                                  onClick={() => handleMoveTaskToColumn(task.id, column.id)}
+                                >
+                                  Move to {column.title}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {editingTag === task.id ? (
@@ -337,8 +474,11 @@ const TaskColumn = ({
                               >
                                 {tag}
                                 <Trash2 
-                                  className="h-3 w-3 text-destructive" 
-                                  onClick={(e) => handleDeleteTag(tag, e)}
+                                  className="h-3 w-3 text-destructive ml-1" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteTag(tag, e);
+                                  }}
                                 />
                               </Button>
                             ))}
@@ -380,18 +520,18 @@ const TaskColumn = ({
                             <Button 
                               variant="outline"
                               size="sm"
-                              onClick={() => setShowColorPicker(!showColorPicker)}
+                              onClick={() => setShowColorPicker(showColorPicker === task.id ? null : task.id)}
                               className="h-6 px-2 text-xs flex items-center w-full justify-between"
                             >
                               <span className="flex items-center">
                                 <Palette className="h-3 w-3 mr-1" />
                                 Choose Color
                               </span>
-                              {showColorPicker ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+                              {showColorPicker === task.id ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
                             </Button>
                           </div>
                           
-                          {showColorPicker && (
+                          {showColorPicker === task.id && (
                             <div className="mt-1 p-2 bg-background rounded-md border border-border">
                               <div className="flex flex-wrap gap-2">
                                 {TAG_COLORS.map(color => (

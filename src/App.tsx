@@ -12,6 +12,7 @@ import Daily from "./pages/Daily";
 import Weekly from "./pages/Weekly";
 import Monthly from "./pages/Monthly";
 import NextNinety from "./pages/NextNinety";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ const App = () => {
                 <Route path="weekly" element={<Weekly />} />
                 <Route path="monthly" element={<Monthly />} />
                 <Route path="next-90" element={<NextNinety />} />
+                <Route path="analytics" element={<Analytics />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

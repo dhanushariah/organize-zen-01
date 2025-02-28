@@ -1,18 +1,29 @@
-
 import TaskColumn from "@/components/TaskColumn";
-import { format } from "date-fns";
-import { useState } from "react";
+import { format, subDays } from "date-fns";
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, History } from "lucide-react";
 
-type TaskType = {
+type Task = {
   id: string;
   title: string;
   tag: string;
   tagColor?: string;
+  startTime?: Date;
+  endTime?: Date;
+  timerRunning?: boolean;
+  duration?: number;
 };
 
 type ColumnTasks = {
-  [key: string]: TaskType[];
+  [key: string]: Task[];
 };
+
+type TaskHistory = {
+  date: string;
+  tasks: ColumnTasks;
+}
 
 const initialTasks = {
   nonNegotiables: [
@@ -31,25 +42,92 @@ const initialTasks = {
 
 const Daily = () => {
   const [tasks, setTasks] = useState<ColumnTasks>(initialTasks);
-  const today = new Date();
-  const dateString = format(today, "EEEE, MMMM do, yyyy");
+  const [taskHistory, setTaskHistory] = useState<TaskHistory[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [activeTab, setActiveTab] = useState("today");
+  const dateString = format(currentDate, "EEEE, MMMM do, yyyy");
+  
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('taskHistory');
+    if (savedHistory) {
+      try {
+        setTaskHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error("Failed to parse task history", e);
+      }
+    }
+  }, []);
+  
+  useEffect(() => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const historyIndex = taskHistory.findIndex(h => h.date === today);
+    
+    let updatedHistory = [...taskHistory];
+    if (historyIndex >= 0) {
+      updatedHistory[historyIndex] = {
+        date: today,
+        tasks: { ...tasks }
+      };
+    } else {
+      updatedHistory.push({
+        date: today,
+        tasks: { ...tasks }
+      });
+    }
+    
+    if (updatedHistory.length > 30) {
+      updatedHistory = updatedHistory.slice(-30);
+    }
+    
+    setTaskHistory(updatedHistory);
+    localStorage.setItem('taskHistory', JSON.stringify(updatedHistory));
+  }, [tasks]);
+  
+  const handlePreviousDay = () => {
+    setCurrentDate(prev => subDays(prev, 1));
+    setActiveTab("history");
+  };
+  
+  const handleNextDay = () => {
+    const tomorrow = subDays(new Date(), -1);
+    if (currentDate < tomorrow) {
+      setCurrentDate(prev => subDays(prev, -1));
+    } else {
+      setCurrentDate(new Date());
+      setActiveTab("today");
+    }
+  };
 
   const handleMoveTask = (taskId: string, sourceColumnId: string, targetColumnId: string) => {
-    // Find the task in the source column
     const taskToMove = tasks[sourceColumnId].find(task => task.id === taskId);
     
     if (!taskToMove) return;
     
-    // Create updated task collections
     const updatedTasks = { ...tasks };
     
-    // Remove from source column
     updatedTasks[sourceColumnId] = tasks[sourceColumnId].filter(task => task.id !== taskId);
     
-    // Add to target column
     updatedTasks[targetColumnId] = [...tasks[targetColumnId], taskToMove];
     
-    // Update state
+    setTasks(updatedTasks);
+  };
+  
+  const handleTaskUpdate = (updatedTask: Task) => {
+    const updatedTasks = { ...tasks };
+    
+    Object.keys(updatedTasks).forEach(columnId => {
+      const columnTasks = updatedTasks[columnId];
+      const taskIndex = columnTasks.findIndex(task => task.id === updatedTask.id);
+      
+      if (taskIndex >= 0) {
+        if ('deleted' in updatedTask) {
+          updatedTasks[columnId] = columnTasks.filter(task => task.id !== updatedTask.id);
+        } else {
+          updatedTasks[columnId][taskIndex] = updatedTask;
+        }
+      }
+    });
+    
     setTasks(updatedTasks);
   };
 
@@ -58,23 +136,69 @@ const Daily = () => {
     { id: "today", title: "Today" },
     { id: "priority", title: "Priority" }
   ];
+  
+  const getHistoricalTasks = () => {
+    const dateKey = format(currentDate, 'yyyy-MM-dd');
+    const historyEntry = taskHistory.find(h => h.date === dateKey);
+    return historyEntry?.tasks || {
+      nonNegotiables: [],
+      today: [],
+      priority: []
+    };
+  };
+  
+  const displayTasks = activeTab === "today" ? tasks : getHistoricalTasks();
+  const isToday = format(currentDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
 
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold">Daily Tasks</h1>
-        <p className="text-secondary mt-2 date-text">{dateString}</p>
+        <div className="flex items-center justify-center mt-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handlePreviousDay}
+            className="h-8 w-8"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <p className="text-secondary date-text px-2">{dateString}</p>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleNextDay}
+            disabled={isToday}
+            className="h-8 w-8"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+          <TabsList className="mx-auto">
+            <TabsTrigger value="today" disabled={!isToday}>
+              Today
+            </TabsTrigger>
+            <TabsTrigger value="history">
+              <History className="h-4 w-4 mr-1" />
+              History
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
+      
       <div className="flex gap-8 overflow-x-auto pb-4 relative">
         {columns.map((column, index) => (
           <TaskColumn
             key={column.id}
             title={column.title}
-            tasks={tasks[column.id]}
+            tasks={displayTasks[column.id] || []}
             isLast={index === columns.length - 1}
-            onMoveTask={handleMoveTask}
+            onMoveTask={activeTab === "today" ? handleMoveTask : undefined}
             columnId={column.id}
-            otherColumns={columns.filter(c => c.id !== column.id)}
+            otherColumns={activeTab === "today" ? columns.filter(c => c.id !== column.id) : []}
+            onTaskUpdate={activeTab === "today" ? handleTaskUpdate : undefined}
           />
         ))}
       </div>

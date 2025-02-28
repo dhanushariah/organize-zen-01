@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
@@ -38,6 +38,11 @@ const items = [
     path: "/next-90",
     icon: Clock,
   },
+  {
+    title: "Analytics",
+    path: "/analytics",
+    icon: BarChart,
+  }
 ];
 
 const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
@@ -52,13 +57,13 @@ const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
         <SidebarGroup>
           <SidebarGroupLabel className="text-base px-6 mb-2">Time Frames</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className={isMobile ? "flex flex-col gap-4 py-4" : ""}>
               {items.map((item) => (
-                <SidebarMenuItem key={item.path} className="px-3 py-1">
+                <SidebarMenuItem key={item.path} className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
                   <SidebarMenuButton
                     asChild
                     data-active={location.pathname === item.path}
-                    className="sidebar-nav-button"
+                    className={`sidebar-nav-button ${isMobile ? "h-10" : ""}`}
                   >
                     <Link 
                       to={item.path} 
@@ -66,7 +71,7 @@ const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
                       onClick={onNavigate}
                     >
                       <item.icon className="w-6 h-6" />
-                      <span className="text-base">{item.title}</span>
+                      <span className={`text-base ${isMobile ? "font-medium" : ""}`}>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

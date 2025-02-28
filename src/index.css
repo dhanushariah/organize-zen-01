@@ -6,47 +6,78 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
+
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
+ 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 240 10% 3.9%;
+ 
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+ 
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+ 
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+ 
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+ 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+ 
     --radius: 0.5rem;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 240 10% 3.9%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+ 
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+ 
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+ 
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+ 
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+ 
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+ 
     --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --destructive-foreground: 0 0% 98%;
+ 
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --sidebar: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
   }
 }
  
@@ -56,125 +87,89 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Tag Styles */
-.tag {
-  @apply text-xs px-2 py-0.5 rounded-full font-medium;
-}
-
-.tag-work {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
-}
-
-.tag-personal {
-  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
-}
-
-.tag-home {
-  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300;
-}
-
-.tag-study {
-  @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300;
-}
-
-.tag-health {
-  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300;
-}
-
-/* Additional tag colors */
-.tag-red {
-  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300;
-}
-
-.tag-blue {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
-}
-
-.tag-green {
-  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
-}
-
-.tag-purple {
-  @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300;
-}
-
-.tag-yellow {
-  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300;
-}
-
-.tag-pink {
-  @apply bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300;
-}
-
-.tag-indigo {
-  @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300;
-}
-
-.tag-teal {
-  @apply bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300;
-}
-
-/* CSS for color selectors */
-.tag-red, .tag-blue, .tag-green, .tag-purple,
-.tag-yellow, .tag-pink, .tag-indigo, .tag-teal {
-  @apply border-2;
-}
-
-/* Sidebar navigation buttons */
-.sidebar-nav-button {
-  @apply w-full rounded-md px-3 py-2 text-base relative transition-all duration-200;
-}
-
-.sidebar-nav-button[data-active="true"] {
-  @apply bg-primary/10 font-medium text-primary;
-}
-
-.sidebar-nav-button:hover:not([data-active="true"]) {
-  @apply bg-accent/50;
-}
-
-/* Progress bar glow effect */
-.progress-bar-glow {
-  animation: glow 2s ease-in-out infinite;
-}
-
-/* Task drag and drop styles */
-.task-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.task-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.task-dragging {
-  opacity: 0.5;
-  transform: scale(0.98);
-}
-
-.task-drop-target {
-  box-shadow: 0 0 0 2px var(--primary) inset;
-  background-color: rgba(var(--primary), 0.05);
-  border-radius: 0.5rem;
-}
-
-/* Dark mode compatible date text */
-.date-text {
-  @apply text-muted-foreground;
-}
-
-/* Fix for mobile sidebar */
-.mobile-sidebar {
-  z-index: 50;
-  background-color: hsl(var(--background));
-  width: 100%;
-  height: 100%;
-}
-
-.mobile-sidebar .sidebar-nav-button {
-  @apply block w-full;
+@layer components {
+  .tag {
+    @apply text-xs px-2 py-0.5 rounded-md font-medium;
+  }
+  
+  .tag-work {
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300;
+  }
+  
+  .tag-personal {
+    @apply bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300;
+  }
+  
+  .tag-home {
+    @apply bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300;
+  }
+  
+  .tag-study {
+    @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300;
+  }
+  
+  .tag-health {
+    @apply bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300;
+  }
+  
+  /* Tag colors */
+  .tag-red {
+    @apply bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300;
+  }
+  
+  .tag-blue {
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300;
+  }
+  
+  .tag-green {
+    @apply bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300;
+  }
+  
+  .tag-purple {
+    @apply bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300;
+  }
+  
+  .tag-yellow {
+    @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300;
+  }
+  
+  .tag-pink {
+    @apply bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300;
+  }
+  
+  .tag-indigo {
+    @apply bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300;
+  }
+  
+  .tag-teal {
+    @apply bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300;
+  }
+  
+  .date-text {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+  
+  .progress-bar-glow {
+    @apply animate-pulse;
+  }
+  
+  .task-card {
+    @apply hover:shadow-md transition-shadow;
+  }
+  
+  .task-dragging {
+    @apply opacity-50;
+  }
+  
+  .task-drop-target {
+    @apply bg-primary/5 rounded-lg;
+  }
+  
+  .sidebar-nav-button[data-active="true"] {
+    @apply bg-primary/10 text-primary font-medium;
+  }
 }
