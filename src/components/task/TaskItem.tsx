@@ -106,9 +106,10 @@ export const TaskItem = ({
                     onClick={onToggleTimer}
                   >
                     <Clock className={`h-3 w-3 ${task.timerRunning ? 'text-primary animate-pulse' : ''}`} />
+                    {task.timerDisplay && (
+                      <span className="ml-1 text-xs">{task.timerDisplay}</span>
+                    )}
                   </Button>
-                  
-                  {/* Move functionality is now handled by drag and drop only */}
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">

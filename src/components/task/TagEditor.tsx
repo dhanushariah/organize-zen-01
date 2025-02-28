@@ -7,6 +7,10 @@ interface TagEditorProps {
   taskId: string;
   availableTags: string[];
   onUpdateTag: (newTag: string) => void;
+  onUpdateTagColor: (color: string) => void;
+  onTagDelete: (tag: string, e: React.MouseEvent) => void;
+  showColorPicker: boolean;
+  setShowColorPicker: (taskId: string | null) => void;
   closeTagEditor: () => void;
 }
 
@@ -14,6 +18,10 @@ export const TagEditor = ({
   taskId,
   availableTags,
   onUpdateTag,
+  onUpdateTagColor,
+  onTagDelete,
+  showColorPicker,
+  setShowColorPicker,
   closeTagEditor
 }: TagEditorProps) => {
   return (
