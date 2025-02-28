@@ -8,18 +8,20 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Layout = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   const handleNavigate = () => {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    navigate("/auth");
+  const handleLogout = async () => {
+    await signOut();
   };
 
   useEffect(() => {
@@ -78,7 +80,7 @@ const Layout = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
-              <Sidebar isMobile onNavigate={handleNavigate} />
+              <Sidebar isMobile={true} onNavigate={handleNavigate} />
             </SheetContent>
           </Sheet>
 

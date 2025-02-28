@@ -6,4 +6,5 @@ export interface Task {
   timerStart?: Date;
   timerElapsed?: number;
   timerDisplay?: string;
+  deleted?: boolean;
 }

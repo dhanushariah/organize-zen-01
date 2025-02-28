@@ -52,6 +52,11 @@ export function useTaskActions({
   const handleDeleteTask = (taskId: string) => {
     setTasks(tasks.filter(task => task.id !== taskId));
     setCompletedTasks(completedTasks.filter(id => id !== taskId));
+    
+    if (onTaskUpdate) {
+      // Mark for deletion with a special property
+      onTaskUpdate({ id: taskId, title: "", deleted: true });
+    }
   };
 
   // Toggle task completion status
@@ -127,12 +132,21 @@ export function useTaskActions({
           const startTime = task.timerStart;
           const elapsed = (task.timerElapsed || 0) + (now.getTime() - startTime.getTime());
           
-          return {
+          const updatedTask = {
             ...task,
             timerStart: now,
             timerElapsed: task.timerElapsed,
             timerDisplay: formatTimerDisplay(elapsed)
           };
+          
+          // Only update the task in Supabase every 10 seconds to avoid too many requests
+          if (Math.floor(elapsed / 10000) !== Math.floor((task.timerElapsed || 0) / 10000)) {
+            if (onTaskUpdate) {
+              onTaskUpdate(updatedTask);
+            }
+          }
+          
+          return updatedTask;
         }
         return task;
       });
@@ -143,7 +157,7 @@ export function useTaskActions({
     }, 1000);
     
     return () => clearInterval(intervalId);
-  }, [tasks, setTasks]);
+  }, [tasks, setTasks, onTaskUpdate]);
 
   return {
     handleAddTask,
