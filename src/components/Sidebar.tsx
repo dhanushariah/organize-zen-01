@@ -12,6 +12,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+interface SidebarProps {
+  isMobile?: boolean;
+  onNavigate?: () => void;
+}
+
 const items = [
   {
     title: "Daily Tasks",
@@ -35,11 +40,11 @@ const items = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
   const location = useLocation();
 
   return (
-    <SidebarContainer>
+    <SidebarContainer className={isMobile ? "w-full border-none" : ""}>
       <SidebarContent>
         <div className="px-6 py-6">
           <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
@@ -55,7 +60,11 @@ const Sidebar = () => {
                     data-active={location.pathname === item.path}
                     className="sidebar-nav-button"
                   >
-                    <Link to={item.path} className="flex items-center gap-3">
+                    <Link 
+                      to={item.path} 
+                      className="flex items-center gap-3"
+                      onClick={onNavigate}
+                    >
                       <item.icon className="w-6 h-6" />
                       <span className="text-base">{item.title}</span>
                     </Link>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Plus, X, Flag, Edit, Check, Trash2, Palette } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Task {
   id: string;
@@ -44,9 +45,10 @@ const TaskColumn = ({
   const [newTagName, setNewTagName] = useState("");
   const [addingNewTag, setAddingNewTag] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [showColorPicker, setShowColorPicker] = useState<string | null>(null);
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<string | null>(null);
   const columnRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (tasks.length > 0) {
@@ -136,6 +138,7 @@ const TaskColumn = ({
         : task
     ));
     setEditingTag(null);
+    setShowColorPicker(false);
   };
 
   const handleUpdateTagColor = (taskId: string, color: string) => {
@@ -144,7 +147,6 @@ const TaskColumn = ({
         ? { ...task, tagColor: color }
         : task
     ));
-    setShowColorPicker(null);
   };
 
   const handleDeleteTask = (taskId: string) => {
@@ -191,6 +193,12 @@ const TaskColumn = ({
     if (taskElement) {
       taskElement.classList.remove('task-dragging');
     }
+  };
+
+  const closeTagEditor = () => {
+    setEditingTag(null);
+    setShowColorPicker(false);
+    setAddingNewTag(false);
   };
 
   return (
@@ -262,7 +270,19 @@ const TaskColumn = ({
                     </label>
                     <div className="flex items-center gap-2 shrink-0">
                       {editingTag === task.id ? (
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 relative">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs font-medium">Select Tag</span>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-5 w-5"
+                              onClick={closeTagEditor}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                          
                           <div className="flex flex-wrap gap-1 max-w-[200px]">
                             {availableTags.map(tag => (
                               <Button 
@@ -315,6 +335,36 @@ const TaskColumn = ({
                               </Button>
                             </div>
                           )}
+                          
+                          <div className="mt-2">
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setShowColorPicker(!showColorPicker)}
+                              className="h-6 px-2 text-xs flex items-center w-full justify-between"
+                            >
+                              <span className="flex items-center">
+                                <Palette className="h-3 w-3 mr-1" />
+                                Choose Color
+                              </span>
+                              {showColorPicker ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+                            </Button>
+                          </div>
+                          
+                          {showColorPicker && (
+                            <div className="mt-1 p-2 bg-background rounded-md border border-border">
+                              <div className="flex flex-wrap gap-2">
+                                {TAG_COLORS.map(color => (
+                                  <Button 
+                                    key={color}
+                                    variant="outline" 
+                                    className={`h-8 w-8 p-0 tag-${color}`}
+                                    onClick={() => handleUpdateTagColor(task.id, color)}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="flex items-center gap-1">
@@ -328,35 +378,11 @@ const TaskColumn = ({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-6 w-6"
-                            onClick={() => setShowColorPicker(task.id)}
-                          >
-                            <Palette className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
                             onClick={() => handleDeleteTask(task.id)}
                             className="h-6 w-6"
                           >
                             <X className="h-4 w-4" />
                           </Button>
-                        </div>
-                      )}
-                      
-                      {showColorPicker === task.id && (
-                        <div className="absolute z-10 mt-2 p-2 bg-background rounded-md shadow-lg border border-border">
-                          <div className="flex flex-wrap gap-1 max-w-[150px]">
-                            {TAG_COLORS.map(color => (
-                              <Button 
-                                key={color}
-                                variant="outline" 
-                                size="sm" 
-                                onClick={() => handleUpdateTagColor(task.id, color)}
-                                className={`h-6 w-6 p-0 bg-${color}-100 dark:bg-${color}-900 border-${color}-200 dark:border-${color}-800`}
-                              />
-                            ))}
-                          </div>
                         </div>
                       )}
                     </div>
