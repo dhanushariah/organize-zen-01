@@ -1,6 +1,5 @@
 
-import { ThemeSelector } from "@/components/settings/ThemeSelector";
-import { TagManagement } from "@/components/settings/TagManagement";
+import { ThemeSelector, TagManagement } from "@/components/settings";
 
 const Settings = () => {
   return (
