@@ -4,12 +4,11 @@
 import * as React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 
-type Theme = "light" | "dark" | "system" | "obsidian"
+type Theme = "light"
 
 type ThemeProviderProps = {
   children: React.ReactNode
   defaultTheme?: Theme
-  enableSystem?: boolean
 }
 
 type ThemeProviderState = {
@@ -27,7 +26,6 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({
   children,
   defaultTheme = "light",
-  enableSystem = false,
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
@@ -35,18 +33,9 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove("light", "dark", "system", "obsidian")
-    
-    if (theme === "system" && enableSystem) {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      root.classList.add(systemTheme)
-      root.dataset.theme = systemTheme
-    } else {
-      root.classList.add(theme)
-      root.dataset.theme = theme
-    }
-  }, [theme, enableSystem])
+    root.classList.add("light")
+    root.dataset.theme = "light"
+  }, [])
 
   return (
     <ThemeProviderContext.Provider 
@@ -56,7 +45,7 @@ export function ThemeProvider({
         setTheme
       }}
     >
-      <div data-theme={theme}>
+      <div data-theme="light">
         {children}
       </div>
     </ThemeProviderContext.Provider>

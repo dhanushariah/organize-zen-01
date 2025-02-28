@@ -19,7 +19,7 @@
     @apply text-base font-medium opacity-100 mt-0 !important;
   }
   
-  /* Tag styling */
+  /* Tag styling with vibrant colors */
   .tag {
     @apply px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center;
   }
@@ -55,37 +55,29 @@
   .tag-teal {
     @apply bg-teal-100 text-teal-800 border-2 border-teal-300;
   }
-
-  /* Dark mode tag colors */
-  [data-theme="dark"] .tag-red {
-    @apply bg-red-900/50 text-red-200 border-red-700;
+  
+  /* Enhanced color styling for task tags - work tag */
+  .tag-work {
+    @apply bg-blue-100 text-blue-800 border-2 border-blue-300;
   }
   
-  [data-theme="dark"] .tag-blue {
-    @apply bg-blue-900/50 text-blue-200 border-blue-700;
+  /* Enhanced color styling for task tags - personal tag */
+  .tag-personal {
+    @apply bg-purple-100 text-purple-800 border-2 border-purple-300;
   }
   
-  [data-theme="dark"] .tag-green {
-    @apply bg-green-900/50 text-green-200 border-green-700;
+  /* Enhanced color styling for task tags - home tag */
+  .tag-home {
+    @apply bg-green-100 text-green-800 border-2 border-green-300;
   }
   
-  [data-theme="dark"] .tag-purple {
-    @apply bg-purple-900/50 text-purple-200 border-purple-700;
+  /* Enhanced color styling for task tags - study tag */
+  .tag-study {
+    @apply bg-yellow-100 text-yellow-800 border-2 border-yellow-300;
   }
   
-  [data-theme="dark"] .tag-yellow {
-    @apply bg-yellow-900/50 text-yellow-200 border-yellow-700;
-  }
-  
-  [data-theme="dark"] .tag-pink {
-    @apply bg-pink-900/50 text-pink-200 border-pink-700;
-  }
-  
-  [data-theme="dark"] .tag-indigo {
-    @apply bg-indigo-900/50 text-indigo-200 border-indigo-700;
-  }
-  
-  [data-theme="dark"] .tag-teal {
-    @apply bg-teal-900/50 text-teal-200 border-teal-700;
+  /* Enhanced color styling for task tags - health tag */
+  .tag-health {
+    @apply bg-pink-100 text-pink-800 border-2 border-pink-300;
   }
 }
