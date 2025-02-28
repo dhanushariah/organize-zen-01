@@ -41,22 +41,23 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <SidebarContent>
-        <div className="px-6 py-4">
+        <div className="px-6 py-6">
           <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel>Time Frames</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-base px-6 mb-2">Time Frames</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.path}>
+                <SidebarMenuItem key={item.path} className="px-3 py-1">
                   <SidebarMenuButton
                     asChild
                     data-active={location.pathname === item.path}
+                    className="sidebar-nav-button"
                   >
                     <Link to={item.path} className="flex items-center gap-3">
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-6 h-6" />
+                      <span className="text-base">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

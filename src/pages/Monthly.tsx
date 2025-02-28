@@ -3,12 +3,12 @@ import TaskColumn from "@/components/TaskColumn";
 import { format } from "date-fns";
 
 const mockTasks = [
-  { id: "1", title: "Monthly Report", tag: "work" as const },
-  { id: "2", title: "Family Dinner", tag: "personal" as const },
-  { id: "3", title: "Project Deadline", tag: "work" as const },
-  { id: "4", title: "Home Maintenance", tag: "personal" as const },
-  { id: "5", title: "Quarterly Review", tag: "work" as const },
-  { id: "6", title: "Weekend Trip", tag: "personal" as const },
+  { id: "1", title: "Monthly Report", tag: "work" },
+  { id: "2", title: "Family Dinner", tag: "personal" },
+  { id: "3", title: "Project Deadline", tag: "work" },
+  { id: "4", title: "Home Maintenance", tag: "personal" },
+  { id: "5", title: "Quarterly Review", tag: "work" },
+  { id: "6", title: "Weekend Trip", tag: "personal" },
 ];
 
 const Monthly = () => {
@@ -18,10 +18,15 @@ const Monthly = () => {
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Monthly</h1>
-        <p className="text-secondary mt-2">{currentMonth}</p>
+        <p className="text-secondary mt-2 date-text">{currentMonth}</p>
       </div>
       <div className="flex justify-center">
-        <TaskColumn title="Monthly Tasks" tasks={mockTasks} isLast />
+        <TaskColumn 
+          title="Monthly Tasks" 
+          tasks={mockTasks} 
+          isLast 
+          columnId="monthly"
+        />
       </div>
     </div>
   );
