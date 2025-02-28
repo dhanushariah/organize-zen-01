@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
@@ -100,7 +100,7 @@ const TaskColumn = ({
           
           {progress === 100 && (
             <div className="flex items-center">
-              <flag className="h-5 w-5 text-primary mr-1" />
+              <Flag className="h-5 w-5 text-primary mr-1" />
               <span className="text-sm text-primary font-medium">Complete!</span>
             </div>
           )}
