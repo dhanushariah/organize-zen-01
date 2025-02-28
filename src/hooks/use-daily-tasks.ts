@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { format, subDays } from "date-fns";
-import { Task } from "@/types/task";
+import { Task, Tables } from "@/types/task";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { v4 as uuidv4 } from "uuid";
@@ -58,17 +59,19 @@ export const useDailyTasks = () => {
           priority: []
         };
         
-        data.forEach((task) => {
-          if (columnTasks[task.column_id]) {
-            columnTasks[task.column_id].push({
-              id: task.id,
-              title: task.title,
-              timerRunning: task.timer_running,
-              timerElapsed: task.timer_elapsed,
-              timerDisplay: task.timer_display
-            });
-          }
-        });
+        if (data) {
+          data.forEach((task: Tables['tasks']) => {
+            if (columnTasks[task.column_id]) {
+              columnTasks[task.column_id].push({
+                id: task.id,
+                title: task.title,
+                timerRunning: task.timer_running,
+                timerElapsed: task.timer_elapsed,
+                timerDisplay: task.timer_display
+              });
+            }
+          });
+        }
         
         setTasks(columnTasks);
       } catch (error) {
@@ -101,10 +104,16 @@ export const useDailyTasks = () => {
           throw error;
         }
         
-        const history: TaskHistory[] = data.map(item => ({
-          date: item.date,
-          tasks: item.tasks as ColumnTasks
-        }));
+        const history: TaskHistory[] = [];
+        
+        if (data) {
+          data.forEach((item: Tables['task_history']) => {
+            history.push({
+              date: item.date,
+              tasks: item.tasks as ColumnTasks
+            });
+          });
+        }
         
         setTaskHistory(history);
       } catch (error) {
