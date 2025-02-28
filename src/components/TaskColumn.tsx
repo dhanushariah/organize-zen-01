@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +23,7 @@ interface Task {
   endTime?: Date;
   timerRunning?: boolean;
   duration?: number; // duration in seconds
+  deleted?: boolean; // Add this property
 }
 
 interface TaskColumnProps {
@@ -72,7 +72,6 @@ const TaskColumn = ({
     }
   }, [completedTasks, tasks]);
 
-  // Initialize drag events
   useEffect(() => {
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
@@ -116,7 +115,6 @@ const TaskColumn = ({
   }, [columnId, onMoveTask]);
 
   useEffect(() => {
-    // Update tasks when initialTasks changes
     setTasks(initialTasks);
   }, [initialTasks]);
 
@@ -127,7 +125,6 @@ const TaskColumn = ({
         : [...prev, taskId]
     );
     
-    // Update the task's endTime if completed, or remove endTime if uncompleted
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         const isCompleting = !completedTasks.includes(taskId);
@@ -219,7 +216,6 @@ const TaskColumn = ({
     setTasks(updatedTasks);
     setCompletedTasks(prev => prev.filter(id => id !== taskId));
     
-    // Notify parent component
     const taskToDelete = tasks.find(task => task.id === taskId);
     if (taskToDelete && onTaskUpdate) {
       onTaskUpdate({...taskToDelete, deleted: true});
@@ -237,10 +233,8 @@ const TaskColumn = ({
   const handleDeleteTag = (tagToDelete: string, e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Update available tags
     setAvailableTags(availableTags.filter(tag => tag !== tagToDelete));
     
-    // Update tasks with the deleted tag to use 'personal' tag instead
     const updatedTasks = tasks.map(task => {
       if (task.tag === tagToDelete) {
         const updatedTask = { ...task, tag: "personal" };
@@ -260,7 +254,6 @@ const TaskColumn = ({
     e.dataTransfer.setData('source-column', columnId);
     setDraggedTask(taskId);
     
-    // Add a slight delay for visual feedback
     setTimeout(() => {
       const taskElement = document.getElementById(`task-${taskId}`);
       if (taskElement) {
@@ -314,7 +307,6 @@ const TaskColumn = ({
     setTasks(updatedTasks);
   };
 
-  // Sort tasks based on sortBy state
   const sortedTasks = [...tasks].sort((a, b) => {
     if (sortBy === null) return 0;
     if (sortBy === a.tag) return -1;
@@ -330,7 +322,6 @@ const TaskColumn = ({
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg md:text-xl font-bold">{title}</h2>
         <div className="flex items-center gap-2">
-          {/* Sort by tag dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-8">
@@ -412,7 +403,6 @@ const TaskColumn = ({
                         {task.title}
                       </label>
                       <div className="flex items-center gap-1">
-                        {/* Task timer button */}
                         <Button
                           variant="ghost"
                           size="icon"
@@ -422,7 +412,6 @@ const TaskColumn = ({
                           <Clock className={`h-3 w-3 ${task.timerRunning ? 'text-primary animate-pulse' : ''}`} />
                         </Button>
                         
-                        {/* Move task dropdown */}
                         {otherColumns && otherColumns.length > 0 && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

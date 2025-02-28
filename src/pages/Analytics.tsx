@@ -7,18 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, CheckSquare, Clock, Tag, Flame } from "lucide-react";
 import { 
-  Chart,
   ChartContainer, 
-  ChartTitle, 
   ChartTooltip, 
   ChartLegend,
-  ChartContent,
-  ChartStatusIndicator,
-  ChartError,
   ChartTooltipContent,
-  ChartAxisOptions,
-  ChartXAxis,
-  ChartYAxis,
+  ChartLegendContent
 } from "@/components/ui/chart";
 import {
   Bar,
@@ -464,3 +457,4 @@ const Analytics = () => {
 };
 
 export default Analytics;
+
