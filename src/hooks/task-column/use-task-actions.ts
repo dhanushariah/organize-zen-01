@@ -1,6 +1,5 @@
 
 import { Task } from "@/types/task";
-import { formatDuration } from "date-fns";
 
 interface TaskActionsProps {
   tasks: Task[];
@@ -9,6 +8,9 @@ interface TaskActionsProps {
   setCompletedTasks: React.Dispatch<React.SetStateAction<string[]>>;
   onTaskUpdate?: (task: Task) => void;
 }
+
+// Define a variable to store the timer interval
+let timerInterval: number | undefined;
 
 export function useTaskActions({
   tasks,
@@ -110,57 +112,17 @@ export function useTaskActions({
     return `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
   };
 
-  // Toggle task timer
-  const toggleTaskTimer = (taskId: string) => {
-    const now = new Date();
-    
-    const updatedTasks = tasks.map(task => {
-      if (task.id === taskId) {
-        const isStarting = !task.timerRunning;
-        
-        let elapsedTime = task.duration || 0;
-        
-        // If stopping the timer, calculate time elapsed since it started
-        if (!isStarting && task.startTime) {
-          const elapsedSeconds = Math.floor((now.getTime() - new Date(task.startTime).getTime()) / 1000);
-          elapsedTime += elapsedSeconds;
-        }
-        
-        const updatedTask = {
-          ...task,
-          timerRunning: isStarting,
-          startTime: isStarting ? now : task.startTime,
-          duration: elapsedTime,
-          timerDisplay: isStarting ? formatTimeDuration(elapsedTime) : undefined
-        };
-        
-        if (onTaskUpdate) {
-          onTaskUpdate(updatedTask);
-        }
-        
-        return updatedTask;
-      }
-      return task;
-    });
-    
-    setTasks(updatedTasks);
-    
-    // If any timer is running, set up interval to update the display
-    if (updatedTasks.some(task => task.timerRunning)) {
-      setupTimerInterval(updatedTasks, setTasks);
-    }
-  };
-
   // Set up timer interval to update running timers
   const setupTimerInterval = (currentTasks: Task[], setTasksFunction: React.Dispatch<React.SetStateAction<Task[]>>) => {
     // Clear any existing interval
-    if (window.timerInterval) {
-      clearInterval(window.timerInterval);
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = undefined;
     }
     
     // Set up new interval if any timer is running
     if (currentTasks.some(task => task.timerRunning)) {
-      window.timerInterval = setInterval(() => {
+      timerInterval = window.setInterval(() => {
         setTasksFunction(prevTasks => 
           prevTasks.map(task => {
             if (task.timerRunning && task.startTime) {
@@ -182,6 +144,45 @@ export function useTaskActions({
     }
   };
 
+  // Toggle task timer
+  const toggleTaskTimer = (taskId: string) => {
+    const now = new Date();
+    
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const isStarting = !task.timerRunning;
+        
+        let elapsedTime = task.duration || 0;
+        
+        // If stopping the timer, calculate time elapsed since it started
+        if (!isStarting && task.startTime) {
+          const elapsedSeconds = Math.floor((now.getTime() - new Date(task.startTime).getTime()) / 1000);
+          elapsedTime += elapsedSeconds;
+        }
+        
+        const updatedTask = {
+          ...task,
+          timerRunning: isStarting,
+          startTime: isStarting ? now : task.startTime,
+          duration: elapsedTime,
+          timerDisplay: formatTimeDuration(elapsedTime)
+        };
+        
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
+    
+    // If any timer is running, set up interval to update the display
+    setupTimerInterval(updatedTasks, setTasks);
+  };
+
   return {
     toggleTask,
     handleAddTask,
@@ -189,11 +190,4 @@ export function useTaskActions({
     handleDeleteTask,
     toggleTaskTimer
   };
-}
-
-// Add the timerInterval property to the Window interface
-declare global {
-  interface Window {
-    timerInterval: number | undefined;
-  }
 }
