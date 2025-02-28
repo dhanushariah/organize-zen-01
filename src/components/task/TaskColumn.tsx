@@ -133,7 +133,7 @@ const TaskColumn = ({
                 {sortBy ? `Sorted: ${sortBy}` : "Sort by Tag"}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="bg-background border shadow-md">
               <DropdownMenuItem onClick={() => setSortBy(null)}>
                 No sorting
               </DropdownMenuItem>

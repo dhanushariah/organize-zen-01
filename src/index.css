@@ -150,7 +150,7 @@
   }
   
   .date-text {
-    @apply text-gray-600 dark:text-gray-300;
+    @apply text-gray-700 dark:text-gray-300 font-medium;
   }
   
   .progress-bar-glow {
@@ -171,5 +171,9 @@
   
   .sidebar-nav-button[data-active="true"] {
     @apply bg-primary/10 text-primary font-medium;
+  }
+  
+  .timer-running {
+    @apply text-primary animate-pulse;
   }
 }

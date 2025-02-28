@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart } from "lucide-react";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
@@ -24,12 +24,12 @@ const items = [
     icon: CheckSquare,
   },
   {
-    title: "Weekly",
+    title: "Weekly Tasks",
     path: "/weekly",
     icon: Calendar,
   },
   {
-    title: "Monthly",
+    title: "Monthly Tasks",
     path: "/monthly",
     icon: CalendarIcon,
   },
@@ -42,6 +42,11 @@ const items = [
     title: "Analytics",
     path: "/analytics",
     icon: BarChart,
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: Settings,
   }
 ];
 

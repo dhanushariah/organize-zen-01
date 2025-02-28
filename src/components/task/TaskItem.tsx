@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Edit, X, Clock, ArrowRightLeft, Check, Trash2, Palette, Plus } from "lucide-react";
+import { Edit, X, Clock, Check, Trash2, Palette, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -108,29 +108,7 @@ export const TaskItem = ({
                     <Clock className={`h-3 w-3 ${task.timerRunning ? 'text-primary animate-pulse' : ''}`} />
                   </Button>
                   
-                  {otherColumns && otherColumns.length > 0 && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-6 w-6"
-                        >
-                          <ArrowRightLeft className="h-3 w-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {otherColumns.map(column => (
-                          <DropdownMenuItem 
-                            key={column.id}
-                            onClick={() => onMoveToColumn(column.id)}
-                          >
-                            Move to {column.title}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
+                  {/* Move functionality is now handled by drag and drop only */}
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
