@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Plus, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Task } from "@/types/task";
 import { TaskItem } from "./TaskItem";
-import { useTaskColumnLogic } from "@/hooks/use-task-column";
+import { useTaskState } from "@/hooks/task-column/use-task-state";
+import { useTaskActions } from "@/hooks/task-column/use-task-actions";
+import { useTagManagement } from "@/hooks/task-column/use-tag-management";
+import { useDragDrop } from "@/hooks/task-column/use-drag-drop";
 
 interface TaskColumnProps {
   title: string;
@@ -33,10 +36,12 @@ const TaskColumn = ({
   const isMobile = useIsMobile();
   const columnRef = useRef<HTMLDivElement>(null);
   
+  // Use the state hook
   const {
     tasks,
     setTasks,
     completedTasks,
+    setCompletedTasks,
     progress,
     newTaskTitle,
     setNewTaskTitle,
@@ -45,32 +50,74 @@ const TaskColumn = ({
     editingTag,
     setEditingTag,
     availableTags,
+    setAvailableTags,
+    newTagName,
+    setNewTagName,
+    addingNewTag,
+    setAddingNewTag,
     showColorPicker,
     setShowColorPicker,
     draggedTask,
     setDraggedTask,
     sortBy,
     setSortBy,
+    sortedTasks
+  } = useTaskState(initialTasks);
+
+  // Use the actions hook
+  const {
     toggleTask,
-    handleAddTask,
+    handleAddTask: addTask,
     handleUpdateTask,
+    handleDeleteTask,
+    toggleTaskTimer
+  } = useTaskActions({
+    tasks,
+    setTasks,
+    completedTasks,
+    setCompletedTasks,
+    onTaskUpdate
+  });
+
+  // Use the tag management hook
+  const {
     handleUpdateTag,
     handleUpdateTagColor,
-    handleDeleteTask,
-    handleDeleteTag,
+    handleAddNewTag,
+    handleDeleteTag
+  } = useTagManagement({
+    tasks,
+    setTasks,
+    availableTags,
+    setAvailableTags,
+    onTaskUpdate
+  });
+
+  // Use the drag and drop hook
+  const {
     handleDragStart,
     handleDragEnd,
-    closeTagEditor,
-    handleMoveTaskToColumn,
-    toggleTaskTimer,
-    sortedTasks
-  } = useTaskColumnLogic({
-    initialTasks,
+    handleMoveTaskToColumn
+  } = useDragDrop({
     columnId,
-    onMoveTask,
-    onTaskUpdate,
-    columnRef
+    columnRef,
+    onMoveTask
   });
+
+  // Wrapper for addTask to use the current newTaskTitle
+  const handleAddTask = () => {
+    if (newTaskTitle.trim()) {
+      addTask(newTaskTitle);
+      setNewTaskTitle("");
+    }
+  };
+
+  // Close tag editor
+  const closeTagEditor = () => {
+    setEditingTag(null);
+    setShowColorPicker(null);
+    setAddingNewTag(false);
+  };
 
   return (
     <div 
