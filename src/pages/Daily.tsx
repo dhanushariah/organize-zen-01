@@ -1,20 +1,11 @@
-import TaskColumn from "@/components/TaskColumn";
+
+import TaskColumn from "@/components/task/TaskColumn";
 import { format, subDays } from "date-fns";
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, History } from "lucide-react";
-
-type Task = {
-  id: string;
-  title: string;
-  tag: string;
-  tagColor?: string;
-  startTime?: Date;
-  endTime?: Date;
-  timerRunning?: boolean;
-  duration?: number;
-};
+import { Task } from "@/types/task";
 
 type ColumnTasks = {
   [key: string]: Task[];

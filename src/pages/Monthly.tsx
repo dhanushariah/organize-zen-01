@@ -1,5 +1,5 @@
 
-import TaskColumn from "@/components/TaskColumn";
+import TaskColumn from "@/components/task/TaskColumn";
 import { format, addMonths, subMonths } from "date-fns";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";

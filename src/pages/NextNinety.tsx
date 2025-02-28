@@ -1,5 +1,5 @@
 
-import TaskColumn from "@/components/TaskColumn";
+import TaskColumn from "@/components/task/TaskColumn";
 
 const mockTasks = [
   { id: "1", title: "Launch Product", tag: "work" },
