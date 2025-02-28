@@ -1,81 +1,43 @@
-
 import { useState, useEffect } from "react";
-import { format, subDays } from "date-fns";
-import { Task, Tables } from "@/types/task";
-import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
+import { Task } from "@/types/task";
+import { ColumnTasks, TaskHistory, DEFAULT_COLUMNS, DEFAULT_COLUMN_TASKS } from "@/types/daily-task";
 import { useAuth } from "@/contexts/AuthContext";
-import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/components/ui/use-toast";
-
-type ColumnTasks = {
-  [key: string]: Task[];
-};
-
-type TaskHistory = {
-  date: string;
-  tasks: ColumnTasks;
-}
+import { useDateNavigation } from "./use-date-navigation";
+import { fetchTasks, fetchTaskHistory, saveTasks, saveTaskHistory } from "@/services/task-service";
 
 export const useDailyTasks = () => {
-  const [tasks, setTasks] = useState<ColumnTasks>({
-    nonNegotiables: [],
-    today: [],
-    priority: []
-  });
+  const [tasks, setTasks] = useState<ColumnTasks>(DEFAULT_COLUMN_TASKS);
   const [taskHistory, setTaskHistory] = useState<TaskHistory[]>([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [activeTab, setActiveTab] = useState("today");
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
   
-  // Define columns once
-  const columns = [
-    { id: "nonNegotiables", title: "Non-negotiables" },
-    { id: "today", title: "Today" },
-    { id: "priority", title: "Priority" }
-  ];
+  // Use the date navigation hook
+  const {
+    currentDate,
+    activeTab,
+    setActiveTab,
+    handlePreviousDay,
+    handleNextDay,
+    isToday
+  } = useDateNavigation();
   
   // Load tasks from Supabase
   useEffect(() => {
-    const fetchTasks = async () => {
+    const loadTasks = async () => {
       if (!user) return;
       
       setIsLoading(true);
       try {
-        const { data, error } = await supabase
-          .from('tasks')
-          .select('*')
-          .eq('user_id', user.id);
-          
-        if (error) {
-          throw error;
+        const columnTasks = await fetchTasks(user.id);
+        
+        if (columnTasks) {
+          setTasks(columnTasks);
         }
-        
-        // Group tasks by column
-        const columnTasks: ColumnTasks = {
-          nonNegotiables: [],
-          today: [],
-          priority: []
-        };
-        
-        if (data) {
-          data.forEach((task: Tables['tasks']) => {
-            if (columnTasks[task.column_id]) {
-              columnTasks[task.column_id].push({
-                id: task.id,
-                title: task.title,
-                timerRunning: task.timer_running,
-                timerElapsed: task.timer_elapsed,
-                timerDisplay: task.timer_display
-              });
-            }
-          });
-        }
-        
-        setTasks(columnTasks);
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.error("Error loading tasks:", error);
         toast({
           title: "Failed to load tasks",
           description: "Please try again later",
@@ -86,156 +48,25 @@ export const useDailyTasks = () => {
       }
     };
     
-    fetchTasks();
+    loadTasks();
   }, [user, toast]);
   
   // Load task history from Supabase
   useEffect(() => {
-    const fetchTaskHistory = async () => {
+    const loadTaskHistory = async () => {
       if (!user) return;
       
       try {
-        const { data, error } = await supabase
-          .from('task_history')
-          .select('*')
-          .eq('user_id', user.id);
-          
-        if (error) {
-          throw error;
-        }
-        
-        const history: TaskHistory[] = [];
-        
-        if (data) {
-          data.forEach((item: Tables['task_history']) => {
-            history.push({
-              date: item.date,
-              tasks: item.tasks as ColumnTasks
-            });
-          });
-        }
-        
+        const history = await fetchTaskHistory(user.id);
         setTaskHistory(history);
       } catch (error) {
-        console.error("Error fetching task history:", error);
+        console.error("Error loading task history:", error);
       }
     };
     
-    fetchTaskHistory();
+    loadTaskHistory();
   }, [user]);
   
-  // Save tasks to Supabase
-  const saveTasks = async (updatedTasks: ColumnTasks) => {
-    if (!user) return;
-    
-    try {
-      // First, delete all tasks for this user (could be optimized in the future)
-      const { error: deleteError } = await supabase
-        .from('tasks')
-        .delete()
-        .eq('user_id', user.id);
-        
-      if (deleteError) {
-        throw deleteError;
-      }
-      
-      // Then insert all tasks
-      const tasksToInsert = [];
-      
-      for (const columnId in updatedTasks) {
-        for (const task of updatedTasks[columnId]) {
-          tasksToInsert.push({
-            id: task.id,
-            user_id: user.id,
-            title: task.title,
-            column_id: columnId,
-            timer_elapsed: task.timerElapsed || 0,
-            timer_running: task.timerRunning || false,
-            timer_display: task.timerDisplay || "",
-          });
-        }
-      }
-      
-      if (tasksToInsert.length > 0) {
-        const { error: insertError } = await supabase
-          .from('tasks')
-          .insert(tasksToInsert);
-          
-        if (insertError) {
-          throw insertError;
-        }
-      }
-    } catch (error) {
-      console.error("Error saving tasks:", error);
-      toast({
-        title: "Failed to save tasks",
-        description: "Please try again later",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  // Save task history to Supabase
-  const saveTaskHistory = async (date: string, taskData: ColumnTasks) => {
-    if (!user) return;
-    
-    try {
-      // Check if history for this date already exists
-      const { data, error: fetchError } = await supabase
-        .from('task_history')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('date', date);
-        
-      if (fetchError) {
-        throw fetchError;
-      }
-      
-      if (data && data.length > 0) {
-        // Update existing record
-        const { error: updateError } = await supabase
-          .from('task_history')
-          .update({ tasks: taskData })
-          .eq('id', data[0].id);
-          
-        if (updateError) {
-          throw updateError;
-        }
-      } else {
-        // Insert new record
-        const { error: insertError } = await supabase
-          .from('task_history')
-          .insert({
-            user_id: user.id,
-            date,
-            tasks: taskData
-          });
-          
-        if (insertError) {
-          throw insertError;
-        }
-      }
-    } catch (error) {
-      console.error("Error saving task history:", error);
-    }
-  };
-  
-  // Navigation handlers
-  const handlePreviousDay = () => {
-    setCurrentDate(prev => subDays(prev, 1));
-    setActiveTab("history");
-  };
-  
-  const handleNextDay = () => {
-    const tomorrow = subDays(new Date(), -1);
-    if (currentDate < tomorrow) {
-      setCurrentDate(prev => subDays(prev, -1));
-    } else {
-      setCurrentDate(new Date());
-      setActiveTab("today");
-    }
-  };
-
   // Task manipulation handlers
   const handleMoveTask = async (taskId: string, sourceColumnId: string, targetColumnId: string) => {
     const taskToMove = tasks[sourceColumnId].find(task => task.id === taskId);
@@ -248,7 +79,9 @@ export const useDailyTasks = () => {
     updatedTasks[targetColumnId] = [...tasks[targetColumnId], taskToMove];
     
     setTasks(updatedTasks);
-    await saveTasks(updatedTasks);
+    if (user) {
+      await saveTasks(user.id, updatedTasks);
+    }
   };
   
   const handleTaskUpdate = async (updatedTask: Task) => {
@@ -272,17 +105,21 @@ export const useDailyTasks = () => {
     
     if (taskFound) {
       setTasks(updatedTasks);
-      await saveTasks(updatedTasks);
+      if (user) {
+        await saveTasks(user.id, updatedTasks);
+      }
     }
   };
   
   // Save task history when tasks change
   useEffect(() => {
-    const saveHistory = async () => {
+    const updateHistory = async () => {
       if (!user || isLoading) return;
       
       const today = format(new Date(), 'yyyy-MM-dd');
-      await saveTaskHistory(today, tasks);
+      if (user) {
+        await saveTaskHistory(user.id, today, tasks);
+      }
       
       // Update the history state as well
       const historyIndex = taskHistory.findIndex(h => h.date === today);
@@ -309,27 +146,22 @@ export const useDailyTasks = () => {
     };
     
     if (!isLoading) {
-      saveHistory();
+      updateHistory();
     }
-  }, [tasks, user, isLoading]);
+  }, [tasks, user, isLoading, taskHistory]);
   
   // Get historical tasks for a specific date
   const getHistoricalTasks = () => {
     const dateKey = format(currentDate, 'yyyy-MM-dd');
     const historyEntry = taskHistory.find(h => h.date === dateKey);
-    return historyEntry?.tasks || {
-      nonNegotiables: [],
-      today: [],
-      priority: []
-    };
+    return historyEntry?.tasks || DEFAULT_COLUMN_TASKS;
   };
   
-  const isToday = format(currentDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
   const displayTasks = activeTab === "today" ? tasks : getHistoricalTasks();
-
+  
   return {
     tasks,
-    columns,
+    columns: DEFAULT_COLUMNS,
     currentDate,
     activeTab,
     setActiveTab,
