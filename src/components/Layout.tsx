@@ -7,7 +7,6 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { ThemeToggle } from "./ThemeToggle";
 
 interface LayoutProps {
   isMobileVersion?: boolean;
@@ -44,8 +43,6 @@ const Layout = ({ isMobileVersion }: LayoutProps) => {
               <Sidebar isMobile onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
             </SheetContent>
           </Sheet>
-
-          <ThemeToggle />
 
           <main>
             <Outlet />

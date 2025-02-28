@@ -2,7 +2,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class", ".dark"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -83,34 +82,15 @@ export default {
         "slide-in": {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
-        },
-        "glow": {
-          "0%, 100%": { 
-            boxShadow: "0 0 5px rgba(0, 230, 118, 0.7), 0 0 10px rgba(0, 230, 118, 0.5)" 
-          },
-          "50%": { 
-            boxShadow: "0 0 15px rgba(0, 230, 118, 0.9), 0 0 20px rgba(0, 230, 118, 0.7)" 
-          }
-        },
-        "pulse-glow": {
-          "0%, 100%": { 
-            boxShadow: "0 0 5px hsl(var(--obsidian-accent-glow) / 0.5)" 
-          },
-          "50%": { 
-            boxShadow: "0 0 15px hsl(var(--obsidian-accent-glow)), 0 0 25px hsl(var(--obsidian-accent-glow) / 0.7)" 
-          }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
-        "slide-in": "slide-in 0.3s ease-out",
-        "glow": "glow 2s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite"
+        "slide-in": "slide-in 0.3s ease-out"
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

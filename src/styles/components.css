@@ -1,0 +1,46 @@
+
+@layer components {
+  /* Sidebar nav button active state */
+  .sidebar-nav-button[data-active="true"] {
+    @apply bg-accent font-medium text-accent-foreground;
+  }
+  
+  /* Task Column Layout */
+  .task-columns-container {
+    @apply grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .task-column {
+    @apply bg-card rounded-lg shadow-sm p-4;
+  }
+  
+  /* Mobile sidebar adjustments */
+  .mobile-sidebar .sidebar-group-label {
+    @apply text-base font-medium opacity-100 mt-0 !important;
+  }
+  
+  /* Tag styling */
+  .tag {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center;
+  }
+  
+  .tag-work {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  .tag-personal {
+    @apply bg-purple-100 text-purple-800;
+  }
+  
+  .tag-health {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .tag-finance {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .tag-education {
+    @apply bg-pink-100 text-pink-800;
+  }
+}
