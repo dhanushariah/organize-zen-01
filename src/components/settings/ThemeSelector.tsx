@@ -19,7 +19,7 @@ export const ThemeSelector = () => {
         
         <RadioGroup 
           value={theme} 
-          onValueChange={(value) => setTheme(value as "light" | "dark" | "system" | "obsidian")}
+          onValueChange={(value: "light" | "dark" | "system" | "obsidian") => setTheme(value)}
           className="grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           <div>
