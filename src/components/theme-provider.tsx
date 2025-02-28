@@ -2,12 +2,14 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
-type Theme = "light" | "dark"
+type Theme = "light" | "dark" | "system" | "obsidian"
 
 type ThemeProviderProps = {
   children: React.ReactNode
+  defaultTheme?: Theme
+  enableSystem?: boolean
 }
 
 type ThemeProviderState = {
@@ -24,9 +26,27 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
+  defaultTheme = "light",
+  enableSystem = false,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("light")
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+
+  useEffect(() => {
+    const root = window.document.documentElement
+    root.classList.remove("light", "dark", "system", "obsidian")
+    
+    if (theme === "system" && enableSystem) {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      root.classList.add(systemTheme)
+      root.dataset.theme = systemTheme
+    } else {
+      root.classList.add(theme)
+      root.dataset.theme = theme
+    }
+  }, [theme, enableSystem])
 
   return (
     <ThemeProviderContext.Provider 
