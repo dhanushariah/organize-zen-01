@@ -61,7 +61,7 @@ const Daily = () => {
 
   return (
     <div className="space-y-8">
-      <div>
+      <div className="text-center">
         <h1 className="text-4xl font-bold">Daily Tasks</h1>
         <p className="text-secondary mt-2 date-text">{dateString}</p>
       </div>

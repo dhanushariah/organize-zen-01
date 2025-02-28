@@ -5,9 +5,15 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Plus, X, Flag, Edit, Check, Trash2, Palette } from "lucide-react";
+import { Plus, X, Flag, Edit, Check, Trash2, Palette, MoveHorizontal, ArrowRightLeft } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Task {
   id: string;
@@ -102,6 +108,11 @@ const TaskColumn = ({
     }
   }, [columnId, onMoveTask]);
 
+  useEffect(() => {
+    // Update tasks when initialTasks changes
+    setTasks(initialTasks);
+  }, [initialTasks]);
+
   const toggleTask = (taskId: string) => {
     setCompletedTasks(prev =>
       prev.includes(taskId) 
@@ -162,7 +173,8 @@ const TaskColumn = ({
     }
   };
 
-  const handleDeleteTag = (tagToDelete: string) => {
+  const handleDeleteTag = (tagToDelete: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     setAvailableTags(availableTags.filter(tag => tag !== tagToDelete));
     
     // Update tasks with the deleted tag to use 'personal' tag instead
@@ -199,6 +211,12 @@ const TaskColumn = ({
     setEditingTag(null);
     setShowColorPicker(false);
     setAddingNewTag(false);
+  };
+
+  const handleMoveTaskToColumn = (taskId: string, targetColumnId: string) => {
+    if (onMoveTask) {
+      onMoveTask(taskId, columnId, targetColumnId);
+    }
   };
 
   return (
@@ -259,15 +277,40 @@ const TaskColumn = ({
                   />
                 ) : (
                   <div className="flex-1 flex items-center justify-between gap-2">
-                    <label
-                      htmlFor={task.id}
-                      className={`font-medium cursor-pointer text-sm md:text-base ${
-                        completedTasks.includes(task.id) ? "line-through text-muted-foreground" : ""
-                      }`}
-                      onClick={() => setEditingTask(task.id)}
-                    >
-                      {task.title}
-                    </label>
+                    <div className="flex items-center gap-2">
+                      <label
+                        htmlFor={task.id}
+                        className={`font-medium cursor-pointer text-sm md:text-base ${
+                          completedTasks.includes(task.id) ? "line-through text-muted-foreground" : ""
+                        }`}
+                        onClick={() => setEditingTask(task.id)}
+                      >
+                        {task.title}
+                      </label>
+                      {otherColumns && otherColumns.length > 0 && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6"
+                            >
+                              <ArrowRightLeft className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {otherColumns.map(column => (
+                              <DropdownMenuItem 
+                                key={column.id}
+                                onClick={() => handleMoveTaskToColumn(task.id, column.id)}
+                              >
+                                Move to {column.title}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {editingTag === task.id ? (
                         <div className="flex flex-col gap-2 relative">
@@ -295,10 +338,7 @@ const TaskColumn = ({
                                 {tag}
                                 <Trash2 
                                   className="h-3 w-3 text-destructive" 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteTag(tag);
-                                  }}
+                                  onClick={(e) => handleDeleteTag(tag, e)}
                                 />
                               </Button>
                             ))}

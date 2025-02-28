@@ -44,7 +44,7 @@ const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
   const location = useLocation();
 
   return (
-    <SidebarContainer className={isMobile ? "w-full border-none" : ""}>
+    <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
       <SidebarContent>
         <div className="px-6 py-6">
           <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
