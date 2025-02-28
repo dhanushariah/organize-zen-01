@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings } from "lucide-react";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, X } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
@@ -11,10 +11,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 interface SidebarProps {
   isMobile?: boolean;
   onNavigate?: () => void;
+  onClose?: () => void;
 }
 
 const items = [
@@ -45,14 +47,19 @@ const items = [
   },
 ];
 
-const Sidebar = ({ isMobile = false, onNavigate }: SidebarProps) => {
+const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
   const location = useLocation();
 
   return (
     <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
       <SidebarContent>
-        <div className="px-6 py-6">
+        <div className="px-6 py-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-primary">TaskSheet</h1>
+          {isMobile && onClose && (
+            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
+              <X className="h-5 w-5" />
+            </Button>
+          )}
         </div>
         <SidebarGroup>
           <SidebarGroupLabel className="text-base px-6 mb-2 underline decoration-2 underline-offset-4">

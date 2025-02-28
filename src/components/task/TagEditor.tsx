@@ -48,11 +48,29 @@ export const TagEditor = ({
               onUpdateTag(tag);
               closeTagEditor();
             }}
-            className="h-6 px-2 text-xs flex items-center gap-1 tag-color-btn"
+            className={`h-6 px-2 py-0 text-xs flex items-center gap-1 tag-${tag}`}
           >
             {tag}
           </Button>
         ))}
+      </div>
+      
+      <div className="mt-2">
+        <div className="text-xs font-medium mb-1">Color</div>
+        <div className="flex flex-wrap gap-1">
+          {['red', 'blue', 'green', 'purple', 'yellow', 'pink', 'indigo', 'teal'].map(color => (
+            <Button
+              key={color}
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                onUpdateTagColor(color);
+                closeTagEditor();
+              }}
+              className={`h-6 w-6 p-0 rounded-full tag-${color}`}
+            />
+          ))}
+        </div>
       </div>
       
       <div className="mt-2 text-xs text-muted-foreground">

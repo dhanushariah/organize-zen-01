@@ -4,7 +4,6 @@ import { Plus, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Task } from "@/types/task";
@@ -215,7 +214,6 @@ const TaskColumn = ({
           </Button>
         </div>
       </div>
-      {/* Removed the separation line as requested */}
     </div>
   );
 };

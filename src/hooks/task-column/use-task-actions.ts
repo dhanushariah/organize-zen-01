@@ -152,6 +152,11 @@ export function useTaskActions({
       if (task.id === taskId) {
         const isStarting = !task.timerRunning;
         
+        // Don't allow timer to start if task is completed
+        if (isStarting && completedTasks.includes(taskId)) {
+          return task;
+        }
+        
         let elapsedTime = task.duration || 0;
         
         // If stopping the timer, calculate time elapsed since it started

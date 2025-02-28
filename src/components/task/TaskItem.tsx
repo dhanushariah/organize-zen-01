@@ -1,11 +1,12 @@
 
 import { useState } from "react";
-import { Edit, X, Clock, Check, Trash2, Palette, Plus } from "lucide-react";
+import { Edit, X, Check, Trash2, Palette, Plus, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Task } from "@/types/task";
 import { TagEditor } from "./TagEditor";
 
@@ -67,12 +68,25 @@ export const TaskItem = ({
       id={`task-${task.id}`}
     >
       <div className="flex items-start gap-2 md:gap-3">
-        <Checkbox
-          id={task.id}
-          checked={isCompleted}
-          onCheckedChange={onToggle}
-          className="mt-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 shrink-0 text-primary"
+            onClick={onToggleTimer}
+            aria-label={task.timerRunning ? "Pause timer" : "Start timer"}
+          >
+            {task.timerRunning ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+          </Button>
+        
+          <Checkbox
+            id={task.id}
+            checked={isCompleted}
+            onCheckedChange={onToggle}
+            className="mt-0.5 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
+          />
+        </div>
+        
         <div className="flex flex-1 items-start justify-between">
           {editingTask ? (
             <Input
@@ -98,19 +112,11 @@ export const TaskItem = ({
                 >
                   {task.title}
                 </label>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={onToggleTimer}
-                  >
-                    <Clock className={`h-3 w-3 ${task.timerRunning ? 'text-primary animate-pulse' : ''}`} />
-                    {task.timerDisplay && (
-                      <span className="ml-1 text-xs">{task.timerDisplay}</span>
-                    )}
-                  </Button>
-                </div>
+                {task.timerDisplay && (
+                  <span className={`text-xs ${task.timerRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`}>
+                    {task.timerDisplay}
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 {editingTag ? (
@@ -126,13 +132,27 @@ export const TaskItem = ({
                   />
                 ) : (
                   <div className="flex items-center gap-1">
-                    <span 
-                      className={`tag ${task.tagColor ? `tag-${task.tagColor}` : `tag-${task.tag}`} cursor-pointer`}
-                      onClick={() => setEditingTag(task.id)}
-                    >
-                      {task.tag}
-                      <Edit className="ml-1 h-3 w-3 inline" />
-                    </span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <span 
+                          className={`tag ${task.tagColor ? `tag-${task.tagColor}` : `tag-${task.tag}`} cursor-pointer`}
+                        >
+                          {task.tag}
+                        </span>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-2" align="end">
+                        <TagEditor
+                          taskId={task.id}
+                          availableTags={availableTags}
+                          onUpdateTag={onUpdateTag}
+                          onUpdateTagColor={onUpdateTagColor}
+                          onTagDelete={onTagDelete}
+                          showColorPicker={showColorPicker}
+                          setShowColorPicker={setShowColorPicker}
+                          closeTagEditor={closeTagEditor}
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <Button
                       variant="ghost"
                       size="icon"

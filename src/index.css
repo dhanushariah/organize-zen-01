@@ -110,7 +110,7 @@
 @layer components {
   /* Sidebar nav button active state */
   .sidebar-nav-button[data-active="true"] {
-    @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+    @apply bg-accent font-medium text-accent-foreground;
   }
   
   /* Task Column Layout - Remove borders but keep spacing */
@@ -129,7 +129,7 @@
   
   /* Tag styling */
   .tag {
-    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+    @apply px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center;
   }
   
   .tag-work {
