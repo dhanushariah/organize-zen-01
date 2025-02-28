@@ -74,7 +74,7 @@ export function useTaskColumnLogic({
     tasks,
     setTasks,
     availableTags,
-    setAvailableTags,
+    setAvailableTasks,
     onTaskUpdate
   });
 
@@ -91,9 +91,8 @@ export function useTaskColumnLogic({
 
   // Wrapper for addTask to use the current newTaskTitle
   const handleAddTask = () => {
-    if (addTask(newTaskTitle)) {
-      setNewTaskTitle("");
-    }
+    addTask(newTaskTitle);
+    setNewTaskTitle("");
   };
 
   // Close tag editor
