@@ -72,7 +72,7 @@ const Layout = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
-              <Sidebar isMobile onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
+              <Sidebar isMobile onNavigate={handleNavigate} />
             </SheetContent>
           </Sheet>
 

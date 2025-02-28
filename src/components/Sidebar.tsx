@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, X, LogOut } from "lucide-react";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, LogOut, Crown, Heart, Flag } from "lucide-react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
@@ -88,7 +89,24 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                 </SidebarMenuItem>
               ))}
               
+              {/* Upgrade to Pro Button */}
               <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6" : "px-3 py-1 mt-10"}>
+                <SidebarMenuButton
+                  asChild
+                  className={`sidebar-nav-button bg-primary hover:bg-primary/90 text-primary-foreground ${isMobile ? "h-10" : ""}`}
+                >
+                  <Link 
+                    to="/settings"
+                    className="flex items-center gap-3"
+                    onClick={onNavigate}
+                  >
+                    <Crown className="w-5 h-5" />
+                    <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Upgrade to Pro</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
                 <SidebarMenuButton
                   asChild
                   data-active={location.pathname === "/settings"}
@@ -120,6 +138,18 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      
+      {/* Footer with attribution */}
+      <SidebarFooter className="px-3 py-3 mt-auto border-t">
+        <div className="flex flex-col items-center justify-center text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by NEO TECHINFRA
+          </div>
+          <div className="flex items-center gap-1 mt-1">
+            INDIA <Flag className="h-3 w-3 ml-1" />
+          </div>
+        </div>
+      </SidebarFooter>
     </SidebarContainer>
   );
 };

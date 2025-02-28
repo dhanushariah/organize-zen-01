@@ -30,4 +30,45 @@
   [data-theme="dark"] .sidebar-nav-button[data-active="true"] {
     @apply bg-secondary;
   }
+  
+  /* Night mode (deep dark indigo) utilities */
+  [data-theme="night"] {
+    --background: 235 30% 12%;
+    --foreground: 210 40% 98%;
+    --card: 235 34% 16%;
+    --card-foreground: 210 40% 98%;
+    --popover: 235 34% 16%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 235 25% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 235 20% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 235 25% 20%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 235 25% 22%;
+    --input: 235 25% 22%;
+    --ring: 212 97% 85%;
+    --sidebar: 240 30% 14%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 235 25% 22%;
+    --sidebar-accent: 235 25% 22%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-ring: 212 97% 85%;
+  }
+  
+  [data-theme="night"] .task-column {
+    @apply bg-card border border-border;
+  }
+
+  [data-theme="night"] .sidebar-nav-button {
+    @apply hover:bg-secondary;
+  }
+
+  [data-theme="night"] .sidebar-nav-button[data-active="true"] {
+    @apply bg-secondary;
+  }
 }
