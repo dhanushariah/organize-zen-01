@@ -7,8 +7,12 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const Layout = () => {
-  const isMobile = useIsMobile();
+interface LayoutProps {
+  isMobileVersion?: boolean;
+}
+
+const Layout = ({ isMobileVersion }: LayoutProps) => {
+  const isMobile = isMobileVersion !== undefined ? isMobileVersion : useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNavigate = () => {
@@ -32,7 +36,7 @@ const Layout = () => {
         )}
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetContent side="left" className="p-0 border-r" overlayClassName="z-40">
+          <SheetContent side="left" className="p-0 border-r">
             <Sidebar isMobile onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
           </SheetContent>
         </Sheet>
