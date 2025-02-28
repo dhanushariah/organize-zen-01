@@ -3,23 +3,22 @@
 
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
-import { Moon, Sun } from "lucide-react"
+import { Moon } from "lucide-react"
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme } = useTheme()
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => {
+        // No-op as we only support light theme
+        console.log("Light theme is the only option available");
+      }}
     >
-      {theme === "light" ? (
-        <Moon className="h-4 w-4" />
-      ) : (
-        <Sun className="h-4 w-4" />
-      )}
-      <span className="sr-only">Toggle theme</span>
+      <Moon className="h-4 w-4" />
+      <span className="sr-only">Theme is set to light</span>
     </Button>
   )
 }
