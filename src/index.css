@@ -66,7 +66,7 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     
-    /* Sidebar specific */
+    /* Sidebar specific dark theme */
     --sidebar: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
@@ -76,33 +76,33 @@
   }
   
   .obsidian {
-    --background: var(--obsidian-bg);
-    --foreground: var(--obsidian-fg);
-    --card: var(--obsidian-card);
-    --card-foreground: var(--obsidian-card-fg);
-    --popover: var(--obsidian-card);
-    --popover-foreground: var(--obsidian-card-fg);
-    --primary: var(--obsidian-accent);
-    --primary-foreground: 0 0% 100%;
-    --secondary: var(--obsidian-muted);
-    --secondary-foreground: var(--obsidian-muted-fg);
-    --muted: var(--obsidian-muted);
-    --muted-foreground: var(--obsidian-muted-fg);
-    --accent: var(--obsidian-accent);
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;
-    --border: var(--obsidian-border);
-    --input: var(--obsidian-border);
-    --ring: var(--obsidian-accent);
+    --background: hsl(250 20% 10%);
+    --foreground: hsl(255 100% 100%);
+    --card: hsl(250 15% 15%);
+    --card-foreground: hsl(255 100% 100%);
+    --popover: hsl(250 15% 15%);
+    --popover-foreground: hsl(255 100% 100%);
+    --primary: hsl(260 70% 70%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(250 10% 30%);
+    --secondary-foreground: hsl(250 5% 80%);
+    --muted: hsl(250 10% 30%);
+    --muted-foreground: hsl(250 5% 80%);
+    --accent: hsl(260 70% 70%);
+    --accent-foreground: hsl(0 0% 100%);
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --border: hsl(250 20% 20%);
+    --input: hsl(250 20% 20%);
+    --ring: hsl(260 70% 70%);
     
-    /* Sidebar specific */
-    --sidebar: var(--obsidian-bg);
-    --sidebar-foreground: var(--obsidian-fg);
-    --sidebar-border: var(--obsidian-border);
-    --sidebar-accent: var(--obsidian-muted);
-    --sidebar-accent-foreground: var(--obsidian-fg);
-    --sidebar-ring: var(--obsidian-accent);
+    /* Sidebar specific obsidian theme */
+    --sidebar: hsl(250 20% 10%);
+    --sidebar-foreground: hsl(255 100% 100%);
+    --sidebar-border: hsl(250 20% 20%);
+    --sidebar-accent: hsl(250 10% 30%);
+    --sidebar-accent-foreground: hsl(255 100% 100%);
+    --sidebar-ring: hsl(260 70% 70%);
   }
   
   /* Set Poppins as default font */

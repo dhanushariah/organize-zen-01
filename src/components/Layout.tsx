@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Menu, LogOut } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Sidebar from "@/components/Sidebar";
@@ -20,11 +20,6 @@ const Layout = ({ isMobileVersion }: LayoutProps) => {
 
   const handleNavigate = () => {
     setIsOpen(false);
-  };
-
-  const handleLogout = () => {
-    // Add your logout logic here
-    navigate("/");
   };
 
   return (
@@ -49,18 +44,6 @@ const Layout = ({ isMobileVersion }: LayoutProps) => {
               <Sidebar isMobile onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
             </SheetContent>
           </Sheet>
-
-          <div className="fixed top-4 right-16 z-50">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              className="mr-2"
-            >
-              <LogOut className="h-5 w-5" />
-              <span className="sr-only">Logout</span>
-            </Button>
-          </div>
 
           <ThemeToggle />
 

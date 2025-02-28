@@ -1,6 +1,6 @@
 
-import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, X } from "lucide-react";
-import { useLocation, Link } from "react-router-dom";
+import { Calendar, CheckSquare, Calendar as CalendarIcon, Clock, BarChart, Settings, X, LogOut } from "lucide-react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   Sidebar as SidebarContainer,
   SidebarContent,
@@ -49,6 +49,12 @@ const items = [
 
 const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    navigate("/");
+  };
 
   return (
     <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
@@ -100,6 +106,18 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                     <Settings className="w-5 h-5" />
                     <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Settings</span>
                   </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  className={`sidebar-nav-button w-full ${isMobile ? "h-10" : ""}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <LogOut className="w-5 h-5" />
+                    <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Logout</span>
+                  </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
