@@ -2,13 +2,8 @@
 export interface Task {
   id: string;
   title: string;
-  tag?: string;
-  tagColor?: string;
-  createdAt?: Date;
-  endTime?: Date;
-  startTime?: Date;
   timerRunning?: boolean;
-  duration?: number;
+  timerStart?: Date;
+  timerElapsed?: number;
   timerDisplay?: string;
-  deleted?: boolean;
 }

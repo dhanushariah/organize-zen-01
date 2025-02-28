@@ -9,12 +9,8 @@ import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-interface LayoutProps {
-  isMobileVersion?: boolean;
-}
-
-const Layout = ({ isMobileVersion }: LayoutProps) => {
-  const isMobile = isMobileVersion !== undefined ? isMobileVersion : useIsMobile();
+const Layout = () => {
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -24,7 +20,7 @@ const Layout = ({ isMobileVersion }: LayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full">
         {!isMobile && <Sidebar />}
 
         <div className="flex-1 p-4 md:p-6">

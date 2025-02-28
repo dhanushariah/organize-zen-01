@@ -1,4 +1,6 @@
 
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Task } from "@/types/task";
 
 interface TaskActionsProps {
@@ -9,9 +11,6 @@ interface TaskActionsProps {
   onTaskUpdate?: (task: Task) => void;
 }
 
-// Define a variable to store the timer interval
-let timerInterval: number | undefined;
-
 export function useTaskActions({
   tasks,
   setTasks,
@@ -19,53 +18,21 @@ export function useTaskActions({
   setCompletedTasks,
   onTaskUpdate
 }: TaskActionsProps) {
-  // Toggle task completion
-  const toggleTask = (taskId: string) => {
-    setCompletedTasks(prev =>
-      prev.includes(taskId) 
-        ? prev.filter(id => id !== taskId)
-        : [...prev, taskId]
-    );
-    
-    const updatedTasks = tasks.map(task => {
-      if (task.id === taskId) {
-        const isCompleting = !completedTasks.includes(taskId);
-        const updatedTask = {
-          ...task,
-          endTime: isCompleting ? new Date() : undefined,
-          timerRunning: isCompleting ? false : task.timerRunning
-        };
-        
-        if (onTaskUpdate) {
-          onTaskUpdate(updatedTask);
-        }
-        
-        return updatedTask;
-      }
-      return task;
-    });
-    
-    setTasks(updatedTasks);
-  };
-
   // Add a new task
-  const handleAddTask = (newTaskTitle: string) => {
-    if (newTaskTitle.trim()) {
-      const newTask = {
-        id: `${Date.now()}`,
-        title: newTaskTitle,
-        tag: "personal"
-      };
-      const updatedTasks = [...tasks, newTask];
-      setTasks(updatedTasks);
-      
-      if (onTaskUpdate) {
-        onTaskUpdate(newTask);
-      }
+  const handleAddTask = (title: string) => {
+    const newTask: Task = {
+      id: uuidv4(),
+      title,
+      timerRunning: false
+    };
+    
+    setTasks([...tasks, newTask]);
+    if (onTaskUpdate) {
+      onTaskUpdate(newTask);
     }
   };
 
-  // Update task title
+  // Update a task
   const handleUpdateTask = (taskId: string, newTitle: string) => {
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
@@ -83,94 +50,39 @@ export function useTaskActions({
 
   // Delete a task
   const handleDeleteTask = (taskId: string) => {
-    const updatedTasks = tasks.filter(task => task.id !== taskId);
-    setTasks(updatedTasks);
-    setCompletedTasks(prev => prev.filter(id => id !== taskId));
-    
-    const taskToDelete = tasks.find(task => task.id === taskId);
-    if (taskToDelete && onTaskUpdate) {
-      onTaskUpdate({...taskToDelete, deleted: true});
+    setTasks(tasks.filter(task => task.id !== taskId));
+    setCompletedTasks(completedTasks.filter(id => id !== taskId));
+  };
+
+  // Toggle task completion status
+  const toggleTask = (taskId: string) => {
+    if (completedTasks.includes(taskId)) {
+      setCompletedTasks(completedTasks.filter(id => id !== taskId));
+    } else {
+      setCompletedTasks([...completedTasks, taskId]);
     }
   };
 
-  // Calculate and format time duration
-  const formatTimeDuration = (seconds: number) => {
-    if (seconds < 60) {
-      return `${seconds}s`;
-    }
-    
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    
-    if (minutes < 60) {
-      return `${minutes}m ${remainingSeconds}s`;
-    }
-    
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    
-    return `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
-  };
-
-  // Set up timer interval to update running timers
-  const setupTimerInterval = (currentTasks: Task[], setTasksFunction: React.Dispatch<React.SetStateAction<Task[]>>) => {
-    // Clear any existing interval
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = undefined;
-    }
-    
-    // Set up new interval if any timer is running
-    if (currentTasks.some(task => task.timerRunning)) {
-      timerInterval = window.setInterval(() => {
-        setTasksFunction(prevTasks => 
-          prevTasks.map(task => {
-            if (task.timerRunning && task.startTime) {
-              const startTime = new Date(task.startTime);
-              const now = new Date();
-              const baseDuration = task.duration || 0;
-              const runningSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000);
-              const totalSeconds = baseDuration + runningSeconds;
-              
-              return {
-                ...task,
-                timerDisplay: formatTimeDuration(totalSeconds)
-              };
-            }
-            return task;
-          })
-        );
-      }, 1000);
-    }
-  };
-
-  // Toggle task timer
+  // Toggle timer for a task
   const toggleTaskTimer = (taskId: string) => {
-    const now = new Date();
+    let timerIntervalId: number | null = null;
     
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
-        const isStarting = !task.timerRunning;
+        // Calculate elapsed time
+        const now = new Date();
+        const startTime = task.timerRunning ? (task.timerStart || now) : now;
+        const elapsed = task.timerElapsed || 0;
         
-        // Don't allow timer to start if task is completed
-        if (isStarting && completedTasks.includes(taskId)) {
-          return task;
-        }
-        
-        let elapsedTime = task.duration || 0;
-        
-        // If stopping the timer, calculate time elapsed since it started
-        if (!isStarting && task.startTime) {
-          const elapsedSeconds = Math.floor((now.getTime() - new Date(task.startTime).getTime()) / 1000);
-          elapsedTime += elapsedSeconds;
-        }
+        // Toggle timer state
+        const timerRunning = !task.timerRunning;
         
         const updatedTask = {
           ...task,
-          timerRunning: isStarting,
-          startTime: isStarting ? now : task.startTime,
-          duration: elapsedTime,
-          timerDisplay: formatTimeDuration(elapsedTime)
+          timerRunning,
+          timerStart: timerRunning ? now : undefined,
+          timerElapsed: timerRunning ? elapsed : elapsed + (task.timerRunning ? (now.getTime() - startTime.getTime()) : 0),
+          timerDisplay: formatTimerDisplay(timerRunning ? elapsed : elapsed + (task.timerRunning ? (now.getTime() - startTime.getTime()) : 0))
         };
         
         if (onTaskUpdate) {
@@ -184,15 +96,60 @@ export function useTaskActions({
     
     setTasks(updatedTasks);
     
-    // If any timer is running, set up interval to update the display
-    setupTimerInterval(updatedTasks, setTasks);
+    if (timerIntervalId) {
+      clearInterval(timerIntervalId);
+    }
   };
 
+  // Timer display formatting helper
+  const formatTimerDisplay = (milliseconds: number): string => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${seconds}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  };
+
+  // Update timers every second
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = new Date();
+      
+      const updatedTasks = tasks.map(task => {
+        if (task.timerRunning && task.timerStart) {
+          const startTime = task.timerStart;
+          const elapsed = (task.timerElapsed || 0) + (now.getTime() - startTime.getTime());
+          
+          return {
+            ...task,
+            timerStart: now,
+            timerElapsed: task.timerElapsed,
+            timerDisplay: formatTimerDisplay(elapsed)
+          };
+        }
+        return task;
+      });
+      
+      if (JSON.stringify(updatedTasks) !== JSON.stringify(tasks)) {
+        setTasks(updatedTasks);
+      }
+    }, 1000);
+    
+    return () => clearInterval(intervalId);
+  }, [tasks, setTasks]);
+
   return {
-    toggleTask,
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
+    toggleTask,
     toggleTaskTimer
   };
 }

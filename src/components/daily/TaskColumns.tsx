@@ -18,7 +18,7 @@ const TaskColumns = ({
   handleTaskUpdate,
 }: TaskColumnsProps) => {
   return (
-    <div className="flex gap-8 overflow-x-auto pb-4 relative">
+    <div className="flex flex-col md:flex-row gap-8 overflow-x-auto pb-4 relative">
       {columns.map((column, index) => (
         <TaskColumn
           key={column.id}

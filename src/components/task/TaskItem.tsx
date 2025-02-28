@@ -1,63 +1,42 @@
 
 import { useState } from "react";
-import { Edit, X, Check, Trash2, Palette, Plus, Play, Pause } from "lucide-react";
+import { Edit, X, Check, Trash2, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Task } from "@/types/task";
-import { TagEditor } from "./TagEditor";
 
 interface TaskItemProps {
   task: Task;
   isCompleted: boolean;
   editingTask: boolean;
-  editingTag: boolean;
-  showColorPicker: boolean;
   isDragging: boolean;
   onToggle: () => void;
   onUpdate: (newTitle: string) => void;
-  onUpdateTag: (newTag: string) => void;
-  onUpdateTagColor: (color: string) => void;
   onDelete: () => void;
-  onTagDelete: (tag: string, e: React.MouseEvent) => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragEnd: () => void;
   onMoveToColumn: (targetColumnId: string) => void;
   onToggleTimer: () => void;
   setEditingTask: (taskId: string | null) => void;
-  setEditingTag: (taskId: string | null) => void;
-  setShowColorPicker: (taskId: string | null) => void;
-  closeTagEditor: () => void;
   otherColumns?: { id: string, title: string }[];
-  availableTags: string[];
 }
 
 export const TaskItem = ({
   task,
   isCompleted,
   editingTask,
-  editingTag,
-  showColorPicker,
   isDragging,
   onToggle,
   onUpdate,
-  onUpdateTag,
-  onUpdateTagColor,
   onDelete,
-  onTagDelete,
   onDragStart,
   onDragEnd,
   onMoveToColumn,
   onToggleTimer,
   setEditingTask,
-  setEditingTag,
-  setShowColorPicker,
-  closeTagEditor,
-  otherColumns = [],
-  availableTags
+  otherColumns = []
 }: TaskItemProps) => {
   return (
     <Card 
@@ -119,50 +98,14 @@ export const TaskItem = ({
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                {editingTag ? (
-                  <TagEditor
-                    taskId={task.id}
-                    availableTags={availableTags}
-                    onUpdateTag={onUpdateTag}
-                    onUpdateTagColor={onUpdateTagColor}
-                    onTagDelete={onTagDelete}
-                    showColorPicker={showColorPicker}
-                    setShowColorPicker={setShowColorPicker}
-                    closeTagEditor={closeTagEditor}
-                  />
-                ) : (
-                  <div className="flex items-center gap-1">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <span 
-                          className={`tag ${task.tagColor ? `tag-${task.tagColor}` : `tag-${task.tag}`} cursor-pointer`}
-                        >
-                          {task.tag}
-                        </span>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-2" align="end">
-                        <TagEditor
-                          taskId={task.id}
-                          availableTags={availableTags}
-                          onUpdateTag={onUpdateTag}
-                          onUpdateTagColor={onUpdateTagColor}
-                          onTagDelete={onTagDelete}
-                          showColorPicker={showColorPicker}
-                          setShowColorPicker={setShowColorPicker}
-                          closeTagEditor={closeTagEditor}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={onDelete}
-                      className="h-6 w-6"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onDelete}
+                  className="h-6 w-6"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           )}
