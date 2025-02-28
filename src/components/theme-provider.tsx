@@ -2,9 +2,9 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext } from "react"
+import { createContext, useContext, useState } from "react"
 
-type Theme = "light"
+type Theme = "light" | "dark"
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -12,10 +12,12 @@ type ThemeProviderProps = {
 
 type ThemeProviderState = {
   theme: Theme
+  setTheme: (theme: Theme) => void
 }
 
 const initialState: ThemeProviderState = {
-  theme: "light"
+  theme: "light",
+  setTheme: () => null
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
@@ -24,13 +26,19 @@ export function ThemeProvider({
   children,
   ...props
 }: ThemeProviderProps) {
-  const value = {
-    theme: "light" as Theme
-  }
+  const [theme, setTheme] = useState<Theme>("light")
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+    <ThemeProviderContext.Provider 
+      {...props} 
+      value={{
+        theme,
+        setTheme
+      }}
+    >
+      <div data-theme={theme}>
+        {children}
+      </div>
     </ThemeProviderContext.Provider>
   )
 }

@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -34,7 +35,13 @@ const Layout = ({ isMobileVersion }: LayoutProps) => {
                 <span className="sr-only">Open menu</span>
               </Button>
               <h1 className="text-xl font-bold">TaskSheet</h1>
-              <div className="w-6" />
+              <ThemeToggle />
+            </div>
+          )}
+
+          {!isMobile && (
+            <div className="flex justify-end mb-6">
+              <ThemeToggle />
             </div>
           )}
 
