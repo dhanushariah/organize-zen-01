@@ -4,8 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
-import { useState } from "react";
+import { Progress } from "@/components/ui/progress";
+import { Plus, X, Flag, Edit } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface Task {
   id: string;
@@ -24,6 +25,17 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [editingTask, setEditingTask] = useState<string | null>(null);
+  const [editingTag, setEditingTag] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (tasks.length > 0) {
+      const newProgress = (completedTasks.length / tasks.length) * 100;
+      setProgress(newProgress);
+    } else {
+      setProgress(0);
+    }
+  }, [completedTasks, tasks]);
 
   const toggleTask = (taskId: string) => {
     setCompletedTasks(prev =>
@@ -54,6 +66,15 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
     setEditingTask(null);
   };
 
+  const handleUpdateTag = (taskId: string, newTag: "work" | "personal") => {
+    setTasks(tasks.map(task => 
+      task.id === taskId 
+        ? { ...task, tag: newTag }
+        : task
+    ));
+    setEditingTag(null);
+  };
+
   const handleDeleteTask = (taskId: string) => {
     setTasks(tasks.filter(task => task.id !== taskId));
     setCompletedTasks(prev => prev.filter(id => id !== taskId));
@@ -61,7 +82,24 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
 
   return (
     <div className="flex-1 min-w-[280px] md:min-w-[300px] relative">
-      <h2 className="text-lg md:text-xl font-semibold text-secondary mb-4">{title}</h2>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-lg md:text-xl font-semibold text-secondary">{title}</h2>
+        {progress === 100 && (
+          <div className="flex items-center">
+            <Flag className="h-5 w-5 text-primary mr-1" />
+            <span className="text-sm text-primary font-medium">Complete!</span>
+          </div>
+        )}
+      </div>
+      
+      <div className="mb-4">
+        <Progress value={progress} className="h-2" />
+        <div className="flex justify-between mt-1">
+          <span className="text-xs text-muted-foreground">Progress</span>
+          <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
+        </div>
+      </div>
+      
       <div className="space-y-3 md:space-y-4">
         {tasks.map((task) => (
           <Card key={task.id} className="task-card p-3 md:p-4">
@@ -97,15 +135,44 @@ const TaskColumn = ({ title, tasks: initialTasks, isLast }: TaskColumnProps) => 
                       {task.title}
                     </label>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className={`tag tag-${task.tag}`}>{task.tag}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteTask(task.id)}
-                        className="h-6 w-6"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
+                      {editingTag === task.id ? (
+                        <div className="flex gap-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleUpdateTag(task.id, "work")}
+                            className="h-6 px-2 text-xs"
+                          >
+                            Work
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleUpdateTag(task.id, "personal")}
+                            className="h-6 px-2 text-xs"
+                          >
+                            Personal
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          <span 
+                            className={`tag tag-${task.tag} cursor-pointer flex items-center`}
+                            onClick={() => setEditingTag(task.id)}
+                          >
+                            {task.tag}
+                            <Edit className="ml-1 h-3 w-3" />
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteTask(task.id)}
+                            className="h-6 w-6"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
