@@ -1,5 +1,5 @@
 
-import { useDailyTasks } from "@/hooks/use-daily-tasks";
+import { useDailyTasks } from "@/hooks/daily-tasks/use-daily-tasks";
 import DailyHeader from "@/components/daily/DailyHeader";
 import TaskColumns from "@/components/daily/TaskColumns";
 
