@@ -18,4 +18,9 @@
   .mobile-sidebar .sidebar-group-label {
     @apply text-base font-medium opacity-100 mt-0 !important;
   }
+  
+  /* Upgrade to Pro button */
+  .upgrade-pro-button {
+    @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold hover:shadow-lg transition-shadow;
+  }
 }

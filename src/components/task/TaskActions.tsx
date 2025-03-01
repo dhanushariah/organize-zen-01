@@ -1,16 +1,15 @@
 
 import React from "react";
-import { Play, Pause, Tag, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 
 interface TaskActionsProps {
   taskId: string;
   tag?: string;
-  timerRunning?: boolean;
   availableTags: string[];
   tagColors: Record<string, string>;
-  onToggleTimer: () => void;
   onDelete: () => void;
   onUpdateTag?: (tag: string) => void;
 }
@@ -18,10 +17,8 @@ interface TaskActionsProps {
 export const TaskActions: React.FC<TaskActionsProps> = ({
   taskId,
   tag,
-  timerRunning,
   availableTags,
   tagColors,
-  onToggleTimer,
   onDelete,
   onUpdateTag
 }) => {
@@ -30,13 +27,12 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
       {onUpdateTag && (
         <Popover>
           <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
+            <Badge
+              variant="outline"
+              className={`text-xs px-2 py-0 cursor-pointer ${tagColors[tag || ""] ? `tag-${tagColors[tag || ""]}` : ''}`}
             >
-              <Tag className="h-4 w-4" />
-            </Button>
+              {tag || "Add tag"}
+            </Badge>
           </PopoverTrigger>
           <PopoverContent className="w-60 p-2">
             <div className="space-y-2">

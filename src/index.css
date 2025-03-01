@@ -29,21 +29,21 @@
  
   .dark {
     --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --foreground: 0 0% 100%;  /* Pure white text */
     --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 0 0% 100%;  /* Pure white text */
     --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    --popover-foreground: 0 0% 100%;  /* Pure white text */
+    --primary: 0 0% 100%;  /* Pure white for primary elements */
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary-foreground: 0 0% 100%;  /* Pure white text */
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted-foreground: 0 0% 85%;  /* Lightened for better visibility */
     --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent-foreground: 0 0% 100%;  /* Pure white text */
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;  /* Pure white text */
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
@@ -57,9 +57,19 @@
     color: rgb(220, 38, 38);
   }
   
+  .dark .tag-red {
+    background-color: rgba(254, 202, 202, 0.2);
+    color: rgb(248, 180, 180);
+  }
+  
   .tag-blue {
     background-color: rgba(191, 219, 254, 0.2);
     color: rgb(37, 99, 235);
+  }
+  
+  .dark .tag-blue {
+    background-color: rgba(191, 219, 254, 0.2);
+    color: rgb(147, 197, 253);
   }
   
   .tag-green {
@@ -67,9 +77,19 @@
     color: rgb(22, 163, 74);
   }
   
+  .dark .tag-green {
+    background-color: rgba(187, 247, 208, 0.2);
+    color: rgb(134, 239, 172);
+  }
+  
   .tag-purple {
     background-color: rgba(216, 180, 254, 0.2);
     color: rgb(126, 34, 206);
+  }
+  
+  .dark .tag-purple {
+    background-color: rgba(216, 180, 254, 0.2);
+    color: rgb(216, 180, 254);
   }
   
   .tag-yellow {
@@ -77,9 +97,19 @@
     color: rgb(202, 138, 4);
   }
   
+  .dark .tag-yellow {
+    background-color: rgba(254, 240, 138, 0.2);
+    color: rgb(253, 224, 71);
+  }
+  
   .tag-pink {
     background-color: rgba(251, 207, 232, 0.2);
     color: rgb(219, 39, 119);
+  }
+  
+  .dark .tag-pink {
+    background-color: rgba(251, 207, 232, 0.2);
+    color: rgb(249, 168, 212);
   }
   
   .tag-indigo {
@@ -87,9 +117,19 @@
     color: rgb(79, 70, 229);
   }
   
+  .dark .tag-indigo {
+    background-color: rgba(199, 210, 254, 0.2);
+    color: rgb(165, 180, 252);
+  }
+  
   .tag-teal {
     background-color: rgba(153, 246, 228, 0.2);
     color: rgb(13, 148, 136);
+  }
+  
+  .dark .tag-teal {
+    background-color: rgba(153, 246, 228, 0.2);
+    color: rgb(94, 234, 212);
   }
   
   .tag-border {
@@ -117,6 +157,38 @@
   
   .animate-pulse-glow {
     animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Dark mode improvements */
+  .dark .task-card {
+    @apply border-white/10 bg-black/20;
+  }
+  
+  .dark .badge {
+    @apply text-white border-white/20;
+  }
+  
+  .dark input::placeholder {
+    @apply text-white/60;
+  }
+  
+  .dark .checkbox-item {
+    @apply border-white;
+  }
+  
+  .dark label, 
+  .dark p, 
+  .dark button,
+  .dark h1, 
+  .dark h2, 
+  .dark h3, 
+  .dark span {
+    @apply text-white;
+  }
+  
+  /* Gold gradient for Upgrade Pro button */
+  .upgrade-pro-button {
+    @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold hover:shadow-lg transition-shadow;
   }
 }
 

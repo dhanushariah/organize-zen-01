@@ -15,10 +15,6 @@ export function useTagsManager() {
         try {
           const parsedTags = JSON.parse(savedTags);
           setAvailableTags(parsedTags);
-          
-          // Ensure consistent storage
-          localStorage.setItem('taskTags', JSON.stringify(parsedTags));
-          localStorage.setItem('availableTags', JSON.stringify(parsedTags));
         } catch (error) {
           console.error('Error parsing stored tags:', error);
           setDefaultTags();
@@ -35,7 +31,6 @@ export function useTagsManager() {
       const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
       setAvailableTags(defaultTags);
       localStorage.setItem('taskTags', JSON.stringify(defaultTags));
-      localStorage.setItem('availableTags', JSON.stringify(defaultTags));
     };
     
     const loadTagColors = () => {
@@ -45,27 +40,60 @@ export function useTagsManager() {
           setTagColors(JSON.parse(savedTagColors));
         } catch (error) {
           console.error('Error parsing tag colors:', error);
-          setTagColors({});
+          setDefaultTagColors();
         }
+      } else {
+        setDefaultTagColors();
       }
+    };
+    
+    const setDefaultTagColors = () => {
+      const defaultColors = {
+        'work': 'blue',
+        'personal': 'purple',
+        'home': 'green',
+        'study': 'indigo',
+        'health': 'teal'
+      };
+      setTagColors(defaultColors);
+      localStorage.setItem('tagColors', JSON.stringify(defaultColors));
     };
     
     loadTags();
     
     // Set up event listener to handle changes in other tabs/windows
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'taskTags' || event.key === 'availableTags') {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'taskTags') {
         loadTags();
       }
-    });
+      if (event.key === 'tagColors') {
+        loadTagColors();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
     
     return () => {
-      window.removeEventListener('storage', () => {});
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
+  // Function to update tags and persist to localStorage
+  const updateTags = (newTags: string[]) => {
+    setAvailableTags(newTags);
+    localStorage.setItem('taskTags', JSON.stringify(newTags));
+  };
+
+  // Function to update tag colors and persist to localStorage
+  const updateTagColors = (newColors: Record<string, string>) => {
+    setTagColors(newColors);
+    localStorage.setItem('tagColors', JSON.stringify(newColors));
+  };
+
   return {
     availableTags,
-    tagColors
+    tagColors,
+    updateTags,
+    updateTagColors
   };
 }

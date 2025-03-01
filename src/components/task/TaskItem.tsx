@@ -53,15 +53,13 @@ export const TaskItem: React.FC<TaskItemProps> = ({
     >
       <div className="flex items-start gap-2 md:gap-3">
         {/* Timer button before checkbox */}
-        {task.timerRunning !== undefined && (
-          <div className="mt-0.5">
-            <TaskTimer 
-              timerRunning={task.timerRunning} 
-              timerDisplay={task.timerDisplay}
-              onToggleTimer={onToggleTimer}
-            />
-          </div>
-        )}
+        <div className="mt-0.5">
+          <TaskTimer 
+            timerRunning={task.timerRunning} 
+            timerDisplay={task.timerDisplay}
+            onToggleTimer={onToggleTimer}
+          />
+        </div>
 
         <Checkbox
           id={task.id}
@@ -76,11 +74,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({
             title={task.title}
             isCompleted={isCompleted}
             editingTask={editingTask}
-            timerRunning={task.timerRunning}
-            timerDisplay={task.timerDisplay}
             tag={task.tag}
             tagColors={tagColors}
-            onToggleTimer={onToggleTimer}
             onUpdate={onUpdate}
             setEditingTask={setEditingTask}
           />
@@ -88,10 +83,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           <TaskActions
             taskId={task.id}
             tag={task.tag}
-            timerRunning={task.timerRunning}
             availableTags={availableTags}
             tagColors={tagColors}
-            onToggleTimer={onToggleTimer}
             onDelete={onDelete}
             onUpdateTag={onUpdateTag}
           />
