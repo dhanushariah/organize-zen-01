@@ -51,7 +51,7 @@
 }
 
 @layer components {
-  /* Tag Colors */
+  /* Tag Colors - Updated for both light and dark modes */
   .tag-red {
     background-color: rgba(254, 202, 202, 0.2);
     color: rgb(220, 38, 38);
