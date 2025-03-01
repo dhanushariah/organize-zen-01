@@ -56,6 +56,11 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
     navigate("/auth");
   };
 
+  const handleItemClick = () => {
+    if (onNavigate) onNavigate();
+    if (onClose) onClose();
+  };
+
   return (
     <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
       <SidebarContent>
@@ -83,7 +88,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                     <Link 
                       to={item.path} 
                       className="flex items-center gap-3"
-                      onClick={onNavigate}
+                      onClick={handleItemClick}
                     >
                       <item.icon className="w-5 h-5" />
                       <span className={`text-base ${isMobile ? "font-medium" : ""}`}>{item.title}</span>
@@ -101,7 +106,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                   <Link 
                     to="/settings"
                     className="flex items-center gap-3"
-                    onClick={onNavigate}
+                    onClick={handleItemClick}
                   >
                     <Crown className="w-5 h-5" />
                     <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Upgrade to Pro</span>
@@ -118,7 +123,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                   <Link 
                     to="/settings"
                     className="flex items-center gap-3"
-                    onClick={onNavigate}
+                    onClick={handleItemClick}
                   >
                     <Settings className="w-5 h-5" />
                     <span className={`text-base ${isMobile ? "font-medium" : ""}`}>Settings</span>

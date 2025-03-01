@@ -69,8 +69,9 @@ const Layout = () => {
             </div>
           )}
 
+          {/* Mobile Navigation Sheet */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent side="left" className="p-0 border-r w-[300px] max-w-[300px]">
+            <SheetContent side="left" className="p-0 w-[280px] max-w-[280px]">
               <div className="flex justify-between items-center px-4 py-3 border-b">
                 <h1 className="text-xl font-bold text-primary flex items-center">
                   TaskSheet
@@ -80,7 +81,9 @@ const Layout = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
-              <Sidebar isMobile={true} onNavigate={handleNavigate} />
+              <div className="overflow-y-auto h-[calc(100vh-56px)]">
+                <Sidebar isMobile={true} onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
+              </div>
             </SheetContent>
           </Sheet>
 

@@ -23,6 +23,19 @@
   .mobile-sidebar .sidebar-group-label {
     @apply text-base font-medium opacity-100 mt-0 !important;
   }
+
+  .mobile-sidebar {
+    @apply flex flex-col h-full;
+  }
+  
+  /* Ensure mobile menu items are visible */
+  .mobile-sidebar .sidebar-menu {
+    @apply flex flex-col gap-2;
+  }
+  
+  .mobile-sidebar .sidebar-menu-button {
+    @apply text-foreground;
+  }
   
   /* Upgrade to Pro button */
   .upgrade-pro-button {
