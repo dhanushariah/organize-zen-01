@@ -6,16 +6,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
-const TAG_COLORS = [
-  'bg-red-100 text-red-800',
-  'bg-blue-100 text-blue-800',
-  'bg-green-100 text-green-800',
-  'bg-yellow-100 text-yellow-800',
-  'bg-purple-100 text-purple-800',
-  'bg-pink-100 text-pink-800',
-  'bg-indigo-100 text-indigo-800',
-  'bg-gray-100 text-gray-800',
-];
+// Define the type for allowed color variants
+type ColorVariant = "default" | "secondary" | "destructive" | "outline" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "indigo" | "gray";
 
 interface TagEditorProps {
   currentTag?: string;
@@ -25,23 +17,52 @@ interface TagEditorProps {
 export const TagEditor = ({ currentTag, onSelectTag }: TagEditorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [tagColors, setTagColors] = useState<Record<string, ColorVariant>>({});
   
   useEffect(() => {
-    const storedTags = localStorage.getItem('taskTags');
-    if (storedTags) {
-      try {
-        setAvailableTags(JSON.parse(storedTags));
-      } catch (error) {
-        console.error('Error parsing stored tags:', error);
-        setAvailableTags([]);
+    const loadData = () => {
+      // Load available tags
+      const storedTags = localStorage.getItem('taskTags');
+      if (storedTags) {
+        try {
+          setAvailableTags(JSON.parse(storedTags));
+        } catch (error) {
+          console.error('Error parsing stored tags:', error);
+          setAvailableTags([]);
+        }
       }
-    }
+      
+      // Load tag colors
+      const storedColors = localStorage.getItem('tagColors');
+      if (storedColors) {
+        try {
+          const parsedColors = JSON.parse(storedColors);
+          const validColors: Record<string, ColorVariant> = {};
+          
+          // Validate each color
+          Object.entries(parsedColors).forEach(([tag, color]) => {
+            validColors[tag] = isValidColorVariant(color as string) ? color as ColorVariant : "gray";
+          });
+          
+          setTagColors(validColors);
+        } catch (error) {
+          console.error('Error parsing tag colors:', error);
+          setTagColors({});
+        }
+      }
+    };
+    
+    loadData();
   }, [isOpen]); // Reload when popover opens to get latest tags
   
-  const getTagColor = (tag: string) => {
-    // Simple hash function to assign consistent colors
-    const hashCode = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return TAG_COLORS[hashCode % TAG_COLORS.length];
+  // Helper function to check if a color is a valid variant
+  const isValidColorVariant = (color: string): color is ColorVariant => {
+    const validColors: ColorVariant[] = ["default", "secondary", "destructive", "outline", "red", "blue", "green", "yellow", "purple", "pink", "indigo", "gray"];
+    return validColors.includes(color as ColorVariant);
+  };
+  
+  const getTagColor = (tag: string): ColorVariant => {
+    return tagColors[tag] || "gray";
   };
   
   const handleSelect = (tag: string) => {
@@ -81,7 +102,8 @@ export const TagEditor = ({ currentTag, onSelectTag }: TagEditorProps) => {
               {availableTags.map((tag) => (
                 <Badge 
                   key={tag} 
-                  className={`${getTagColor(tag)} px-2 py-1 cursor-pointer w-full justify-start ${
+                  variant={getTagColor(tag)}
+                  className={`px-2 py-1 cursor-pointer w-full justify-start ${
                     currentTag === tag ? 'ring-2 ring-offset-1' : ''
                   }`}
                   onClick={() => handleSelect(tag)}

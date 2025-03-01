@@ -7,10 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// Define a type for the allowed color variants to match the Badge component
+type ColorVariant = "default" | "secondary" | "destructive" | "outline" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "indigo" | "gray";
+
 export const TagManagement = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
-  const [tagColors, setTagColors] = useState<Record<string, string>>({});
+  const [tagColors, setTagColors] = useState<Record<string, ColorVariant>>({});
   
   // Load tags from localStorage on component mount
   useEffect(() => {
@@ -30,12 +33,26 @@ export const TagManagement = () => {
         // Load tag colors
         const storedColors = localStorage.getItem('tagColors');
         if (storedColors) {
-          setTagColors(JSON.parse(storedColors));
+          // Ensure the stored colors match the allowed variants
+          const parsedColors = JSON.parse(storedColors);
+          const validColors: Record<string, ColorVariant> = {};
+          
+          Object.entries(parsedColors).forEach(([tag, color]) => {
+            // Check if color is a valid ColorVariant
+            if (isValidColorVariant(color as string)) {
+              validColors[tag] = color as ColorVariant;
+            } else {
+              // Fallback to a default color if not valid
+              validColors[tag] = "gray";
+            }
+          });
+          
+          setTagColors(validColors);
         } else {
           // Initialize with default colors
-          const defaultColors: Record<string, string> = {};
+          const defaultColors: Record<string, ColorVariant> = {};
           ['work', 'personal', 'home', 'study', 'health'].forEach((tag, index) => {
-            const colorKey = ['blue', 'purple', 'green', 'indigo', 'red'][index % 5];
+            const colorKey = ['blue', 'purple', 'green', 'indigo', 'red'][index % 5] as ColorVariant;
             defaultColors[tag] = colorKey;
           });
           setTagColors(defaultColors);
@@ -53,6 +70,12 @@ export const TagManagement = () => {
     loadSavedTags();
   }, []);
   
+  // Helper function to check if a color is a valid variant
+  const isValidColorVariant = (color: string): color is ColorVariant => {
+    const validColors: ColorVariant[] = ["default", "secondary", "destructive", "outline", "red", "blue", "green", "yellow", "purple", "pink", "indigo", "gray"];
+    return validColors.includes(color as ColorVariant);
+  };
+  
   // Save tags to localStorage
   const saveTags = (tagsToSave: string[]) => {
     try {
@@ -64,7 +87,7 @@ export const TagManagement = () => {
       const updatedColors = { ...tagColors };
       tagsToSave.forEach(tag => {
         if (!updatedColors[tag]) {
-          const colorKeys = ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'indigo', 'gray'];
+          const colorKeys: ColorVariant[] = ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'indigo', 'gray'];
           updatedColors[tag] = colorKeys[Math.floor(Math.random() * colorKeys.length)];
         }
       });
@@ -101,7 +124,7 @@ export const TagManagement = () => {
     toast.success('Tag deleted successfully');
   };
   
-  const updateTagColor = (tag: string, color: string) => {
+  const updateTagColor = (tag: string, color: ColorVariant) => {
     const updatedColors = { ...tagColors, [tag]: color };
     setTagColors(updatedColors);
     localStorage.setItem('tagColors', JSON.stringify(updatedColors));
@@ -153,7 +176,13 @@ export const TagManagement = () => {
               <div className="flex items-center gap-2">
                 <Select 
                   value={tagColors[tag] || 'gray'} 
-                  onValueChange={(value) => updateTagColor(tag, value)}
+                  onValueChange={(value) => {
+                    if (isValidColorVariant(value)) {
+                      updateTagColor(tag, value);
+                    } else {
+                      updateTagColor(tag, 'gray');
+                    }
+                  }}
                 >
                   <SelectTrigger className="w-24 h-7">
                     <SelectValue placeholder="Color" />

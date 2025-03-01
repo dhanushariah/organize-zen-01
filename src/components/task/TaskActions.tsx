@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 
+// Define the type for allowed color variants
+type ColorVariant = "default" | "secondary" | "destructive" | "outline" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "indigo" | "gray";
+
 interface TaskActionsProps {
   taskId: string;
   tag?: string;
@@ -22,9 +25,12 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
   onDelete,
   onUpdateTag
 }) => {
-  // Helper function to get the appropriate tag color
-  const getTagColor = (tagName: string) => {
-    return tagColors[tagName] || "gray";
+  // Helper function to get the appropriate tag color and ensure it's a valid variant
+  const getTagColor = (tagName: string): ColorVariant => {
+    const color = tagColors[tagName];
+    const validColors: ColorVariant[] = ["default", "secondary", "destructive", "outline", "red", "blue", "green", "yellow", "purple", "pink", "indigo", "gray"];
+    
+    return validColors.includes(color as ColorVariant) ? color as ColorVariant : "gray";
   };
 
   return (
@@ -34,7 +40,7 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
           <PopoverTrigger asChild>
             {tag ? (
               <Badge 
-                variant={getTagColor(tag) as any}
+                variant={getTagColor(tag)}
                 className="cursor-pointer"
               >
                 {tag}
@@ -64,7 +70,7 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
                     onClick={() => onUpdateTag(tagOption)}
                   >
                     <Badge 
-                      variant={getTagColor(tagOption) as any}
+                      variant={getTagColor(tagOption)}
                       className="mr-1"
                     >
                       •
