@@ -14,11 +14,7 @@ const TaskColumnHeader = ({
   return (
     <div className="flex justify-between items-center mb-2">
       <h2 className="text-lg font-bold">{title}</h2>
-      <div className="flex items-center gap-1">
-        <span className="text-sm text-muted-foreground">
-          {Math.round(progress)}%
-        </span>
-      </div>
+      {/* Removed the progress percentage display from here */}
     </div>
   );
 };
