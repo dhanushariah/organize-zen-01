@@ -73,6 +73,11 @@
 
 /* Add utility classes for the gold gradient */
 @layer components {
+  /* Custom background classes using the theme variables */
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+
   .gold-gradient {
     @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold;
   }

@@ -1,5 +1,10 @@
 
 @layer components {
+  /* Custom background classes using the theme variables */
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+
   /* Sidebar nav button active state */
   .sidebar-nav-button[data-active="true"] {
     @apply bg-accent font-medium text-accent-foreground;
@@ -72,13 +77,15 @@
   
   /* Ensure dropdown menus are visible with solid background */
   .dropdown-menu {
-    @apply bg-popover border border-border shadow-md !important;
+    background-color: hsl(var(--popover));
+    @apply border border-border shadow-md !important;
     backdrop-filter: none !important;
   }
   
   /* Fixed select component background */
   .select-content {
-    @apply bg-popover border border-border shadow-md !important;
+    background-color: hsl(var(--popover));
+    @apply border border-border shadow-md !important;
     backdrop-filter: none !important;
   }
 }
