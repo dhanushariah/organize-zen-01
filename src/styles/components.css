@@ -5,9 +5,90 @@
     background-color: hsl(var(--popover));
   }
 
-  /* Sidebar nav button active state */
-  .sidebar-nav-button[data-active="true"] {
+  /* Sidebar Container Styles */
+  .sidebar-container {
+    @apply flex flex-col h-full bg-background border-r border-border;
+  }
+  
+  .desktop-sidebar {
+    @apply w-64 fixed h-screen;
+  }
+  
+  .mobile-sidebar {
+    @apply w-full h-full;
+  }
+  
+  /* Sidebar Header Styles */
+  .sidebar-header {
+    @apply px-6 py-6 flex justify-between items-center;
+  }
+  
+  /* Sidebar Content Styles */
+  .sidebar-content {
+    @apply flex-1 overflow-auto py-4;
+  }
+  
+  /* Sidebar Group Styles */
+  .sidebar-group {
+    @apply flex flex-col px-3;
+  }
+  
+  .sidebar-group-label {
+    @apply text-sm font-medium text-muted-foreground px-3 pb-2 underline decoration-2 underline-offset-4;
+  }
+  
+  .mobile-group-label {
+    @apply text-base opacity-100 mt-0;
+  }
+  
+  /* Sidebar Navigation Styles */
+  .sidebar-nav {
+    @apply flex flex-col gap-1;
+  }
+  
+  .mobile-sidebar-nav {
+    @apply gap-2;
+  }
+  
+  .sidebar-nav-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors;
+  }
+  
+  .sidebar-nav-link.active {
     @apply bg-accent font-medium text-accent-foreground;
+  }
+  
+  .mobile-nav-link {
+    @apply text-base py-3;
+  }
+  
+  .sidebar-icon {
+    @apply w-5 h-5;
+  }
+  
+  .sidebar-link-text {
+    @apply truncate;
+  }
+  
+  /* Upgrade Pro Button Styles */
+  .sidebar-nav-link.upgrade-pro {
+    @apply bg-background hover:bg-background/90 text-transparent font-bold hover:shadow-lg transition-shadow mt-6 mb-2;
+    background-clip: border-box !important;
+  }
+  
+  .sidebar-nav-link.upgrade-pro .sidebar-link-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, #f59e0b, #eab308, #d97706);
+  }
+  
+  /* Sidebar Logout Button Styles */
+  .sidebar-nav-link.logout {
+    @apply w-full text-left;
+  }
+  
+  /* Sidebar Footer Styles */
+  .sidebar-footer {
+    @apply px-3 py-3 mt-auto border-t;
   }
   
   /* Task Column Layout */
@@ -17,67 +98,6 @@
   
   .task-column {
     @apply bg-card rounded-lg shadow-sm p-4;
-  }
-  
-  /* Mobile sidebar adjustments */
-  .mobile-sidebar .sidebar-group-label {
-    @apply text-base font-medium opacity-100 mt-0 !important;
-  }
-
-  .mobile-sidebar {
-    @apply flex flex-col h-full visible;
-  }
-  
-  /* Ensure mobile menu items are visible */
-  .mobile-sidebar .sidebar-menu {
-    @apply flex flex-col gap-2 visible;
-  }
-  
-  .mobile-sidebar-menu {
-    @apply flex flex-col gap-4 py-4 visible;
-  }
-  
-  .mobile-sidebar .sidebar-menu-button {
-    @apply text-foreground visible;
-  }
-
-  /* Add specific styles for mobile navigation buttons */
-  .mobile-nav-button {
-    @apply flex items-center gap-3 w-full text-foreground visible;
-  }
-  
-  /* Mobile Sheet fixes */
-  [data-sidebar="sidebar"][data-mobile="true"] {
-    @apply bg-background visible !important;
-    min-height: 100vh;
-    z-index: 50;
-    display: flex !important;
-    flex-direction: column;
-  }
-
-  /* Fix for sheet content */
-  .SheetContent[side="left"] {
-    @apply bg-background !important;
-  }
-  
-  /* Sheet content fixes - ensure items are visible */
-  [role="dialog"] {
-    @apply bg-background visible;
-  }
-  
-  [role="dialog"] [data-mobile="true"] {
-    @apply visible flex flex-col;
-  }
-  
-  /* Upgrade to Pro button */
-  .upgrade-pro-button {
-    @apply bg-background hover:bg-background/90 text-transparent font-bold hover:shadow-lg transition-shadow;
-    background-clip: border-box !important;
-  }
-  
-  .upgrade-pro-button span {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(to right, #f59e0b, #eab308, #d97706);
   }
   
   /* Timer glow effect */
