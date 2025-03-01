@@ -63,7 +63,10 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
   };
 
   return (
-    <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""} data-mobile={isMobile}>
+    <SidebarContainer 
+      className={isMobile ? "w-full border-none mobile-sidebar bg-background" : ""} 
+      data-mobile={isMobile}
+    >
       <SidebarContent className="bg-background">
         {!isMobile && (
           <div className="px-6 py-6 flex justify-between items-center">
@@ -74,13 +77,13 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
           </div>
         )}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-base px-6 mb-2 underline decoration-2 underline-offset-4">
+          <SidebarGroupLabel className={`text-base px-6 mb-2 underline decoration-2 underline-offset-4 ${isMobile ? "opacity-100" : ""}`}>
             Time Frames
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className={isMobile ? "mobile-sidebar-menu" : ""}>
+            <SidebarMenu className={isMobile ? "mobile-sidebar-menu flex flex-col gap-1" : ""}>
               {items.map((item) => (
-                <SidebarMenuItem key={item.path} className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
+                <SidebarMenuItem key={item.path} className={isMobile ? "px-6 py-2 block" : "px-3 py-1"}>
                   <SidebarMenuButton
                     asChild
                     data-active={location.pathname === item.path}
@@ -99,7 +102,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
               ))}
               
               {/* Upgrade to Pro Button */}
-              <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6" : "px-3 py-1 mt-10"}>
+              <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6 block" : "px-3 py-1 mt-10"}>
                 <SidebarMenuButton
                   asChild
                   className={`sidebar-nav-button upgrade-pro-button ${isMobile ? "h-10 mobile-nav-button" : ""}`}
@@ -115,7 +118,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
-              <SidebarMenuItem className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
+              <SidebarMenuItem className={isMobile ? "px-6 py-2 block" : "px-3 py-1"}>
                 <SidebarMenuButton
                   asChild
                   data-active={location.pathname === "/settings"}
@@ -132,7 +135,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              <SidebarMenuItem className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
+              <SidebarMenuItem className={isMobile ? "px-6 py-2 block" : "px-3 py-1"}>
                 <SidebarMenuButton
                   onClick={handleLogout}
                   className={`sidebar-nav-button w-full ${isMobile ? "h-10 mobile-nav-button" : ""}`}

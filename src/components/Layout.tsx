@@ -75,7 +75,7 @@ const Layout = () => {
               side="left" 
               className="p-0 w-[280px] max-w-[280px] bg-background"
             >
-              <div className="flex justify-between items-center px-4 py-3 border-b">
+              <div className="flex justify-between items-center px-4 py-3 border-b bg-background">
                 <h1 className="text-xl font-bold text-primary flex items-center">
                   TaskSheet
                   <span className="ml-2 text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Pro</span>
@@ -84,7 +84,7 @@ const Layout = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
-              <div className="overflow-y-auto h-[calc(100vh-56px)] bg-background">
+              <div className="relative flex-1 overflow-auto h-[calc(100vh-56px)] bg-background">
                 <Sidebar isMobile={true} onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
               </div>
             </SheetContent>

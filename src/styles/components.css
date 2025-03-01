@@ -25,37 +25,48 @@
   }
 
   .mobile-sidebar {
-    @apply flex flex-col h-full;
+    @apply flex flex-col h-full visible;
   }
   
   /* Ensure mobile menu items are visible */
   .mobile-sidebar .sidebar-menu {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-2 visible;
   }
   
   .mobile-sidebar-menu {
-    @apply flex flex-col gap-4 py-4;
+    @apply flex flex-col gap-4 py-4 visible;
   }
   
   .mobile-sidebar .sidebar-menu-button {
-    @apply text-foreground;
+    @apply text-foreground visible;
   }
 
   /* Add specific styles for mobile navigation buttons */
   .mobile-nav-button {
-    @apply flex items-center gap-3 w-full text-foreground;
+    @apply flex items-center gap-3 w-full text-foreground visible;
   }
   
   /* Mobile Sheet fixes */
   [data-sidebar="sidebar"][data-mobile="true"] {
-    @apply bg-background !important;
+    @apply bg-background visible !important;
     min-height: 100vh;
     z-index: 50;
+    display: flex !important;
+    flex-direction: column;
   }
 
   /* Fix for sheet content */
   .SheetContent[side="left"] {
     @apply bg-background !important;
+  }
+  
+  /* Sheet content fixes - ensure items are visible */
+  [role="dialog"] {
+    @apply bg-background visible;
+  }
+  
+  [role="dialog"] [data-mobile="true"] {
+    @apply visible flex flex-col;
   }
   
   /* Upgrade to Pro button */
