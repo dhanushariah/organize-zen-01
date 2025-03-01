@@ -5,17 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-
-const TAG_COLORS = [
-  'bg-red-100 text-red-800',
-  'bg-blue-100 text-blue-800',
-  'bg-green-100 text-green-800',
-  'bg-yellow-100 text-yellow-800',
-  'bg-purple-100 text-purple-800',
-  'bg-pink-100 text-pink-800',
-  'bg-indigo-100 text-indigo-800',
-  'bg-gray-100 text-gray-800',
-];
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export const TagManagement = () => {
   const [tags, setTags] = useState<string[]>([]);
@@ -45,7 +35,7 @@ export const TagManagement = () => {
           // Initialize with default colors
           const defaultColors: Record<string, string> = {};
           ['work', 'personal', 'home', 'study', 'health'].forEach((tag, index) => {
-            const colorKey = ['red', 'blue', 'green', 'yellow', 'purple'][index % 5];
+            const colorKey = ['blue', 'purple', 'green', 'indigo', 'red'][index % 5];
             defaultColors[tag] = colorKey;
           });
           setTagColors(defaultColors);
@@ -111,6 +101,24 @@ export const TagManagement = () => {
     toast.success('Tag deleted successfully');
   };
   
+  const updateTagColor = (tag: string, color: string) => {
+    const updatedColors = { ...tagColors, [tag]: color };
+    setTagColors(updatedColors);
+    localStorage.setItem('tagColors', JSON.stringify(updatedColors));
+    toast.success(`Color updated for ${tag}`);
+  };
+  
+  const colorOptions = [
+    { value: 'red', label: 'Red' },
+    { value: 'blue', label: 'Blue' },
+    { value: 'green', label: 'Green' },
+    { value: 'yellow', label: 'Yellow' },
+    { value: 'purple', label: 'Purple' },
+    { value: 'pink', label: 'Pink' },
+    { value: 'indigo', label: 'Indigo' },
+    { value: 'gray', label: 'Gray' }
+  ];
+  
   return (
     <div className="p-4 bg-card rounded-md shadow">
       <h2 className="text-2xl font-semibold mb-4">Tag Management</h2>
@@ -135,20 +143,45 @@ export const TagManagement = () => {
           No tags created yet. Add your first tag above.
         </div>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <div className="space-y-4">
           {tags.map((tag) => (
-            <Badge 
-              key={tag} 
-              className={`tag-${tagColors[tag] || 'gray'} px-3 py-1 flex items-center gap-1`}
-            >
-              {tag}
-              <button 
-                onClick={() => handleDeleteTag(tag)}
-                className="ml-1 hover:bg-white/20 rounded-full p-0.5"
+            <div key={tag} className="flex items-center justify-between gap-2 p-2 bg-background/50 rounded-md">
+              <Badge 
+                className={`tag-${tagColors[tag] || 'gray'} px-3 py-1`}
               >
-                <X className="w-3 h-3" />
-              </button>
-            </Badge>
+                {tag}
+              </Badge>
+              
+              <div className="flex items-center gap-2">
+                <Select 
+                  value={tagColors[tag] || 'gray'} 
+                  onValueChange={(value) => updateTagColor(tag, value)}
+                >
+                  <SelectTrigger className="w-24 h-7">
+                    <SelectValue placeholder="Color" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorOptions.map(color => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center">
+                          <div className={`w-3 h-3 rounded-full mr-2 bg-${color.value}-500`}></div>
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7"
+                  onClick={() => handleDeleteTag(tag)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           ))}
         </div>
       )}

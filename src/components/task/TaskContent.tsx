@@ -57,7 +57,7 @@ export const TaskContent: React.FC<TaskContentProps> = ({
       {tag && (
         <Badge 
           variant="outline" 
-          className={`text-xs w-fit ${tagColors[tag] ? `tag-badge tag-${tagColors[tag]}` : ''}`}
+          className={`tag-badge ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
         >
           {tag}
         </Badge>

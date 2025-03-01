@@ -1,6 +1,6 @@
 
 import React from "react";
-import { X } from "lucide-react";
+import { X, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -27,12 +27,13 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
       {onUpdateTag && (
         <Popover>
           <PopoverTrigger asChild>
-            <Badge
+            <Button
               variant="outline"
-              className={`text-xs px-2 py-0 cursor-pointer ${tagColors[tag || ""] ? `tag-${tagColors[tag || ""]}` : ''}`}
+              size="sm"
+              className={`h-6 text-xs px-2 py-0 flex items-center ${tag ? `tag-${tagColors[tag] || "gray"}` : ''}`}
             >
-              {tag || "Add tag"}
-            </Badge>
+              {tag || <><Tag className="h-3 w-3 mr-1" /> Add Tag</>}
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-60 p-2">
             <div className="space-y-2">

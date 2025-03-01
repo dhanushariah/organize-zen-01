@@ -41,21 +41,21 @@ export function useTaskTimer({
         }
         
         // Calculate elapsed time
-        const startTime = task.timerRunning ? task.timerStart || now : now;
+        const startTime = task.timerRunning ? undefined : now;
         const elapsed = task.timerElapsed || 0;
         
         // Toggle timer state
         const timerRunning = !task.timerRunning;
         
         // Calculate new elapsed time if stopping timer
-        const newElapsed = timerRunning 
-          ? elapsed 
-          : elapsed + (task.timerRunning ? (now.getTime() - (task.timerStart?.getTime() || now.getTime())) : 0);
+        const newElapsed = !timerRunning 
+          ? elapsed + (task.timerStart ? (now.getTime() - task.timerStart.getTime()) : 0)
+          : elapsed;
         
         const updatedTask = {
           ...task,
           timerRunning,
-          timerStart: timerRunning ? now : undefined,
+          timerStart: startTime,
           timerElapsed: newElapsed,
           timerDisplay: formatTimerDisplay(newElapsed)
         };
@@ -91,7 +91,7 @@ export function useTaskTimer({
           };
           
           // Only update the task in Supabase every 10 seconds to avoid too many requests
-          if (Math.floor(totalElapsed / 10000) !== Math.floor(baseElapsed / 10000)) {
+          if (Math.floor(totalElapsed / 10000) !== Math.floor((baseElapsed + (currentElapsed - 1000)) / 10000)) {
             if (onTaskUpdate) {
               const persistTask = {
                 ...updatedTask,

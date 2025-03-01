@@ -31,6 +31,7 @@ export function useTagsManager() {
       const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
       setAvailableTags(defaultTags);
       localStorage.setItem('taskTags', JSON.stringify(defaultTags));
+      localStorage.setItem('availableTags', JSON.stringify(defaultTags));
     };
     
     const loadTagColors = () => {
@@ -53,7 +54,7 @@ export function useTagsManager() {
         'personal': 'purple',
         'home': 'green',
         'study': 'indigo',
-        'health': 'teal'
+        'health': 'red'
       };
       setTagColors(defaultColors);
       localStorage.setItem('tagColors', JSON.stringify(defaultColors));
@@ -63,7 +64,7 @@ export function useTagsManager() {
     
     // Set up event listener to handle changes in other tabs/windows
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'taskTags') {
+      if (event.key === 'taskTags' || event.key === 'availableTags') {
         loadTags();
       }
       if (event.key === 'tagColors') {
@@ -82,6 +83,7 @@ export function useTagsManager() {
   const updateTags = (newTags: string[]) => {
     setAvailableTags(newTags);
     localStorage.setItem('taskTags', JSON.stringify(newTags));
+    localStorage.setItem('availableTags', JSON.stringify(newTags));
   };
 
   // Function to update tag colors and persist to localStorage

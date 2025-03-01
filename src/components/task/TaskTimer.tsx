@@ -27,7 +27,7 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
       </Button>
       
       {timerDisplay && (
-        <span className={`text-xs ${timerRunning ? 'timer-active' : 'text-muted-foreground'}`}>
+        <span className={`text-xs ${timerRunning ? 'animate-pulse text-primary' : 'text-muted-foreground'}`}>
           {timerDisplay}
         </span>
       )}

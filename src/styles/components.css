@@ -21,7 +21,8 @@
   
   /* Upgrade to Pro button */
   .upgrade-pro-button {
-    @apply bg-gradient-to-r from-amber-300 via-yellow-500 to-amber-600 text-black font-bold hover:shadow-lg transition-shadow;
+    @apply bg-black text-transparent bg-clip-text font-bold hover:shadow-lg transition-shadow;
+    background-image: linear-gradient(to right, #f59e0b, #eab308, #d97706);
   }
   
   /* Timer glow effect */
@@ -31,7 +32,7 @@
   
   /* Tag styles */
   .tag-badge {
-    @apply text-xs w-fit;
+    @apply text-xs w-fit px-2 py-0.5 rounded-full;
   }
   
   .tag-red { @apply bg-red-100 text-red-800 border-red-300; }
@@ -42,4 +43,14 @@
   .tag-pink { @apply bg-pink-100 text-pink-800 border-pink-300; }
   .tag-indigo { @apply bg-indigo-100 text-indigo-800 border-indigo-300; }
   .tag-gray { @apply bg-gray-100 text-gray-800 border-gray-300; }
+  
+  /* Dark mode tag styles */
+  .dark .tag-red { @apply bg-red-900/30 text-red-200 border-red-800; }
+  .dark .tag-blue { @apply bg-blue-900/30 text-blue-200 border-blue-800; }
+  .dark .tag-green { @apply bg-green-900/30 text-green-200 border-green-800; }
+  .dark .tag-yellow { @apply bg-yellow-900/30 text-yellow-200 border-yellow-800; }
+  .dark .tag-purple { @apply bg-purple-900/30 text-purple-200 border-purple-800; }
+  .dark .tag-pink { @apply bg-pink-900/30 text-pink-200 border-pink-800; }
+  .dark .tag-indigo { @apply bg-indigo-900/30 text-indigo-200 border-indigo-800; }
+  .dark .tag-gray { @apply bg-gray-900/30 text-gray-200 border-gray-800; }
 }
