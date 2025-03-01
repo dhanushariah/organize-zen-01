@@ -20,7 +20,7 @@ export function useTaskManagement({
   onTaskUpdate
 }: UseTaskManagementProps) {
   // Add a new task
-  const handleAddTask = (title: string, columnId: string) => {
+  const handleAddTask = (title: string, columnId: string, tag?: string) => {
     if (!title.trim()) return;
     
     const newTask: Task = {
@@ -28,7 +28,8 @@ export function useTaskManagement({
       title,
       timerRunning: false,
       columnId, // Store columnId with the task
-      completed: false // Initialize as not completed
+      completed: false, // Initialize as not completed
+      tag // Add the selected tag if provided
     };
     
     setTasks([...tasks, newTask]);

@@ -39,11 +39,14 @@ const TaskColumn = ({
     editingTask,
     setEditingTask,
     draggedTask,
+    selectedTag,
+    setSelectedTag,
     toggleTask,
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
     toggleTaskTimer,
+    updateTaskTag,
     handleDragStart,
     handleDragEnd,
     handleMoveTaskToColumn
@@ -53,15 +56,6 @@ const TaskColumn = ({
     onMoveTask,
     onTaskUpdate
   });
-
-  // Wrapper for addTask to check for empty inputs
-  const onAddTask = () => {
-    if (newTaskTitle.trim()) {
-      // Add columnId to ensure task is associated with correct column
-      handleAddTask(newTaskTitle, columnId);
-      setNewTaskTitle("");
-    }
-  };
 
   return (
     <div 
@@ -88,6 +82,7 @@ const TaskColumn = ({
             onDragEnd={() => handleDragEnd(task.id)}
             onMoveToColumn={(targetColumnId) => handleMoveTaskToColumn(task.id, targetColumnId)}
             onToggleTimer={() => toggleTaskTimer(task.id)}
+            onUpdateTag={onTaskUpdate ? (tag) => updateTaskTag(task.id, tag) : undefined}
             editingTask={editingTask === task.id}
             setEditingTask={setEditingTask}
             otherColumns={otherColumns}
@@ -98,7 +93,9 @@ const TaskColumn = ({
         <AddTaskInput 
           newTaskTitle={newTaskTitle}
           setNewTaskTitle={setNewTaskTitle}
-          onAddTask={onAddTask}
+          onAddTask={handleAddTask}
+          onSelectTag={setSelectedTag}
+          selectedTag={selectedTag}
         />
       </div>
     </div>

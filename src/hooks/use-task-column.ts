@@ -1,5 +1,5 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Task } from "@/types/task";
 import { useTaskState } from "./task-column/use-task-state";
 import { useTaskActions } from "./task-column/use-task-actions";
@@ -20,6 +20,9 @@ export const useTaskColumn = ({
 }: UseTaskColumnProps) => {
   // Create a reference for the column element (used for drag and drop)
   const columnRef = useRef<HTMLDivElement>(null);
+  
+  // Add state for selected tag
+  const [selectedTag, setSelectedTag] = useState<string>("");
   
   // Use the task state hook to manage tasks state
   const {
@@ -42,7 +45,8 @@ export const useTaskColumn = ({
     handleUpdateTask,
     handleDeleteTask,
     toggleTask,
-    toggleTaskTimer
+    toggleTaskTimer,
+    updateTaskTag
   } = useTaskActions({
     tasks,
     setTasks,
@@ -65,6 +69,16 @@ export const useTaskColumn = ({
     setDraggedTask
   });
   
+  // Modified add task function to include the selected tag
+  const handleAddTaskWithTag = () => {
+    if (newTaskTitle.trim()) {
+      handleAddTask(newTaskTitle, columnId, selectedTag);
+      setNewTaskTitle("");
+      // Optionally clear the selected tag after adding a task
+      // setSelectedTag("");
+    }
+  };
+  
   return {
     columnRef,
     tasks,
@@ -78,10 +92,15 @@ export const useTaskColumn = ({
     
     // Task operations
     toggleTask,
-    handleAddTask,
+    handleAddTask: handleAddTaskWithTag,
     handleUpdateTask,
     handleDeleteTask,
     toggleTaskTimer,
+    updateTaskTag,
+    
+    // Tag selection
+    selectedTag,
+    setSelectedTag,
     
     // Drag and drop operations
     handleDragStart,

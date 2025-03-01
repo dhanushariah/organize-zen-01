@@ -31,12 +31,22 @@ export const TagManagement = () => {
         console.error('Error parsing stored tags:', error);
         setTags([]);
       }
+    } else {
+      // Initialize with default tags if no stored tags are found
+      const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
+      setTags(defaultTags);
+      localStorage.setItem('taskTags', JSON.stringify(defaultTags));
     }
   }, []);
   
   // Save tags to localStorage when they change
   useEffect(() => {
-    localStorage.setItem('taskTags', JSON.stringify(tags));
+    if (tags.length > 0) {
+      localStorage.setItem('taskTags', JSON.stringify(tags));
+      
+      // Also update availableTags in the localStorage to ensure it's in sync
+      localStorage.setItem('availableTags', JSON.stringify(tags));
+    }
   }, [tags]);
   
   const handleAddTag = () => {
@@ -50,14 +60,24 @@ export const TagManagement = () => {
       return;
     }
     
-    setTags([...tags, newTag.trim()]);
+    const updatedTags = [...tags, newTag.trim()];
+    setTags(updatedTags);
     setNewTag('');
     toast.success('Tag added successfully');
+    
+    // Ensure both localStorage keys are updated
+    localStorage.setItem('taskTags', JSON.stringify(updatedTags));
+    localStorage.setItem('availableTags', JSON.stringify(updatedTags));
   };
   
   const handleDeleteTag = (tagToDelete: string) => {
-    setTags(tags.filter(tag => tag !== tagToDelete));
+    const updatedTags = tags.filter(tag => tag !== tagToDelete);
+    setTags(updatedTags);
     toast.success('Tag deleted successfully');
+    
+    // Ensure both localStorage keys are updated
+    localStorage.setItem('taskTags', JSON.stringify(updatedTags));
+    localStorage.setItem('availableTags', JSON.stringify(updatedTags));
   };
   
   const getTagColor = (tag: string) => {

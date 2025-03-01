@@ -57,6 +57,11 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        gold: {
+          light: "#FFD700",
+          medium: "#FFC107",
+          dark: "#FF8C00",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -90,6 +95,9 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "slide-in": "slide-in 0.3s ease-out"
+      },
+      backgroundImage: {
+        'gold-gradient': 'linear-gradient(to right, #FFD700, #FFC107, #FF8C00)',
       },
     },
   },
