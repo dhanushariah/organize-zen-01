@@ -33,8 +33,19 @@
     @apply flex flex-col gap-2;
   }
   
+  .mobile-sidebar-menu {
+    @apply flex flex-col gap-4 py-4;
+  }
+  
   .mobile-sidebar .sidebar-menu-button {
     @apply text-foreground;
+  }
+  
+  /* Mobile Sheet fixes */
+  [data-sidebar="sidebar"][data-mobile="true"] {
+    @apply bg-background !important;
+    min-height: 100vh;
+    z-index: 50;
   }
   
   /* Upgrade to Pro button */

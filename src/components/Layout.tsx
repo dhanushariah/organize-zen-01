@@ -71,7 +71,10 @@ const Layout = () => {
 
           {/* Mobile Navigation Sheet */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent side="left" className="p-0 w-[280px] max-w-[280px]">
+            <SheetContent 
+              side="left" 
+              className="p-0 w-[280px] max-w-[280px]"
+            >
               <div className="flex justify-between items-center px-4 py-3 border-b">
                 <h1 className="text-xl font-bold text-primary flex items-center">
                   TaskSheet

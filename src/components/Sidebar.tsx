@@ -77,7 +77,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
             Time Frames
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className={isMobile ? "flex flex-col gap-4 py-4" : ""}>
+            <SidebarMenu className={isMobile ? "mobile-sidebar-menu" : ""}>
               {items.map((item) => (
                 <SidebarMenuItem key={item.path} className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
                   <SidebarMenuButton
