@@ -25,6 +25,7 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+    --checkbox-check: 142 69% 58%; /* New variable for green checkbox */
   }
  
   .dark {
@@ -47,6 +48,7 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+    --checkbox-check: 142 69% 58%; /* Same green checkbox in dark mode */
   }
 }
 
@@ -101,6 +103,12 @@
   /* Gold gradient for Upgrade Pro button */
   .upgrade-pro-button {
     @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold hover:shadow-lg transition-shadow;
+  }
+  
+  /* Fix dropdown menu transparency */
+  .dropdown-menu {
+    @apply bg-popover border border-border shadow-md !important;
+    backdrop-filter: none !important;
   }
 }
 

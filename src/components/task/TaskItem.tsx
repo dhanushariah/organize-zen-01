@@ -68,7 +68,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           id={task.id}
           checked={isCompleted}
           onCheckedChange={onToggle}
-          className="mt-0.5 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
+          className="mt-0.5 border-primary data-[state=checked]:bg-[hsl(var(--checkbox-check))] data-[state=checked]:text-primary-foreground checkbox-item"
         />
         
         <div className="flex flex-1 items-start justify-between">

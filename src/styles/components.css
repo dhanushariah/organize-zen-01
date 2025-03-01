@@ -60,13 +60,25 @@
   .dark .tag-indigo { @apply bg-indigo-900/30 text-indigo-200 border-indigo-800 !important; }
   .dark .tag-gray { @apply bg-gray-900/30 text-gray-200 border-gray-800 !important; }
   
-  /* Progress bar animation */
+  /* Progress bar animation and glow effect */
   @keyframes pulse-glow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    0%, 100% { box-shadow: 0 0 5px 1px hsla(var(--primary), 0.3); }
+    50% { box-shadow: 0 0 10px 2px hsla(var(--primary), 0.5); }
   }
   
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Ensure dropdown menus are visible with solid background */
+  .dropdown-menu {
+    @apply bg-popover border border-border shadow-md !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Fixed select component background */
+  .select-content {
+    @apply bg-popover border border-border shadow-md !important;
+    backdrop-filter: none !important;
   }
 }
