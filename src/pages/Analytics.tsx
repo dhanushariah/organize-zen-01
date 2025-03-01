@@ -1,5 +1,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { useAnalyticsData } from "@/hooks/use-analytics-data";
 import { 
   getCompletionByDay, 
@@ -12,6 +14,7 @@ import { CompletionChart } from "@/components/analytics/CompletionChart";
 import { TagDistributionChart } from "@/components/analytics/TagDistributionChart";
 import { TimeTrackingChart } from "@/components/analytics/TimeTrackingChart";
 import { StreakTracker } from "@/components/analytics/StreakTracker";
+import { ExportAnalytics } from "@/components/analytics/ExportAnalytics";
 
 // Custom theme colors for charts
 const CHART_COLORS = [
@@ -89,6 +92,16 @@ const Analytics = () => {
         longestStreak={longestStreak}
         taskHistory={taskHistory}
       />
+      
+      <Card>
+        <CardContent className="pt-6">
+          <ExportAnalytics 
+            taskHistory={taskHistory}
+            tagStats={tagStats}
+            timeStats={timeStats}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };
