@@ -1,9 +1,18 @@
 
 import { useState, useEffect } from "react";
 
+// Define a type for the allowed color variants to match the Badge component
+type ColorVariant = "default" | "secondary" | "destructive" | "outline" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "indigo" | "gray";
+
 export function useTagsManager() {
   const [availableTags, setAvailableTags] = useState<string[]>([]);
-  const [tagColors, setTagColors] = useState<Record<string, string>>({});
+  const [tagColors, setTagColors] = useState<Record<string, ColorVariant>>({});
+  
+  // Helper function to check if a color is a valid variant
+  const isValidColorVariant = (color: string): color is ColorVariant => {
+    const validColors: ColorVariant[] = ["default", "secondary", "destructive", "outline", "red", "blue", "green", "yellow", "purple", "pink", "indigo", "gray"];
+    return validColors.includes(color as ColorVariant);
+  };
   
   // Load available tags from localStorage
   useEffect(() => {
@@ -38,7 +47,19 @@ export function useTagsManager() {
       const savedTagColors = localStorage.getItem('tagColors');
       if (savedTagColors) {
         try {
-          setTagColors(JSON.parse(savedTagColors));
+          const parsedColors = JSON.parse(savedTagColors);
+          const validColors: Record<string, ColorVariant> = {};
+          
+          // Ensure we only use valid color variants
+          Object.entries(parsedColors).forEach(([tag, color]) => {
+            if (isValidColorVariant(color as string)) {
+              validColors[tag] = color as ColorVariant;
+            } else {
+              validColors[tag] = "gray"; // Fallback to gray if invalid
+            }
+          });
+          
+          setTagColors(validColors);
         } catch (error) {
           console.error('Error parsing tag colors:', error);
           setDefaultTagColors();
@@ -49,7 +70,7 @@ export function useTagsManager() {
     };
     
     const setDefaultTagColors = () => {
-      const defaultColors = {
+      const defaultColors: Record<string, ColorVariant> = {
         'work': 'blue',
         'personal': 'purple',
         'home': 'green',
@@ -87,7 +108,7 @@ export function useTagsManager() {
   };
 
   // Function to update tag colors and persist to localStorage
-  const updateTagColors = (newColors: Record<string, string>) => {
+  const updateTagColors = (newColors: Record<string, ColorVariant>) => {
     setTagColors(newColors);
     localStorage.setItem('tagColors', JSON.stringify(newColors));
   };
