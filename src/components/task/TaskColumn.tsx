@@ -57,7 +57,8 @@ const TaskColumn = ({
   // Wrapper for addTask to check for empty inputs
   const onAddTask = () => {
     if (newTaskTitle.trim()) {
-      handleAddTask(newTaskTitle);
+      // Add columnId to ensure task is associated with correct column
+      handleAddTask(newTaskTitle, columnId);
       setNewTaskTitle("");
     }
   };

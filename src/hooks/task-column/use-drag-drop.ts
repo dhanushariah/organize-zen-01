@@ -5,15 +5,17 @@ interface DragDropProps {
   columnId: string;
   columnRef: RefObject<HTMLDivElement>;
   onMoveTask?: (taskId: string, sourceColumn: string, targetColumn: string) => void;
+  draggedTask: string | null;
+  setDraggedTask: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export function useDragDrop({
   columnId,
   columnRef,
-  onMoveTask
+  onMoveTask,
+  draggedTask,
+  setDraggedTask
 }: DragDropProps) {
-  const [draggedTask, setDraggedTask] = useState<string | null>(null);
-
   // Handle drag and drop functionality
   useEffect(() => {
     const handleDragOver = (e: DragEvent) => {
@@ -39,6 +41,7 @@ export function useDragDrop({
       const sourceColumn = e.dataTransfer?.getData('source-column');
       
       if (taskId && sourceColumn && sourceColumn !== columnId && onMoveTask) {
+        console.log(`Dropping task ${taskId} from ${sourceColumn} to ${columnId}`);
         onMoveTask(taskId, sourceColumn, columnId);
       }
     };
@@ -83,13 +86,12 @@ export function useDragDrop({
   // Handle direct column move
   const handleMoveTaskToColumn = (taskId: string, targetColumnId: string) => {
     if (onMoveTask) {
+      console.log(`Moving task ${taskId} from ${columnId} to ${targetColumnId}`);
       onMoveTask(taskId, columnId, targetColumnId);
     }
   };
 
   return {
-    draggedTask,
-    setDraggedTask,
     handleDragStart,
     handleDragEnd,
     handleMoveTaskToColumn

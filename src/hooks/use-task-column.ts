@@ -12,15 +12,16 @@ interface UseTaskColumnProps {
   onTaskUpdate?: (task: Task) => void;
 }
 
-export function useTaskColumn({
+export const useTaskColumn = ({
   initialTasks,
   columnId,
   onMoveTask,
   onTaskUpdate
-}: UseTaskColumnProps) {
+}: UseTaskColumnProps) => {
+  // Create a reference for the column element (used for drag and drop)
   const columnRef = useRef<HTMLDivElement>(null);
   
-  // Get all state from the useTaskState hook
+  // Use the task state hook to manage tasks state
   const {
     tasks,
     setTasks,
@@ -34,23 +35,24 @@ export function useTaskColumn({
     draggedTask,
     setDraggedTask
   } = useTaskState(initialTasks);
-
-  // Get task action handlers
+  
+  // Use the task actions hook to handle task operations
   const {
-    toggleTask,
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
+    toggleTask,
     toggleTaskTimer
   } = useTaskActions({
     tasks,
     setTasks,
     completedTasks,
     setCompletedTasks,
+    columnId,
     onTaskUpdate
   });
-
-  // Get drag and drop handlers
+  
+  // Use the drag drop hook to handle drag and drop operations
   const {
     handleDragStart,
     handleDragEnd,
@@ -58,16 +60,14 @@ export function useTaskColumn({
   } = useDragDrop({
     columnId,
     columnRef,
-    onMoveTask
+    onMoveTask,
+    draggedTask,
+    setDraggedTask
   });
-
+  
   return {
-    // Refs
     columnRef,
-    
-    // State
     tasks,
-    setTasks,
     completedTasks,
     progress,
     newTaskTitle,
@@ -75,18 +75,17 @@ export function useTaskColumn({
     editingTask,
     setEditingTask,
     draggedTask,
-    setDraggedTask,
     
-    // Task Actions
+    // Task operations
     toggleTask,
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
     toggleTaskTimer,
     
-    // Drag and Drop
+    // Drag and drop operations
     handleDragStart,
     handleDragEnd,
     handleMoveTaskToColumn
   };
-}
+};

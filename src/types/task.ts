@@ -7,6 +7,7 @@ export interface Task {
   timerElapsed?: number;
   timerDisplay?: string;
   deleted?: boolean;
+  columnId?: string; // Added to track which column a task belongs to
 }
 
 // Add database table types for Supabase

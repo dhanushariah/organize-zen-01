@@ -8,6 +8,7 @@ interface TaskActionsProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   completedTasks: string[];
   setCompletedTasks: React.Dispatch<React.SetStateAction<string[]>>;
+  columnId: string;
   onTaskUpdate?: (task: Task) => void;
 }
 
@@ -16,6 +17,7 @@ export function useTaskActions({
   setTasks,
   completedTasks,
   setCompletedTasks,
+  columnId,
   onTaskUpdate
 }: TaskActionsProps) {
   // Use the task management hook
@@ -29,6 +31,7 @@ export function useTaskActions({
     setTasks,
     completedTasks,
     setCompletedTasks,
+    columnId,
     onTaskUpdate
   });
 

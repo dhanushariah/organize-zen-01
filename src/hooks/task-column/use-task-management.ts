@@ -7,6 +7,7 @@ interface UseTaskManagementProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   completedTasks: string[];
   setCompletedTasks: React.Dispatch<React.SetStateAction<string[]>>;
+  columnId: string;
   onTaskUpdate?: (task: Task) => void;
 }
 
@@ -15,16 +16,18 @@ export function useTaskManagement({
   setTasks,
   completedTasks,
   setCompletedTasks,
+  columnId,
   onTaskUpdate
 }: UseTaskManagementProps) {
   // Add a new task
-  const handleAddTask = (title: string) => {
+  const handleAddTask = (title: string, columnId: string) => {
     if (!title.trim()) return;
     
     const newTask: Task = {
       id: uuidv4(),
       title,
-      timerRunning: false
+      timerRunning: false,
+      columnId // Store columnId with the task
     };
     
     setTasks([...tasks, newTask]);
@@ -37,7 +40,11 @@ export function useTaskManagement({
   const handleUpdateTask = (taskId: string, newTitle: string) => {
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
-        const updatedTask = { ...task, title: newTitle };
+        const updatedTask = { 
+          ...task, 
+          title: newTitle,
+          columnId // Ensure columnId is preserved when updating
+        };
         if (onTaskUpdate) {
           onTaskUpdate(updatedTask);
         }

@@ -7,6 +7,7 @@ import { Json } from "@/integrations/supabase/types";
 // Fetch tasks from Supabase
 export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> => {
   try {
+    console.log("Fetching tasks for user:", userId);
     const { data, error } = await supabase
       .from('tasks')
       .select('*')
@@ -25,6 +26,7 @@ export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> =>
     };
     
     if (data && data.length > 0) {
+      console.log("Tasks retrieved from Supabase:", data);
       data.forEach((task: Tables['tasks']) => {
         if (columnTasks[task.column_id]) {
           columnTasks[task.column_id].push({
@@ -34,10 +36,13 @@ export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> =>
             timerElapsed: task.timer_elapsed,
             timerDisplay: task.timer_display
           });
+        } else {
+          console.warn(`Task with unknown column_id: ${task.column_id}`, task);
         }
       });
     }
     
+    console.log("Organized column tasks:", columnTasks);
     return columnTasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -110,6 +115,7 @@ export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Prom
     }
     
     if (tasksToInsert.length > 0) {
+      console.log("Tasks to insert:", tasksToInsert);
       const { error: insertError } = await supabase
         .from('tasks')
         .insert(tasksToInsert);
