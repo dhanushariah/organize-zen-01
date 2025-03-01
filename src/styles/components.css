@@ -40,12 +40,22 @@
   .mobile-sidebar .sidebar-menu-button {
     @apply text-foreground;
   }
+
+  /* Add specific styles for mobile navigation buttons */
+  .mobile-nav-button {
+    @apply flex items-center gap-3 w-full text-foreground;
+  }
   
   /* Mobile Sheet fixes */
   [data-sidebar="sidebar"][data-mobile="true"] {
     @apply bg-background !important;
     min-height: 100vh;
     z-index: 50;
+  }
+
+  /* Fix for sheet content */
+  .SheetContent[side="left"] {
+    @apply bg-background !important;
   }
   
   /* Upgrade to Pro button */

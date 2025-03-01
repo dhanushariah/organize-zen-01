@@ -54,6 +54,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
 
   const handleLogout = () => {
     navigate("/auth");
+    if (onClose) onClose();
   };
 
   const handleItemClick = () => {
@@ -62,8 +63,8 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
   };
 
   return (
-    <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""}>
-      <SidebarContent>
+    <SidebarContainer className={isMobile ? "w-full border-none mobile-sidebar" : ""} data-mobile={isMobile}>
+      <SidebarContent className="bg-background">
         {!isMobile && (
           <div className="px-6 py-6 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-primary flex items-center">
@@ -83,7 +84,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                   <SidebarMenuButton
                     asChild
                     data-active={location.pathname === item.path}
-                    className={`sidebar-nav-button ${isMobile ? "h-10" : ""}`}
+                    className={`sidebar-nav-button ${isMobile ? "h-10 mobile-nav-button" : ""}`}
                   >
                     <Link 
                       to={item.path} 
@@ -101,7 +102,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
               <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6" : "px-3 py-1 mt-10"}>
                 <SidebarMenuButton
                   asChild
-                  className={`sidebar-nav-button upgrade-pro-button ${isMobile ? "h-10" : ""}`}
+                  className={`sidebar-nav-button upgrade-pro-button ${isMobile ? "h-10 mobile-nav-button" : ""}`}
                 >
                   <Link 
                     to="/settings"
@@ -118,7 +119,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
                 <SidebarMenuButton
                   asChild
                   data-active={location.pathname === "/settings"}
-                  className={`sidebar-nav-button ${isMobile ? "h-10" : ""}`}
+                  className={`sidebar-nav-button ${isMobile ? "h-10 mobile-nav-button" : ""}`}
                 >
                   <Link 
                     to="/settings"
@@ -134,7 +135,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
               <SidebarMenuItem className={isMobile ? "px-6 py-2" : "px-3 py-1"}>
                 <SidebarMenuButton
                   onClick={handleLogout}
-                  className={`sidebar-nav-button w-full ${isMobile ? "h-10" : ""}`}
+                  className={`sidebar-nav-button w-full ${isMobile ? "h-10 mobile-nav-button" : ""}`}
                 >
                   <div className="flex items-center gap-3">
                     <LogOut className="w-5 h-5" />

@@ -73,7 +73,7 @@ const Layout = () => {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetContent 
               side="left" 
-              className="p-0 w-[280px] max-w-[280px]"
+              className="p-0 w-[280px] max-w-[280px] bg-background"
             >
               <div className="flex justify-between items-center px-4 py-3 border-b">
                 <h1 className="text-xl font-bold text-primary flex items-center">
@@ -84,7 +84,7 @@ const Layout = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
               </div>
-              <div className="overflow-y-auto h-[calc(100vh-56px)]">
+              <div className="overflow-y-auto h-[calc(100vh-56px)] bg-background">
                 <Sidebar isMobile={true} onNavigate={handleNavigate} onClose={() => setIsOpen(false)} />
               </div>
             </SheetContent>
