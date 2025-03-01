@@ -34,7 +34,9 @@ export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> =>
             title: task.title,
             timerRunning: task.timer_running,
             timerElapsed: task.timer_elapsed,
-            timerDisplay: task.timer_display
+            timerDisplay: task.timer_display,
+            tag: task.tag || undefined,
+            completed: task.completed
           });
         } else {
           console.warn(`Task with unknown column_id: ${task.column_id}`, task);
@@ -110,6 +112,8 @@ export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Prom
           timer_elapsed: task.timerElapsed || 0,
           timer_running: task.timerRunning || false,
           timer_display: task.timerDisplay || "",
+          tag: task.tag || null,
+          completed: task.completed || false
         });
       }
     }

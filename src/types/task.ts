@@ -8,6 +8,8 @@ export interface Task {
   timerDisplay?: string;
   deleted?: boolean;
   columnId?: string; // Added to track which column a task belongs to
+  tag?: string; // Added for tagging tasks
+  completed?: boolean; // Added to track completion status
 }
 
 // Add database table types for Supabase
@@ -22,6 +24,8 @@ export type Tables = {
     timer_display: string;
     created_at: string;
     updated_at: string;
+    tag: string | null;
+    completed: boolean;
   };
   task_history: {
     id: string;

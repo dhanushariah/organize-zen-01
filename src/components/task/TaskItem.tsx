@@ -1,11 +1,17 @@
 
 import { useState } from "react";
-import { Edit, X, Check, Trash2, Play, Pause } from "lucide-react";
+import { Edit, X, Check, Trash2, Play, Pause, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Task } from "@/types/task";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 
 interface TaskItemProps {
   task: Task;
@@ -19,6 +25,7 @@ interface TaskItemProps {
   onDragEnd: () => void;
   onMoveToColumn: (targetColumnId: string) => void;
   onToggleTimer: () => void;
+  onUpdateTag?: (tag: string) => void;
   setEditingTask: (taskId: string | null) => void;
   otherColumns?: { id: string, title: string }[];
 }
@@ -35,12 +42,32 @@ export const TaskItem = ({
   onDragEnd,
   onMoveToColumn,
   onToggleTimer,
+  onUpdateTag,
   setEditingTask,
   otherColumns = []
 }: TaskItemProps) => {
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [tagColors, setTagColors] = useState<Record<string, string>>({});
+  
+  // Load available tags from localStorage
+  useState(() => {
+    const savedTags = localStorage.getItem('availableTags');
+    if (savedTags) {
+      setAvailableTags(JSON.parse(savedTags));
+    } else {
+      setAvailableTags(['work', 'personal', 'home', 'study', 'health']);
+    }
+    
+    // Load tag colors
+    const savedTagColors = localStorage.getItem('tagColors');
+    if (savedTagColors) {
+      setTagColors(JSON.parse(savedTagColors));
+    }
+  });
+  
   return (
     <Card 
-      className="task-card p-3 md:p-4 cursor-move"
+      className={`task-card p-3 md:p-4 cursor-move ${task.tag && tagColors[task.tag] ? `tag-${tagColors[task.tag]} tag-border` : ''}`}
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
@@ -81,23 +108,78 @@ export const TaskItem = ({
             />
           ) : (
             <div className="flex-1 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <label
-                  htmlFor={task.id}
-                  className={`font-medium cursor-pointer text-sm md:text-base ${
-                    isCompleted ? "line-through text-muted-foreground" : ""
-                  }`}
-                  onClick={() => setEditingTask(task.id)}
-                >
-                  {task.title}
-                </label>
-                {task.timerDisplay && (
-                  <span className={`text-xs ${task.timerRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`}>
-                    {task.timerDisplay}
-                  </span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <label
+                    htmlFor={task.id}
+                    className={`font-medium cursor-pointer text-sm md:text-base ${
+                      isCompleted ? "line-through text-muted-foreground" : ""
+                    }`}
+                    onClick={() => setEditingTask(task.id)}
+                  >
+                    {task.title}
+                  </label>
+                  {task.timerDisplay && (
+                    <span className={`text-xs ${task.timerRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`}>
+                      {task.timerDisplay}
+                    </span>
+                  )}
+                </div>
+                
+                {task.tag && (
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs w-fit ${tagColors[task.tag] ? `tag-badge tag-${tagColors[task.tag]}` : ''}`}
+                  >
+                    {task.tag}
+                  </Badge>
                 )}
               </div>
+              
               <div className="flex items-center gap-2 shrink-0">
+                {onUpdateTag && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                      >
+                        <Tag className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-60 p-2">
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium">Select tag</p>
+                        <div className="grid grid-cols-2 gap-1">
+                          {availableTags.map((tag) => (
+                            <Button 
+                              key={tag}
+                              variant="outline"
+                              size="sm"
+                              className={`text-xs justify-start ${
+                                task.tag === tag ? 'border-primary' : ''
+                              } ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
+                              onClick={() => onUpdateTag(tag)}
+                            >
+                              {tag}
+                            </Button>
+                          ))}
+                        </div>
+                        {task.tag && (
+                          <Button 
+                            variant="ghost" 
+                            className="w-full text-xs"
+                            onClick={() => onUpdateTag('')}
+                          >
+                            Clear tag
+                          </Button>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                )}
+                
                 <Button
                   variant="ghost"
                   size="icon"

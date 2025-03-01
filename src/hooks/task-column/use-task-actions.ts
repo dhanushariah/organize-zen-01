@@ -43,12 +43,29 @@ export function useTaskActions({
     setTasks,
     onTaskUpdate
   });
+  
+  // Function to update task tag
+  const updateTaskTag = (taskId: string, tag: string) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedTask = { ...task, tag };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
+  };
 
   return {
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
     toggleTask,
-    toggleTaskTimer
+    toggleTaskTimer,
+    updateTaskTag
   };
 }

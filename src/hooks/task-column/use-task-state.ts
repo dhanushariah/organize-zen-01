@@ -15,6 +15,17 @@ export function useTaskState(initialTasks: Task[]) {
   // Drag and drop state
   const [draggedTask, setDraggedTask] = useState<string | null>(null);
 
+  // Initialize completedTasks from initialTasks
+  useEffect(() => {
+    const completed = initialTasks
+      .filter(task => task.completed)
+      .map(task => task.id);
+    
+    if (completed.length > 0) {
+      setCompletedTasks(completed);
+    }
+  }, [initialTasks]);
+
   // Calculate progress based on completed tasks
   useEffect(() => {
     if (tasks.length > 0) {

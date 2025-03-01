@@ -1,5 +1,5 @@
 
-import { ThemeSelector } from "@/components/settings";
+import { ThemeSelector, TagManagement } from "@/components/settings";
 
 const Settings = () => {
   return (
@@ -12,6 +12,9 @@ const Settings = () => {
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Theme Settings */}
         <ThemeSelector />
+        
+        {/* Tag Management */}
+        <TagManagement />
       </div>
     </div>
   );

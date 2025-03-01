@@ -27,7 +27,8 @@ export function useTaskManagement({
       id: uuidv4(),
       title,
       timerRunning: false,
-      columnId // Store columnId with the task
+      columnId, // Store columnId with the task
+      completed: false // Initialize as not completed
     };
     
     setTasks([...tasks, newTask]);
@@ -69,11 +70,29 @@ export function useTaskManagement({
 
   // Toggle task completion status
   const toggleTask = (taskId: string) => {
+    // Toggle in the completed tasks array
     if (completedTasks.includes(taskId)) {
       setCompletedTasks(completedTasks.filter(id => id !== taskId));
     } else {
       setCompletedTasks([...completedTasks, taskId]);
     }
+    
+    // Also update the task's completed property for persistence
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedTask = { 
+          ...task, 
+          completed: !completedTasks.includes(taskId)
+        };
+        if (onTaskUpdate) {
+          onTaskUpdate(updatedTask);
+        }
+        return updatedTask;
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
   };
 
   return {
