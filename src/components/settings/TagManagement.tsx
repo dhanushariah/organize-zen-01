@@ -23,31 +23,41 @@ export const TagManagement = () => {
   
   // Load tags from localStorage on component mount
   useEffect(() => {
-    const storedTags = localStorage.getItem('taskTags');
-    if (storedTags) {
+    const loadSavedTags = () => {
       try {
-        setTags(JSON.parse(storedTags));
+        const storedTags = localStorage.getItem('taskTags');
+        if (storedTags) {
+          const parsedTags = JSON.parse(storedTags);
+          setTags(parsedTags);
+        } else {
+          // Initialize with default tags if no stored tags are found
+          const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
+          setTags(defaultTags);
+          saveTags(defaultTags);
+        }
       } catch (error) {
-        console.error('Error parsing stored tags:', error);
-        setTags([]);
+        console.error('Error loading tags:', error);
+        // Initialize with default tags on error
+        const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
+        setTags(defaultTags);
+        saveTags(defaultTags);
       }
-    } else {
-      // Initialize with default tags if no stored tags are found
-      const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
-      setTags(defaultTags);
-      localStorage.setItem('taskTags', JSON.stringify(defaultTags));
-    }
+    };
+    
+    loadSavedTags();
   }, []);
   
-  // Save tags to localStorage when they change
-  useEffect(() => {
-    if (tags.length > 0) {
-      localStorage.setItem('taskTags', JSON.stringify(tags));
-      
-      // Also update availableTags in the localStorage to ensure it's in sync
-      localStorage.setItem('availableTags', JSON.stringify(tags));
+  // Save tags to localStorage
+  const saveTags = (tagsToSave: string[]) => {
+    try {
+      const tagsJSON = JSON.stringify(tagsToSave);
+      localStorage.setItem('taskTags', tagsJSON);
+      localStorage.setItem('availableTags', tagsJSON);
+    } catch (error) {
+      console.error('Error saving tags:', error);
+      toast.error('Failed to save tags');
     }
-  }, [tags]);
+  };
   
   const handleAddTag = () => {
     if (!newTag.trim()) {
@@ -62,22 +72,16 @@ export const TagManagement = () => {
     
     const updatedTags = [...tags, newTag.trim()];
     setTags(updatedTags);
+    saveTags(updatedTags);
     setNewTag('');
     toast.success('Tag added successfully');
-    
-    // Ensure both localStorage keys are updated
-    localStorage.setItem('taskTags', JSON.stringify(updatedTags));
-    localStorage.setItem('availableTags', JSON.stringify(updatedTags));
   };
   
   const handleDeleteTag = (tagToDelete: string) => {
     const updatedTags = tags.filter(tag => tag !== tagToDelete);
     setTags(updatedTags);
+    saveTags(updatedTags);
     toast.success('Tag deleted successfully');
-    
-    // Ensure both localStorage keys are updated
-    localStorage.setItem('taskTags', JSON.stringify(updatedTags));
-    localStorage.setItem('availableTags', JSON.stringify(updatedTags));
   };
   
   const getTagColor = (tag: string) => {

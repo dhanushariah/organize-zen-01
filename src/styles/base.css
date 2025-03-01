@@ -37,31 +37,31 @@
 
   .dark {
     --background: 240 10% 3.9%;
-    --foreground: 0 0% 100%;  /* Changed to pure white */
+    --foreground: 0 0% 100%;  /* Pure white text */
     --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 100%;  /* Changed to pure white */
+    --card-foreground: 0 0% 100%;  /* Pure white text */
     --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 100%;  /* Changed to pure white */
-    --primary: 0 0% 100%;  /* Changed to pure white */
+    --popover-foreground: 0 0% 100%;  /* Pure white text */
+    --primary: 0 0% 100%;  /* Pure white for primary elements */
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 100%;  /* Changed to pure white */
+    --secondary-foreground: 0 0% 100%;  /* Pure white text */
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 0 0% 70%;  /* Lightened for better visibility */
     --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 100%;  /* Changed to pure white */
+    --accent-foreground: 0 0% 100%;  /* Pure white text */
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;  /* Changed to pure white */
+    --destructive-foreground: 0 0% 100%;  /* Pure white text */
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     
     /* Sidebar specific */
     --sidebar: 240 10% 5.9%;
-    --sidebar-foreground: 0 0% 100%;  /* Changed to pure white */
+    --sidebar-foreground: 0 0% 100%;  /* Pure white text */
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 0 0% 100%;  /* Changed to pure white */
+    --sidebar-accent-foreground: 0 0% 100%;  /* Pure white text */
     --sidebar-ring: 240 4.9% 83.9%;
   }
 
@@ -74,7 +74,7 @@
 /* Add utility classes for the gold gradient */
 @layer components {
   .gold-gradient {
-    @apply bg-gold-gradient text-black font-bold;
+    @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold;
   }
   
   .dark .text-muted-foreground {
@@ -94,6 +94,6 @@
   }
   
   .upgrade-pro-button {
-    @apply bg-gold-gradient text-black font-bold hover:shadow-lg transition-shadow;
+    @apply bg-gradient-to-r from-gold-light via-gold-medium to-gold-dark text-black font-bold hover:shadow-lg transition-shadow;
   }
 }

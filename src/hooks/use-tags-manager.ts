@@ -7,62 +7,61 @@ export function useTagsManager() {
   
   // Load available tags from localStorage
   useEffect(() => {
-    // First try to load from taskTags (the source of truth)
-    const savedTags = localStorage.getItem('taskTags');
-    
-    if (savedTags) {
-      try {
-        const parsedTags = JSON.parse(savedTags);
-        setAvailableTags(parsedTags);
-        
-        // Also ensure availableTags is in sync
-        localStorage.setItem('availableTags', savedTags);
-      } catch (error) {
-        console.error('Error parsing stored tags:', error);
-        
-        // Fallback to default tags
-        const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
-        setAvailableTags(defaultTags);
-        localStorage.setItem('taskTags', JSON.stringify(defaultTags));
-        localStorage.setItem('availableTags', JSON.stringify(defaultTags));
-      }
-    } else {
-      // If no taskTags, check availableTags as fallback
-      const fallbackTags = localStorage.getItem('availableTags');
+    const loadTags = () => {
+      // Try to load tags from localStorage
+      const savedTags = localStorage.getItem('taskTags');
       
-      if (fallbackTags) {
+      if (savedTags) {
         try {
-          setAvailableTags(JSON.parse(fallbackTags));
-          // Sync back to taskTags
-          localStorage.setItem('taskTags', fallbackTags);
-        } catch (error) {
-          console.error('Error parsing fallback tags:', error);
+          const parsedTags = JSON.parse(savedTags);
+          setAvailableTags(parsedTags);
           
-          // Set defaults if both failed
-          const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
-          setAvailableTags(defaultTags);
-          localStorage.setItem('taskTags', JSON.stringify(defaultTags));
-          localStorage.setItem('availableTags', JSON.stringify(defaultTags));
+          // Ensure consistent storage
+          localStorage.setItem('taskTags', JSON.stringify(parsedTags));
+          localStorage.setItem('availableTags', JSON.stringify(parsedTags));
+        } catch (error) {
+          console.error('Error parsing stored tags:', error);
+          setDefaultTags();
         }
       } else {
-        // No tags found anywhere, set defaults
-        const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
-        setAvailableTags(defaultTags);
-        localStorage.setItem('taskTags', JSON.stringify(defaultTags));
-        localStorage.setItem('availableTags', JSON.stringify(defaultTags));
+        setDefaultTags();
       }
-    }
+      
+      // Load tag colors
+      loadTagColors();
+    };
     
-    // Load tag colors
-    const savedTagColors = localStorage.getItem('tagColors');
-    if (savedTagColors) {
-      try {
-        setTagColors(JSON.parse(savedTagColors));
-      } catch (error) {
-        console.error('Error parsing tag colors:', error);
-        setTagColors({});
+    const setDefaultTags = () => {
+      const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
+      setAvailableTags(defaultTags);
+      localStorage.setItem('taskTags', JSON.stringify(defaultTags));
+      localStorage.setItem('availableTags', JSON.stringify(defaultTags));
+    };
+    
+    const loadTagColors = () => {
+      const savedTagColors = localStorage.getItem('tagColors');
+      if (savedTagColors) {
+        try {
+          setTagColors(JSON.parse(savedTagColors));
+        } catch (error) {
+          console.error('Error parsing tag colors:', error);
+          setTagColors({});
+        }
       }
-    }
+    };
+    
+    loadTags();
+    
+    // Set up event listener to handle changes in other tabs/windows
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'taskTags' || event.key === 'availableTags') {
+        loadTags();
+      }
+    });
+    
+    return () => {
+      window.removeEventListener('storage', () => {});
+    };
   }, []);
 
   return {

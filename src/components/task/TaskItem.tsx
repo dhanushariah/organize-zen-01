@@ -6,6 +6,7 @@ import { Task } from "@/types/task";
 import { TaskContent } from "./TaskContent";
 import { TaskActions } from "./TaskActions";
 import { useTagsManager } from "@/hooks/use-tags-manager";
+import { TaskTimer } from "./TaskTimer";
 
 interface TaskItemProps {
   task: Task;
@@ -51,6 +52,17 @@ export const TaskItem: React.FC<TaskItemProps> = ({
       id={`task-${task.id}`}
     >
       <div className="flex items-start gap-2 md:gap-3">
+        {/* Timer button before checkbox */}
+        {task.timerRunning !== undefined && (
+          <div className="mt-0.5">
+            <TaskTimer 
+              timerRunning={task.timerRunning} 
+              timerDisplay={task.timerDisplay}
+              onToggleTimer={onToggleTimer}
+            />
+          </div>
+        )}
+
         <Checkbox
           id={task.id}
           checked={isCompleted}

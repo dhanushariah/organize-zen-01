@@ -48,30 +48,28 @@ export const TaskContent: React.FC<TaskContentProps> = ({
   }
 
   return (
-    <div className="flex flex-1 items-center justify-between gap-2">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor={taskId}
-            className={`font-medium cursor-pointer text-sm md:text-base ${
-              isCompleted ? "line-through text-muted-foreground" : ""
-            }`}
-            onClick={() => setEditingTask(taskId)}
-          >
-            {title}
-          </label>
-          {timerDisplay && <TaskTimer timerRunning={timerRunning} timerDisplay={timerDisplay} onToggleTimer={onToggleTimer} />}
-        </div>
-        
-        {tag && (
-          <Badge 
-            variant="outline" 
-            className={`text-xs w-fit ${tagColors[tag] ? `tag-badge tag-${tagColors[tag]}` : ''}`}
-          >
-            {tag}
-          </Badge>
-        )}
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-2">
+        <label
+          htmlFor={taskId}
+          className={`font-medium cursor-pointer text-sm md:text-base ${
+            isCompleted ? "line-through text-muted-foreground" : ""
+          }`}
+          onClick={() => setEditingTask(taskId)}
+        >
+          {title}
+        </label>
+        {timerDisplay && <TaskTimer timerRunning={timerRunning} timerDisplay={timerDisplay} onToggleTimer={onToggleTimer} />}
       </div>
+      
+      {tag && (
+        <Badge 
+          variant="outline" 
+          className={`text-xs w-fit ${tagColors[tag] ? `tag-badge tag-${tagColors[tag]}` : ''}`}
+        >
+          {tag}
+        </Badge>
+      )}
     </div>
   );
 };

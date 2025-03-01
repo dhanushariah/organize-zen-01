@@ -2,9 +2,7 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tag } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useTagsManager } from "@/hooks/use-tags-manager";
 
 interface AddTaskInputProps {
@@ -25,70 +23,49 @@ const AddTaskInput = ({
   const { availableTags, tagColors } = useTagsManager();
   
   return (
-    <div className="flex gap-2">
-      <Input
-        placeholder="Add a new task..."
-        value={newTaskTitle}
-        onChange={(e) => setNewTaskTitle(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && newTaskTitle.trim()) {
-            onAddTask();
-          }
-        }}
-        className="text-sm md:text-base"
-      />
+    <div className="space-y-3">
+      <div className="flex gap-2">
+        <Input
+          placeholder="Add a new task..."
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && newTaskTitle.trim()) {
+              onAddTask();
+            }
+          }}
+          className="text-sm md:text-base"
+        />
+        
+        <Button 
+          size="icon" 
+          onClick={onAddTask} 
+          disabled={!newTaskTitle.trim()}
+          className="shrink-0"
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
       
       {onSelectTag && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button 
-              size="icon" 
-              variant="outline"
-              className="shrink-0"
-            >
-              <Tag className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-60 p-2">
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Select tag for new task</p>
-              <div className="grid grid-cols-2 gap-1">
-                {availableTags.map((tagOption) => (
-                  <Button 
-                    key={tagOption}
-                    variant="outline"
-                    size="sm"
-                    className={`text-xs justify-start ${
-                      selectedTag === tagOption ? 'border-primary' : ''
-                    } ${tagColors[tagOption] ? `tag-${tagColors[tagOption]}` : ''}`}
-                    onClick={() => onSelectTag(tagOption)}
-                  >
-                    {tagOption}
-                  </Button>
-                ))}
-              </div>
-              {selectedTag && (
-                <Button 
-                  variant="ghost" 
-                  className="w-full text-xs"
-                  onClick={() => onSelectTag('')}
-                >
-                  Clear tag
-                </Button>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">Tags:</span>
+          <div className="flex flex-wrap gap-1">
+            {availableTags.map((tagOption) => (
+              <Badge 
+                key={tagOption}
+                variant={selectedTag === tagOption ? "default" : "outline"}
+                className={`cursor-pointer text-xs ${
+                  tagColors[tagOption] ? `tag-${tagColors[tagOption]}` : ''
+                } ${selectedTag === tagOption ? 'bg-primary text-primary-foreground' : ''}`}
+                onClick={() => onSelectTag(selectedTag === tagOption ? '' : tagOption)}
+              >
+                {tagOption}
+              </Badge>
+            ))}
+          </div>
+        </div>
       )}
-      
-      <Button 
-        size="icon" 
-        onClick={onAddTask} 
-        disabled={!newTaskTitle.trim()}
-        className="shrink-0"
-      >
-        <Plus className="h-4 w-4" />
-      </Button>
     </div>
   );
 };
