@@ -11,7 +11,7 @@ interface TaskTimerProps {
 
 export const TaskTimer: React.FC<TaskTimerProps> = ({
   timerRunning = false,
-  timerDisplay,
+  timerDisplay = "0s",
   onToggleTimer
 }) => {
   return (
@@ -27,7 +27,7 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
       </Button>
       
       {timerDisplay && (
-        <span className={`text-xs ${timerRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`}>
+        <span className={`text-xs ${timerRunning ? 'timer-active' : 'text-muted-foreground'}`}>
           {timerDisplay}
         </span>
       )}

@@ -31,24 +31,33 @@ export function useTaskTimer({
 
   // Toggle timer for a task
   const toggleTaskTimer = (taskId: string) => {
-    let timerIntervalId: number | null = null;
+    const now = new Date();
     
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
+        // If task is already completed, don't start the timer
+        if (task.completed) {
+          return task;
+        }
+        
         // Calculate elapsed time
-        const now = new Date();
-        const startTime = task.timerRunning ? (task.timerStart || now) : now;
+        const startTime = task.timerRunning ? task.timerStart || now : now;
         const elapsed = task.timerElapsed || 0;
         
         // Toggle timer state
         const timerRunning = !task.timerRunning;
         
+        // Calculate new elapsed time if stopping timer
+        const newElapsed = timerRunning 
+          ? elapsed 
+          : elapsed + (task.timerRunning ? (now.getTime() - (task.timerStart?.getTime() || now.getTime())) : 0);
+        
         const updatedTask = {
           ...task,
           timerRunning,
           timerStart: timerRunning ? now : undefined,
-          timerElapsed: timerRunning ? elapsed : elapsed + (task.timerRunning ? (now.getTime() - startTime.getTime()) : 0),
-          timerDisplay: formatTimerDisplay(timerRunning ? elapsed : elapsed + (task.timerRunning ? (now.getTime() - startTime.getTime()) : 0))
+          timerElapsed: newElapsed,
+          timerDisplay: formatTimerDisplay(newElapsed)
         };
         
         if (onTaskUpdate) {
@@ -61,42 +70,44 @@ export function useTaskTimer({
     });
     
     setTasks(updatedTasks);
-    
-    if (timerIntervalId) {
-      clearInterval(timerIntervalId);
-    }
   };
 
   // Update timers every second
   useEffect(() => {
     const intervalId = setInterval(() => {
       const now = new Date();
+      let tasksChanged = false;
       
       const updatedTasks = tasks.map(task => {
         if (task.timerRunning && task.timerStart) {
           const startTime = task.timerStart;
-          const elapsed = (task.timerElapsed || 0) + (now.getTime() - startTime.getTime());
+          const baseElapsed = task.timerElapsed || 0;
+          const currentElapsed = now.getTime() - startTime.getTime();
+          const totalElapsed = baseElapsed + currentElapsed;
           
           const updatedTask = {
             ...task,
-            timerStart: now,
-            timerElapsed: task.timerElapsed,
-            timerDisplay: formatTimerDisplay(elapsed)
+            timerDisplay: formatTimerDisplay(totalElapsed)
           };
           
           // Only update the task in Supabase every 10 seconds to avoid too many requests
-          if (Math.floor(elapsed / 10000) !== Math.floor((task.timerElapsed || 0) / 10000)) {
+          if (Math.floor(totalElapsed / 10000) !== Math.floor(baseElapsed / 10000)) {
             if (onTaskUpdate) {
-              onTaskUpdate(updatedTask);
+              const persistTask = {
+                ...updatedTask,
+                timerElapsed: totalElapsed
+              };
+              onTaskUpdate(persistTask);
             }
           }
           
+          tasksChanged = true;
           return updatedTask;
         }
         return task;
       });
       
-      if (JSON.stringify(updatedTasks) !== JSON.stringify(tasks)) {
+      if (tasksChanged) {
         setTasks(updatedTasks);
       }
     }, 1000);

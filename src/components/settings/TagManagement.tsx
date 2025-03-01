@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Plus, X, Save } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,7 @@ const TAG_COLORS = [
 export const TagManagement = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
+  const [tagColors, setTagColors] = useState<Record<string, string>>({});
   
   // Load tags from localStorage on component mount
   useEffect(() => {
@@ -34,6 +35,21 @@ export const TagManagement = () => {
           const defaultTags = ['work', 'personal', 'home', 'study', 'health'];
           setTags(defaultTags);
           saveTags(defaultTags);
+        }
+        
+        // Load tag colors
+        const storedColors = localStorage.getItem('tagColors');
+        if (storedColors) {
+          setTagColors(JSON.parse(storedColors));
+        } else {
+          // Initialize with default colors
+          const defaultColors: Record<string, string> = {};
+          ['work', 'personal', 'home', 'study', 'health'].forEach((tag, index) => {
+            const colorKey = ['red', 'blue', 'green', 'yellow', 'purple'][index % 5];
+            defaultColors[tag] = colorKey;
+          });
+          setTagColors(defaultColors);
+          localStorage.setItem('tagColors', JSON.stringify(defaultColors));
         }
       } catch (error) {
         console.error('Error loading tags:', error);
@@ -53,6 +69,17 @@ export const TagManagement = () => {
       const tagsJSON = JSON.stringify(tagsToSave);
       localStorage.setItem('taskTags', tagsJSON);
       localStorage.setItem('availableTags', tagsJSON);
+      
+      // Also add colors for new tags
+      const updatedColors = { ...tagColors };
+      tagsToSave.forEach(tag => {
+        if (!updatedColors[tag]) {
+          const colorKeys = ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'indigo', 'gray'];
+          updatedColors[tag] = colorKeys[Math.floor(Math.random() * colorKeys.length)];
+        }
+      });
+      localStorage.setItem('tagColors', JSON.stringify(updatedColors));
+      setTagColors(updatedColors);
     } catch (error) {
       console.error('Error saving tags:', error);
       toast.error('Failed to save tags');
@@ -84,12 +111,6 @@ export const TagManagement = () => {
     toast.success('Tag deleted successfully');
   };
   
-  const getTagColor = (tag: string) => {
-    // Simple hash function to assign consistent colors
-    const hashCode = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return TAG_COLORS[hashCode % TAG_COLORS.length];
-  };
-  
   return (
     <div className="p-4 bg-card rounded-md shadow">
       <h2 className="text-2xl font-semibold mb-4">Tag Management</h2>
@@ -118,7 +139,7 @@ export const TagManagement = () => {
           {tags.map((tag) => (
             <Badge 
               key={tag} 
-              className={`${getTagColor(tag)} px-3 py-1 flex items-center gap-1`}
+              className={`tag-${tagColors[tag] || 'gray'} px-3 py-1 flex items-center gap-1`}
             >
               {tag}
               <button 

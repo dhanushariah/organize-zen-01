@@ -96,7 +96,7 @@ const Sidebar = ({ isMobile = false, onNavigate, onClose }: SidebarProps) => {
               <SidebarMenuItem className={isMobile ? "px-6 py-2 mt-6" : "px-3 py-1 mt-10"}>
                 <SidebarMenuButton
                   asChild
-                  className={`sidebar-nav-button bg-primary hover:bg-primary/90 text-primary-foreground ${isMobile ? "h-10" : ""}`}
+                  className={`sidebar-nav-button upgrade-pro-button ${isMobile ? "h-10" : ""}`}
                 >
                   <Link 
                     to="/settings"
