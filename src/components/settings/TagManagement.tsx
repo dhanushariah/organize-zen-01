@@ -146,9 +146,7 @@ export const TagManagement = () => {
         <div className="space-y-4">
           {tags.map((tag) => (
             <div key={tag} className="flex items-center justify-between gap-2 p-2 bg-background/50 rounded-md">
-              <Badge 
-                className={`tag-${tagColors[tag] || 'gray'} px-3 py-1`}
-              >
+              <Badge variant={tagColors[tag] || "gray"}>
                 {tag}
               </Badge>
               

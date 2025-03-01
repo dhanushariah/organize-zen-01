@@ -7,6 +7,7 @@ import { TaskContent } from "./TaskContent";
 import { TaskActions } from "./TaskActions";
 import { useTagsManager } from "@/hooks/use-tags-manager";
 import { TaskTimer } from "./TaskTimer";
+import { Badge } from "@/components/ui/badge";
 
 interface TaskItemProps {
   task: Task;
@@ -46,8 +47,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <Card 
       className={`task-card p-3 md:p-4 cursor-move border shadow-sm hover:shadow-md transition-shadow ${
-        task.tag && tagColors[task.tag] ? `border-l-4 border-l-${tagColors[task.tag]}-500` : ''
-      } ${isDragging ? 'opacity-50' : ''}`}
+        isDragging ? 'opacity-50' : ''
+      }`}
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
