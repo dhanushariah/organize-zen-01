@@ -21,7 +21,12 @@
   
   /* Upgrade to Pro button */
   .upgrade-pro-button {
-    @apply bg-black text-transparent bg-clip-text font-bold hover:shadow-lg transition-shadow;
+    @apply bg-background hover:bg-background/90 text-transparent font-bold hover:shadow-lg transition-shadow;
+    background-clip: border-box !important;
+  }
+  
+  .upgrade-pro-button span {
+    @apply bg-clip-text text-transparent;
     background-image: linear-gradient(to right, #f59e0b, #eab308, #d97706);
   }
   

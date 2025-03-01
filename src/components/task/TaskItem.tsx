@@ -45,7 +45,9 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   
   return (
     <Card 
-      className={`task-card p-3 md:p-4 cursor-move ${task.tag && tagColors[task.tag] ? `tag-${tagColors[task.tag]} tag-border` : ''}`}
+      className={`task-card p-3 md:p-4 cursor-move border shadow-sm hover:shadow-md transition-shadow ${
+        task.tag && tagColors[task.tag] ? `border-l-4 border-l-${tagColors[task.tag]}-500` : ''
+      } ${isDragging ? 'opacity-50' : ''}`}
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}

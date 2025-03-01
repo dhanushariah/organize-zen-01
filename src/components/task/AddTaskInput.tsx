@@ -40,14 +40,15 @@ const AddTaskInput = ({
       {onSelectTag && (
         <Popover>
           <PopoverTrigger asChild>
-            <Badge 
-              variant={selectedTag ? "default" : "outline"}
-              className={`cursor-pointer text-xs whitespace-nowrap ${
-                tagColors[selectedTag || ""] ? `tag-${tagColors[selectedTag || ""]}` : ''
-              } ${selectedTag ? 'bg-primary text-primary-foreground' : ''}`}
+            <Button 
+              variant={selectedTag ? "outline" : "ghost"}
+              size="sm"
+              className={`text-xs shrink-0 ${
+                selectedTag && tagColors[selectedTag] ? `tag-${tagColors[selectedTag]}` : ''
+              }`}
             >
               {selectedTag || "Tag"}
-            </Badge>
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-48 p-2" align="end">
             <div className="grid grid-cols-2 gap-1">

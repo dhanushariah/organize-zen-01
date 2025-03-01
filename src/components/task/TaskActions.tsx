@@ -46,7 +46,7 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
                     size="sm"
                     className={`text-xs justify-start ${
                       tag === tagOption ? 'border-primary' : ''
-                    } ${tagColors[tagOption] ? `tag-${tagColors[tagOption]}` : ''}`}
+                    } tag-${tagColors[tagOption] || "gray"}`}
                     onClick={() => onUpdateTag(tagOption)}
                   >
                     {tagOption}

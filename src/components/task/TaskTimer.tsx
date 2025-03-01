@@ -19,7 +19,7 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
       <Button
         variant="ghost"
         size="icon"
-        className="h-6 w-6 shrink-0 text-primary"
+        className={`h-6 w-6 shrink-0 ${timerRunning ? 'text-primary' : ''}`}
         onClick={onToggleTimer}
         aria-label={timerRunning ? "Pause timer" : "Start timer"}
       >
@@ -27,7 +27,7 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
       </Button>
       
       {timerDisplay && (
-        <span className={`text-xs ${timerRunning ? 'animate-pulse text-primary' : 'text-muted-foreground'}`}>
+        <span className={`text-xs ${timerRunning ? 'timer-active' : 'text-muted-foreground'}`}>
           {timerDisplay}
         </span>
       )}

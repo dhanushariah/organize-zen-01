@@ -54,14 +54,7 @@ export const TaskContent: React.FC<TaskContentProps> = ({
         </label>
       </div>
       
-      {tag && (
-        <Badge 
-          variant="outline" 
-          className={`tag-badge ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
-        >
-          {tag}
-        </Badge>
-      )}
+      {/* The tag is only displayed in TaskActions component, not here */}
     </div>
   );
 };

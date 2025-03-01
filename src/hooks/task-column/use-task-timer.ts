@@ -1,6 +1,5 @@
-
 import { Task } from "@/types/task";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface UseTaskTimerProps {
   tasks: Task[];
@@ -13,6 +12,9 @@ export function useTaskTimer({
   setTasks,
   onTaskUpdate
 }: UseTaskTimerProps) {
+  // Keep track of the interval ID
+  const timerIntervalRef = useRef<number | null>(null);
+  
   // Timer display formatting helper
   const formatTimerDisplay = (milliseconds: number): string => {
     const totalSeconds = Math.floor(milliseconds / 1000);
@@ -74,7 +76,13 @@ export function useTaskTimer({
 
   // Update timers every second
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    // Clear any existing interval
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+    
+    // Create a new interval that updates every 500ms for smoother updates
+    timerIntervalRef.current = window.setInterval(() => {
       const now = new Date();
       let tasksChanged = false;
       
@@ -90,7 +98,7 @@ export function useTaskTimer({
             timerDisplay: formatTimerDisplay(totalElapsed)
           };
           
-          // Only update the task in Supabase every 10 seconds to avoid too many requests
+          // Only update the task in database every 10 seconds to avoid too many requests
           if (Math.floor(totalElapsed / 10000) !== Math.floor((baseElapsed + (currentElapsed - 1000)) / 10000)) {
             if (onTaskUpdate) {
               const persistTask = {
@@ -110,9 +118,13 @@ export function useTaskTimer({
       if (tasksChanged) {
         setTasks(updatedTasks);
       }
-    }, 1000);
+    }, 500); // Update every 500ms for smoother display
     
-    return () => clearInterval(intervalId);
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
   }, [tasks, setTasks, onTaskUpdate]);
 
   return {

@@ -1,21 +1,25 @@
 
+import React from "react";
 import { Progress } from "@/components/ui/progress";
 
 interface TaskColumnProgressProps {
   progress: number;
 }
 
-const TaskColumnProgress = ({ progress }: TaskColumnProgressProps) => {
+const TaskColumnProgress: React.FC<TaskColumnProgressProps> = ({ progress }) => {
+  const roundedProgress = Math.round(progress);
+  
   return (
     <div className="mb-4">
+      <div className="flex justify-between items-center text-xs text-muted-foreground mb-2">
+        <p>Progress</p>
+        <p>{roundedProgress}%</p>
+      </div>
       <Progress 
         value={progress} 
-        className={`h-2 rounded-full overflow-hidden ${progress > 0 ? 'progress-bar-glow' : ''}`}
+        className="h-1.5" 
+        aria-label={`${roundedProgress}% of tasks completed`}
       />
-      <div className="flex justify-between mt-1">
-        <span className="text-xs text-muted-foreground">Progress</span>
-        <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
-      </div>
     </div>
   );
 };
