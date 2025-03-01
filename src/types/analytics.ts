@@ -24,9 +24,19 @@ export type CompletionData = {
 export type TagChartData = {
   name: string;
   value: number;
+  color?: string;
 };
 
 export type TimeChartData = {
   date: string;
   hours: number;
+};
+
+export type ChartCustomization = {
+  colors?: string[];
+  showLegend?: boolean;
+  showTooltip?: boolean;
+  showLabels?: boolean;
+  innerRadius?: number;
+  outerRadius?: number;
 };

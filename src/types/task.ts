@@ -10,6 +10,9 @@ export interface Task {
   columnId?: string; // Added to track which column a task belongs to
   tag?: string; // Added for tagging tasks
   completed?: boolean; // Added to track completion status
+  startTime?: Date; // Added for analytics tracking
+  endTime?: Date; // Added for analytics tracking
+  duration?: number; // Added for time tracking
 }
 
 // Add database table types for Supabase

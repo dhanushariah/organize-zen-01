@@ -13,6 +13,18 @@ import { TagDistributionChart } from "@/components/analytics/TagDistributionChar
 import { TimeTrackingChart } from "@/components/analytics/TimeTrackingChart";
 import { StreakTracker } from "@/components/analytics/StreakTracker";
 
+// Custom theme colors for charts
+const CHART_COLORS = [
+  '#8B5CF6', // Vivid Purple
+  '#D946EF', // Magenta Pink
+  '#F97316', // Bright Orange
+  '#0EA5E9', // Ocean Blue
+  '#10B981', // Emerald Green
+  '#F59E0B', // Amber Yellow
+  '#EC4899', // Pink
+  '#6366F1'  // Indigo
+];
+
 const Analytics = () => {
   const { taskHistory, currentStreak, longestStreak, tagStats, timeStats } = useAnalyticsData();
   
@@ -21,6 +33,16 @@ const Analytics = () => {
   const tagChartData = getTagChartData(tagStats);
   const timeChartData = getTimeChartData(timeStats);
   const weeklyCompletion = getCurrentWeekCompletion(taskHistory);
+  
+  // Chart customization options
+  const tagChartOptions = {
+    colors: CHART_COLORS,
+    showLabels: true,
+    innerRadius: 30,
+    outerRadius: 80,
+    showLegend: true,
+    showTooltip: true
+  };
 
   return (
     <div className="space-y-8">
@@ -49,7 +71,12 @@ const Analytics = () => {
         </TabsContent>
         
         <TabsContent value="tags" className="mt-4">
-          <TagDistributionChart data={tagChartData} />
+          <TagDistributionChart 
+            data={tagChartData}
+            title="Task Distribution by Tag"
+            description="Breakdown of tasks by tag category"
+            {...tagChartOptions}
+          />
         </TabsContent>
         
         <TabsContent value="time" className="mt-4">
