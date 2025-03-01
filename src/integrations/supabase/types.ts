@@ -63,8 +63,10 @@ export type Database = {
       tasks: {
         Row: {
           column_id: string
+          completed: boolean | null
           created_at: string | null
           id: string
+          tag: string | null
           timer_display: string | null
           timer_elapsed: number | null
           timer_running: boolean | null
@@ -74,8 +76,10 @@ export type Database = {
         }
         Insert: {
           column_id: string
+          completed?: boolean | null
           created_at?: string | null
           id: string
+          tag?: string | null
           timer_display?: string | null
           timer_elapsed?: number | null
           timer_running?: boolean | null
@@ -85,8 +89,10 @@ export type Database = {
         }
         Update: {
           column_id?: string
+          completed?: boolean | null
           created_at?: string | null
           id?: string
+          tag?: string | null
           timer_display?: string | null
           timer_elapsed?: number | null
           timer_running?: boolean | null
