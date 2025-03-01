@@ -1,17 +1,11 @@
 
-import { useState } from "react";
-import { Edit, X, Check, Trash2, Play, Pause, Tag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Task } from "@/types/task";
-import { 
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
+import { TaskContent } from "./TaskContent";
+import { TaskActions } from "./TaskActions";
+import { useTagsManager } from "@/hooks/use-tags-manager";
 
 interface TaskItemProps {
   task: Task;
@@ -30,7 +24,7 @@ interface TaskItemProps {
   otherColumns?: { id: string, title: string }[];
 }
 
-export const TaskItem = ({
+export const TaskItem: React.FC<TaskItemProps> = ({
   task,
   isCompleted,
   editingTask,
@@ -45,25 +39,8 @@ export const TaskItem = ({
   onUpdateTag,
   setEditingTask,
   otherColumns = []
-}: TaskItemProps) => {
-  const [availableTags, setAvailableTags] = useState<string[]>([]);
-  const [tagColors, setTagColors] = useState<Record<string, string>>({});
-  
-  // Load available tags from localStorage
-  useState(() => {
-    const savedTags = localStorage.getItem('availableTags');
-    if (savedTags) {
-      setAvailableTags(JSON.parse(savedTags));
-    } else {
-      setAvailableTags(['work', 'personal', 'home', 'study', 'health']);
-    }
-    
-    // Load tag colors
-    const savedTagColors = localStorage.getItem('tagColors');
-    if (savedTagColors) {
-      setTagColors(JSON.parse(savedTagColors));
-    }
-  });
+}) => {
+  const { availableTags, tagColors } = useTagsManager();
   
   return (
     <Card 
@@ -74,123 +51,38 @@ export const TaskItem = ({
       id={`task-${task.id}`}
     >
       <div className="flex items-start gap-2 md:gap-3">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 shrink-0 text-primary"
-            onClick={onToggleTimer}
-            aria-label={task.timerRunning ? "Pause timer" : "Start timer"}
-          >
-            {task.timerRunning ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-          </Button>
-        
-          <Checkbox
-            id={task.id}
-            checked={isCompleted}
-            onCheckedChange={onToggle}
-            className="mt-0.5 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
-          />
-        </div>
+        <Checkbox
+          id={task.id}
+          checked={isCompleted}
+          onCheckedChange={onToggle}
+          className="mt-0.5 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground checkbox-item"
+        />
         
         <div className="flex flex-1 items-start justify-between">
-          {editingTask ? (
-            <Input
-              defaultValue={task.title}
-              onBlur={(e) => onUpdate(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  onUpdate(e.currentTarget.value);
-                }
-              }}
-              autoFocus
-              className="text-sm md:text-base"
-            />
-          ) : (
-            <div className="flex-1 flex items-center justify-between gap-2">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <label
-                    htmlFor={task.id}
-                    className={`font-medium cursor-pointer text-sm md:text-base ${
-                      isCompleted ? "line-through text-muted-foreground" : ""
-                    }`}
-                    onClick={() => setEditingTask(task.id)}
-                  >
-                    {task.title}
-                  </label>
-                  {task.timerDisplay && (
-                    <span className={`text-xs ${task.timerRunning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`}>
-                      {task.timerDisplay}
-                    </span>
-                  )}
-                </div>
-                
-                {task.tag && (
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs w-fit ${tagColors[task.tag] ? `tag-badge tag-${tagColors[task.tag]}` : ''}`}
-                  >
-                    {task.tag}
-                  </Badge>
-                )}
-              </div>
-              
-              <div className="flex items-center gap-2 shrink-0">
-                {onUpdateTag && (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                      >
-                        <Tag className="h-4 w-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-60 p-2">
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Select tag</p>
-                        <div className="grid grid-cols-2 gap-1">
-                          {availableTags.map((tag) => (
-                            <Button 
-                              key={tag}
-                              variant="outline"
-                              size="sm"
-                              className={`text-xs justify-start ${
-                                task.tag === tag ? 'border-primary' : ''
-                              } ${tagColors[tag] ? `tag-${tagColors[tag]}` : ''}`}
-                              onClick={() => onUpdateTag(tag)}
-                            >
-                              {tag}
-                            </Button>
-                          ))}
-                        </div>
-                        {task.tag && (
-                          <Button 
-                            variant="ghost" 
-                            className="w-full text-xs"
-                            onClick={() => onUpdateTag('')}
-                          >
-                            Clear tag
-                          </Button>
-                        )}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                )}
-                
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onDelete}
-                  className="h-6 w-6"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
+          <TaskContent
+            taskId={task.id}
+            title={task.title}
+            isCompleted={isCompleted}
+            editingTask={editingTask}
+            timerRunning={task.timerRunning}
+            timerDisplay={task.timerDisplay}
+            tag={task.tag}
+            tagColors={tagColors}
+            onToggleTimer={onToggleTimer}
+            onUpdate={onUpdate}
+            setEditingTask={setEditingTask}
+          />
+          
+          <TaskActions
+            taskId={task.id}
+            tag={task.tag}
+            timerRunning={task.timerRunning}
+            availableTags={availableTags}
+            tagColors={tagColors}
+            onToggleTimer={onToggleTimer}
+            onDelete={onDelete}
+            onUpdateTag={onUpdateTag}
+          />
         </div>
       </div>
     </Card>
