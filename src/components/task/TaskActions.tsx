@@ -3,7 +3,6 @@ import React from "react";
 import { X, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
 
 interface TaskActionsProps {
   taskId: string;
@@ -22,6 +21,12 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
   onDelete,
   onUpdateTag
 }) => {
+  // Helper function to get the appropriate tag color class
+  const getTagColorClass = (tagName: string) => {
+    const color = tagColors[tagName] || "gray";
+    return `tag-${color}`;
+  };
+
   return (
     <div className="flex items-center gap-2 shrink-0">
       {onUpdateTag && (
@@ -30,7 +35,9 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
             <Button
               variant="outline"
               size="sm"
-              className={`h-6 text-xs px-2 py-0 flex items-center ${tag ? `tag-${tagColors[tag] || "gray"}` : ''}`}
+              className={`h-6 text-xs px-2 py-0 flex items-center ${
+                tag ? getTagColorClass(tag) : ''
+              }`}
             >
               {tag || <><Tag className="h-3 w-3 mr-1" /> Add Tag</>}
             </Button>
@@ -46,7 +53,7 @@ export const TaskActions: React.FC<TaskActionsProps> = ({
                     size="sm"
                     className={`text-xs justify-start ${
                       tag === tagOption ? 'border-primary' : ''
-                    } tag-${tagColors[tagOption] || "gray"}`}
+                    } ${getTagColorClass(tagOption)}`}
                     onClick={() => onUpdateTag(tagOption)}
                   >
                     {tagOption}

@@ -35,27 +35,38 @@
     @apply text-primary animate-pulse;
   }
   
-  /* Tag styles */
+  /* Tag styles - updated to ensure colors are visible in all themes */
   .tag-badge {
     @apply text-xs w-fit px-2 py-0.5 rounded-full;
   }
   
-  .tag-red { @apply bg-red-100 text-red-800 border-red-300; }
-  .tag-blue { @apply bg-blue-100 text-blue-800 border-blue-300; }
-  .tag-green { @apply bg-green-100 text-green-800 border-green-300; }
-  .tag-yellow { @apply bg-yellow-100 text-yellow-800 border-yellow-300; }
-  .tag-purple { @apply bg-purple-100 text-purple-800 border-purple-300; }
-  .tag-pink { @apply bg-pink-100 text-pink-800 border-pink-300; }
-  .tag-indigo { @apply bg-indigo-100 text-indigo-800 border-indigo-300; }
-  .tag-gray { @apply bg-gray-100 text-gray-800 border-gray-300; }
+  /* Light mode tag styles */
+  .tag-red { @apply bg-red-100 text-red-800 border-red-300 !important; }
+  .tag-blue { @apply bg-blue-100 text-blue-800 border-blue-300 !important; }
+  .tag-green { @apply bg-green-100 text-green-800 border-green-300 !important; }
+  .tag-yellow { @apply bg-yellow-100 text-yellow-800 border-yellow-300 !important; }
+  .tag-purple { @apply bg-purple-100 text-purple-800 border-purple-300 !important; }
+  .tag-pink { @apply bg-pink-100 text-pink-800 border-pink-300 !important; }
+  .tag-indigo { @apply bg-indigo-100 text-indigo-800 border-indigo-300 !important; }
+  .tag-gray { @apply bg-gray-100 text-gray-800 border-gray-300 !important; }
   
   /* Dark mode tag styles */
-  .dark .tag-red { @apply bg-red-900/30 text-red-200 border-red-800; }
-  .dark .tag-blue { @apply bg-blue-900/30 text-blue-200 border-blue-800; }
-  .dark .tag-green { @apply bg-green-900/30 text-green-200 border-green-800; }
-  .dark .tag-yellow { @apply bg-yellow-900/30 text-yellow-200 border-yellow-800; }
-  .dark .tag-purple { @apply bg-purple-900/30 text-purple-200 border-purple-800; }
-  .dark .tag-pink { @apply bg-pink-900/30 text-pink-200 border-pink-800; }
-  .dark .tag-indigo { @apply bg-indigo-900/30 text-indigo-200 border-indigo-800; }
-  .dark .tag-gray { @apply bg-gray-900/30 text-gray-200 border-gray-800; }
+  .dark .tag-red { @apply bg-red-900/30 text-red-200 border-red-800 !important; }
+  .dark .tag-blue { @apply bg-blue-900/30 text-blue-200 border-blue-800 !important; }
+  .dark .tag-green { @apply bg-green-900/30 text-green-200 border-green-800 !important; }
+  .dark .tag-yellow { @apply bg-yellow-900/30 text-yellow-200 border-yellow-800 !important; }
+  .dark .tag-purple { @apply bg-purple-900/30 text-purple-200 border-purple-800 !important; }
+  .dark .tag-pink { @apply bg-pink-900/30 text-pink-200 border-pink-800 !important; }
+  .dark .tag-indigo { @apply bg-indigo-900/30 text-indigo-200 border-indigo-800 !important; }
+  .dark .tag-gray { @apply bg-gray-900/30 text-gray-200 border-gray-800 !important; }
+  
+  /* Progress bar animation */
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
 }

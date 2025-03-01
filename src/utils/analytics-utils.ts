@@ -17,7 +17,7 @@ export const calculateStreaks = (history: TaskHistory[]) => {
     const entryDate = new Date(entry.date);
     const hasCompletedTasks = Object.values(entry.tasks)
       .flat()
-      .some(task => task.endTime);
+      .some(task => task.completed || task.endTime);
     
     if (hasCompletedTasks) {
       // If this is first entry or consecutive with previous date
@@ -45,7 +45,7 @@ export const calculateTagStats = (history: TaskHistory[]): TagStats => {
   
   history.forEach(entry => {
     Object.values(entry.tasks).flat().forEach(task => {
-      if (task.tag) {
+      if (task.tag && typeof task.tag === 'string') {
         stats[task.tag] = (stats[task.tag] || 0) + 1;
       }
     });
@@ -68,6 +68,8 @@ export const calculateTimeStats = (history: TaskHistory[]): TimeStats => {
       } else if (task.startTime && task.endTime) {
         const duration = (new Date(task.endTime).getTime() - new Date(task.startTime).getTime()) / 1000;
         totalDuration += duration;
+      } else if (task.timerElapsed) {
+        totalDuration += task.timerElapsed / 1000; // Convert milliseconds to seconds
       }
     });
     
@@ -82,7 +84,7 @@ export const getCompletionByDay = (taskHistory: TaskHistory[]): CompletionData[]
   return taskHistory.map(entry => {
     const tasks = Object.values(entry.tasks).flat();
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.endTime).length;
+    const completedTasks = tasks.filter(task => task.completed || task.endTime).length;
     const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
     
     return {
@@ -133,7 +135,7 @@ export const getCurrentWeekCompletion = (taskHistory: TaskHistory[]): number => 
   weekEntries.forEach(entry => {
     const tasks = Object.values(entry.tasks).flat();
     totalTasks += tasks.length;
-    completedTasks += tasks.filter(task => task.endTime).length;
+    completedTasks += tasks.filter(task => task.completed || task.endTime).length;
   });
   
   return totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;

@@ -18,7 +18,7 @@ const TaskColumnProgress: React.FC<TaskColumnProgressProps> = ({ progress }) => 
       <Progress 
         value={progress} 
         className="h-1.5" 
-        aria-label={`${roundedProgress}% of tasks completed`}
+        aria-label={`Progress bar showing ${roundedProgress}% of tasks completed`}
       />
     </div>
   );

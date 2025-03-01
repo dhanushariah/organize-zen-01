@@ -1,3 +1,4 @@
+
 import { Task } from "@/types/task";
 import { useEffect, useRef } from "react";
 
@@ -81,7 +82,7 @@ export function useTaskTimer({
       clearInterval(timerIntervalRef.current);
     }
     
-    // Create a new interval that updates every 500ms for smoother updates
+    // Create a new interval that updates every 100ms for smoother updates
     timerIntervalRef.current = window.setInterval(() => {
       const now = new Date();
       let tasksChanged = false;
@@ -118,7 +119,7 @@ export function useTaskTimer({
       if (tasksChanged) {
         setTasks(updatedTasks);
       }
-    }, 500); // Update every 500ms for smoother display
+    }, 100); // Update every 100ms for smoother display
     
     return () => {
       if (timerIntervalRef.current) {

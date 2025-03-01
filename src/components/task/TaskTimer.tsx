@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +14,13 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
   timerDisplay = "0s",
   onToggleTimer
 }) => {
+  const [displayTime, setDisplayTime] = useState(timerDisplay);
+  
+  // Update local state whenever the prop changes
+  useEffect(() => {
+    setDisplayTime(timerDisplay);
+  }, [timerDisplay]);
+
   return (
     <div className="flex items-center gap-1">
       <Button
@@ -26,9 +33,9 @@ export const TaskTimer: React.FC<TaskTimerProps> = ({
         {timerRunning ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
       </Button>
       
-      {timerDisplay && (
+      {displayTime && (
         <span className={`text-xs ${timerRunning ? 'timer-active' : 'text-muted-foreground'}`}>
-          {timerDisplay}
+          {displayTime}
         </span>
       )}
     </div>
