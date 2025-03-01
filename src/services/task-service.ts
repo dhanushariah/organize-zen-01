@@ -13,6 +13,7 @@ export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> =>
       .eq('user_id', userId);
       
     if (error) {
+      console.error("Supabase error fetching tasks:", error);
       throw error;
     }
     
@@ -23,7 +24,7 @@ export const fetchTasks = async (userId: string): Promise<ColumnTasks | null> =>
       priority: []
     };
     
-    if (data) {
+    if (data && data.length > 0) {
       data.forEach((task: Tables['tasks']) => {
         if (columnTasks[task.column_id]) {
           columnTasks[task.column_id].push({
@@ -53,12 +54,13 @@ export const fetchTaskHistory = async (userId: string): Promise<TaskHistory[]> =
       .eq('user_id', userId);
       
     if (error) {
+      console.error("Supabase error fetching task history:", error);
       throw error;
     }
     
     const history: TaskHistory[] = [];
     
-    if (data) {
+    if (data && data.length > 0) {
       data.forEach((item: Tables['task_history']) => {
         history.push({
           date: item.date,
@@ -77,6 +79,8 @@ export const fetchTaskHistory = async (userId: string): Promise<TaskHistory[]> =
 // Save tasks to Supabase
 export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Promise<boolean> => {
   try {
+    console.log("Saving tasks for user:", userId, updatedTasks);
+    
     // First, delete all tasks for this user
     const { error: deleteError } = await supabase
       .from('tasks')
@@ -84,6 +88,7 @@ export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Prom
       .eq('user_id', userId);
       
     if (deleteError) {
+      console.error("Supabase error deleting tasks:", deleteError);
       throw deleteError;
     }
     
@@ -110,10 +115,12 @@ export const saveTasks = async (userId: string, updatedTasks: ColumnTasks): Prom
         .insert(tasksToInsert);
         
       if (insertError) {
+        console.error("Supabase error inserting tasks:", insertError);
         throw insertError;
       }
     }
     
+    console.log("Tasks saved successfully");
     return true;
   } catch (error) {
     console.error("Error saving tasks:", error);
@@ -135,6 +142,7 @@ export const saveTaskHistory = async (userId: string, date: string, taskData: Co
       .eq('date', date);
       
     if (fetchError) {
+      console.error("Supabase error fetching history:", fetchError);
       throw fetchError;
     }
     
@@ -146,6 +154,7 @@ export const saveTaskHistory = async (userId: string, date: string, taskData: Co
         .eq('id', data[0].id);
         
       if (updateError) {
+        console.error("Supabase error updating history:", updateError);
         throw updateError;
       }
     } else {
@@ -159,6 +168,7 @@ export const saveTaskHistory = async (userId: string, date: string, taskData: Co
         });
         
       if (insertError) {
+        console.error("Supabase error inserting history:", insertError);
         throw insertError;
       }
     }

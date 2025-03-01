@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Task } from "@/types/task";
@@ -106,6 +107,17 @@ export const useDailyTasks = () => {
     if (taskFound) {
       setTasks(updatedTasks);
       if (user) {
+        // Ensure we save the tasks to Supabase
+        await saveTasks(user.id, updatedTasks);
+      }
+    } else if (!('deleted' in updatedTask)) {
+      // If task wasn't found in any column and it's not a deletion, it's a new task
+      // Add it to the "today" column by default
+      updatedTasks["today"] = [...updatedTasks["today"], updatedTask];
+      setTasks(updatedTasks);
+      
+      if (user) {
+        // Ensure we save the tasks to Supabase
         await saveTasks(user.id, updatedTasks);
       }
     }
